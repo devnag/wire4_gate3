@@ -3,3 +3,4 @@
 /SourceMapping/pdfs/
 __pycache__/
 *.pyc
+*~
