@@ -1,0 +1,42 @@
+
+\subsection{Formal counterparts of the proof diagram}\label{app:lean-map}
+\Cref{tab:lean-nodes} maps the nodes of \cref{fig:proof-dag} to
+formal declarations. The adapter \path{Adapters.sources_to_nine} derives, from the six published results, the intermediate interfaces used by the proof (normalization, restriction, concentration, rectangular product, short PCP, refuter, amplification, three-query PCPP). Wire names are relative to
+\path{NearQuarticWires}; source-adapter names are relative to
+\path{NearCubicGates}. The theorem \path{Release.main_from_published}
+proves the joint statement from \path{Close.PublishedInputs}, with
+the common constants in \path{Statement.JointStatement4}.
+
+\begingroup\footnotesize
+\setlength\LTleft{0pt plus 1fill}\setlength\LTright{0pt plus 1fill}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{.27\textwidth}>{\raggedright\arraybackslash}p{\dimexpr.73\textwidth-2\tabcolsep\relax}@{}}
+\caption{Formal counterparts of the proof diagram.}\label{tab:lean-nodes}\\
+\toprule Diagram component & Exact formal declaration\\\midrule
+\endfirsthead
+\toprule Diagram component & Exact formal declaration\\\midrule
+\endhead
+Williams & \path{Close.PublishedInputs.williams_rectangularProductLeaf}\\[3pt]
+BCGT13 & \path{Close.PublishedInputs.bcgt13_theorem11_1}\\[3pt]
+Shoup/BCGT & \path{Close.PublishedInputs.shoup_findIrrPolyAlgorithm17}\\[3pt]
+STV & \path{Close.PublishedInputs.stv_theorem29}\\[3pt]
+CW proximity & \path{Close.PublishedInputs.cw19Proximity_lemma22Half}\\[3pt]
+CW code & \path{Close.PublishedInputs.cw19Code_lemma26}\\[3pt]
+
+Published-source adapter & \path{Adapters.sources_to_nine}\\[3pt]
+Refuter & \path{Adapters.Assembly.field7}\\[3pt]
+Short PCP & \path{Adapters.Assembly.Fixed.field6OrdinaryFixed}\\[3pt]
+Amplification & \path{Adapters.Amplification.field8}\\[3pt]
+Three-query PCPP/code & \path{Adapters.Assembly.field9Encoder}\\[3pt]
+Product-star cells & \path{Cells.partition_average}; \path{Cells.mean_population}\\[3pt]
+Bounded-matrix sampler & \path{Sampler.mean_traceMoment_le}; \path{Sampler.paper_fourth_root_budget}\\[3pt]
+Cycle-sum identity & \path{Cycle.cycle_sum_identity}; \path{Cycle.conditional_cycle_sum_identity}\\[3pt]
+Integer masks & \path{Mask.maskPoly_eq_mask}; \path{Mask.indicatorPolynomial_eq_mask}\\[3pt]
+Localization/tomography & \path{Walks.chain_localization_failure_bound}; \path{Walks.signed_residue_recovery}\\[3pt]
+Printing & \path{Cells.compiledTable_value}; \path{Cells.compiledTable_weightedDominance}\\[3pt]
+Certified counter & \path{Program.counterExists4}\\[3pt]
+Wire transfer & \path{Transfer.transfer4_official}; \path{Program.finalStatement4}\\[3pt]
+Wires and gate outputs & \path{Statement.WiresAt}; \path{Statement.SymGatesAt}; \path{Statement.GatesAt}; \path{GateCorollary.jointStatement4_of_final}\\[3pt]
+Joint conclusion & \path{Release.main_from_published}; \path{Statement.JointStatement4}\\
+\bottomrule
+\end{longtable}
+\endgroup

@@ -1,0 +1,16 @@
+def WiresAt (K : ℕ) (F : Language) (d : ℝ) (n : ℕ) : Prop :=
+  ∀ C : SymmetricThresholdCircuit n, wires C ≤ wireCap K n → agr C F < 1 - d
+
+def SymGatesAt (K : ℕ) (F : Language) (d : ℝ) (n : ℕ) : Prop :=
+  ∀ C : SymmetricThresholdCircuit n, C.bottomCount ≤ gateCap K n → agr C F < 1 - d
+
+def GatesAt (K : ℕ) (F : Language) (d : ℝ) (n : ℕ) : Prop :=
+  ∀ C : WeightedSymmetricCircuit n, C.topWeight ≤ gateCap K n → agreement C F < 1 - d
+
+def JointAt4 (gamma : ℚ) : Prop :=
+  ∀ d : ℝ, 0 < d → d < (gamma : ℝ) / 5 →
+    ∃ K : ℕ, 0 < K ∧ ∃ F : Language, InENP F ∧
+      ∃ n₀ : ℕ, 4 ≤ n₀ ∧ ∀ n : ℕ, n₀ ≤ n → WiresAt K F d n ∧ SymGatesAt K F d n ∧ GatesAt K F d n
+
+def JointStatement4 : Prop :=
+  ∃ gamma : ℚ, 0 < gamma ∧ gamma < 1 ∧ JointAt4 gamma

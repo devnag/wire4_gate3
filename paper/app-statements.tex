@@ -1,0 +1,209 @@
+\section{Statements from earlier work}\label[appendix]{app:statements}
+This appendix records the supporting statements used in the counter.
+Their origins are credited at each statement; proofs are reproduced
+in \cref{app:earlier}. Classical normalization, concentration, and
+lifting are cited directly to their published sources.
+
+\subsection{Matrix concentration}
+
+\begin{imported}[{Tropp~\cite[Theorem~1.6]{Tropp}}]\label{imp:tropp}
+Let \(X_1,\dots,X_Q\) be independent random real \(d_1\times d_2\)
+matrices with \(\E X_j=0\) and \(\|X_j\|\le L\) almost surely, and
+let
+\(\sigma^2=\max\{\|\sum_j\E X_jX_j^{\mathsf T}\|,\|\sum_j\E X_j^{\mathsf T}X_j\|\}\).
+Then for all \(x\ge0\),
+\[
+ \Pr\Bigl[\Bigl\|\sum_jX_j\Bigr\|\ge x\Bigr]
+ \le(d_1+d_2)\exp\Bigl(-\frac{x^2/2}{\sigma^2+Lx/3}\Bigr).
+\]
+\end{imported}
+
+Here and below \(\|\cdot\|\) is the operator norm.
+
+\subsection{Product-star geometry and exact printing}\label{sec:imports-star}
+
+\begin{imported}[{\cite[Lemma~A.1]{Nag72}}]\label{imp:partition}
+Let \(2\le r\le n/4\) be even, \(s=\lfloor\lgx(n/r+1)\rfloor\),
+\(b=2^s-1\) and \(k=rs\). There are \(2^k\) explicitly described
+partitions of \(\{0,1\}^n\), each into \(2^{n-k}\) cells of size
+\(2^k\). A point of a cell is specified by one choice from
+\(\{0,e_1,\dots,e_b\}\) in each of \(r\) disjoint blocks of
+coordinates. For every partition, a uniform cell and a uniform point
+give a uniform input. Averaging over the partition and its uniformly
+chosen center gives a uniform center, independently of the point
+choices. The center bits can be divided into two halves differing in
+size by at most one while keeping each block on its assigned side.
+\end{imported}
+
+Since \(2^{s+1}>n/r+1\), we have \(b+1>(n/r+1)/2>n/(2r)\). We write a
+cell's address, or \emph{column}, as \(z\in\{0,1\}^{n-k}\) and its
+center as \(c(z)\). The \(r/2\) blocks on the left side give \(N=2^{k/2}\)
+left patterns \(u\in[N]\), and the \(r/2\) blocks on the right side
+give \(N\) right patterns \(v\in[N]\); we identify a pattern with its
+error vector, so the points of the cell are \(c(z)\oplus u\oplus v\).
+Let \(F(u)\) be the set of at most \(r/2\) coordinates flipped by
+\(u\); it depends only on \(u\) and the partition, not on \(z\).
+
+\begin{imported}[{\cite[Lemma~A.2]{Nag72}}]\label{imp:range}
+For every threshold function \(T\) and all \(c,u,v\) as above,
+\(\Delta_T(c,u,v)=T(c\oplus u\oplus v)-T(c\oplus u)-T(c\oplus v)+T(c)\in\{-1,0,1\}\).
+\end{imported}
+
+\begin{imported}[{\cite[Theorem~A.4]{Nag72}}]\label{imp:population}
+Average over a uniform partition, a uniform center, and uniform
+patterns \(u,v\). For a threshold function \(T\) that depends on \(f\)
+coordinates, \(\Pr[\Delta_T\ne0]\le2f/(b+1)^{3/2}\).
+\end{imported}
+
+The next four statements compile threshold atoms into tables
+printable over all columns.
+
+\begin{imported}[{\cite[Lemma~C.2]{Nag72}}]\label{imp:disjoint}
+Let \(H(x)=\ind[\sum_{i=1}^fw_ix_i>T]\) have integer parameters, let
+\(B_0'=\max(1,|T|,|w_1|,\dots,|w_f|)\) and
+\(\ell=\max\{1,\lceil\lgx((f+1)B_0'+1)\rceil\}\). There is an explicitly
+constructible list of at most \(\max(1,f\ell)\) integer affine
+equations \(E_j(x)=0\) with \(H(x)=\sum_j\ind[E_j(x)=0]\) on the
+Boolean cube, the sum always lying in \(\{0,1\}\). Their coefficients
+have \(O(\ell+\log(f+2))\) bits. Weak thresholds are included by
+replacing \(\sum_iw_ix_i\ge T\) with \(\sum_iw_ix_i>T-1\).
+\end{imported}
+
+\begin{imported}[{\cite[Lemma~C.3 and the paragraph after it]{Nag72}}]\label{imp:pullback}
+In the product-star parametrization, with each block kept on its side
+of the column split \(z=(z_{\rm L},z_{\rm R})\), each original input
+coordinate of \(c(z)\oplus x\), for a fixed point \(x\) of the cell, is
+a Boolean function, computable in polynomial time, of one of the two
+column halves. Substituting these functions into a disjoint exact
+child \(c_j+\sum_id_{j,i}x_i=0\) of \cref{imp:disjoint} yields a
+\emph{separated} equation \(a_j(z_{\rm L})+b_j(z_{\rm R})=0\) with
+polynomial-bit values; the children remain disjoint and represent the
+pulled-back threshold exactly over the integers.
+\end{imported}
+
+\begin{imported}[{\cite[Lemma~C.6]{Nag72}}]\label{imp:stack}
+If integer separated equations satisfy \(|E_j(z)|\le V\) for all
+\(j,z\) and \(H=2V+2\), then
+\(\prod_{j=1}^t\ind[E_j(z)=0]=\ind[\sum_jH^{j-1}E_j(z)=0]\), and the
+stacked equation is separated with \(O(t\log(V+2))\)-bit
+coefficients.
+\end{imported}
+
+\begin{imported}[{\cite[Theorem~C.5]{Nag72}}]\label{imp:printer}
+Fix a polynomial description envelope and \(n/2\le n_{\rm out}\le n\).
+Let \(E_i(z)=a_i(z_{\rm L})+b_i(z_{\rm R})\), \(1\le i\le s\), be
+separated equations over \(z\in\{0,1\}^{n_{\rm out}}\) with
+polynomial-bit half-scores computable in polynomial time, and let
+\(v_i\) be polynomial-bit integers. If \(s\le2^{n_{\rm out}/100}\),
+the table \(z\mapsto\sum_{i=1}^sv_i\ind[E_i(z)=0]\) is printable in
+\(2^{n_{\rm out}}\poly(n)\) bit operations, in addition to the
+construction of the list of the \(s\) equations.
+\end{imported}
+
+The printer reduces the table to weighted dominance counting, which
+Matou\v{s}ek's bucketing~\cite{Mat91} reduces to Williams' uniform
+rectangular matrix multiplication~\cite[Corollary~4.4]{WilACC14}.
+
+\begin{imported}[{\cite[Lemma~F.2 and its proof]{Nag72}}]\label{imp:seed}
+Let \(N=2^{k/2}\), let \(Q\) and \(h\) be positive integers, take an
+integer \(\ell_f\ge\max\{k,\lceil\lgx(Q+1)\rceil\}\) and the field
+\(\F_{2^{\ell_f}}\), label the \(Q\) samples by distinct field elements,
+evaluate a uniformly random polynomial of degree \(2h-1\) at the
+labels, and project each value to \(k\) bits, read as a pair in
+\([N]^2\). The seed has \(S=2h\ell_f\) bits, and the \(Q\) sample
+positions are \(2h\)-wise independent and uniform on \([N]^2\). For
+every seed prefix, the conditional probability of any conjunction of
+events ``sample \(j\) lies at position \(x\)'' is \(0\) or \(2^{-a}\)
+with \(a\le S\), and it is computable by Gaussian elimination over
+\(\F_2\); repeated sample labels repeat or augment the same linear
+system. The two one-bit extensions of a prefix average to the prefix:
+for every function \(\Psi\) of the seed,
+\(\E[\Psi\mid\pi]=\tfrac12(\E[\Psi\mid\pi0]+\E[\Psi\mid\pi1])\).
+\end{imported}
+
+\subsection{Normalization, sampling rates, and residue reconstruction}\label{sec:imports-nc}
+
+\begin{imported}[{\cite[Lemma~3.2]{CTW26}}]\label{imp:integer}
+Every threshold function on \(f\ge1\) Boolean inputs has an
+equivalent representation whose weights and threshold are integers in
+\(\pm f^f\).
+\end{imported}
+
+This is~\cite[Lemma~3.2]{CTW26}, attributed there to Muroga, Toda, and
+Takasu~\cite{MTT61}.
+
+\begin{imported}[{\cite[Theorem~2.8.4]{Vershynin18}}]\label{imp:bernstein}
+If independent centered random variables \(Y_t\) satisfy
+\(|Y_t|\le1\) and \(\sum_t\E Y_t^2\le V\), then for every \(T>0\),
+\(\Pr[|\sum_tY_t|\ge\sqrt{2TV}+2T/3]\le2e^{-T}\).
+\end{imported}
+
+\begin{imported}[{\cite[Lemma~5.1 and Equation~(1)]{NagCG}}]\label{imp:chain}
+Let \(T>0\), let \(h\ge64T\) be an integer, and let \(\ell_0\ge0\).
+Define
+\[
+ \bar\ell=\max\{\ell_0,h^2/(256T)\},\quad
+ \pi^*=\frac{h^2}{8T\bar\ell},\quad
+ s(\pi)=\sqrt{2T\pi\bar\ell}+\frac{2T}3,\quad
+ M_1=\lceil4\bar\ell/h\rceil,\quad\pi_1=1/M_1 .
+\]
+While \(x_r=\pi_r/\pi^*<2^{-8}\), set \(a_r=\lfloor1/(4\sqrt{x_r})\rfloor\)
+and \(\pi_{r+1}=a_r\pi_r\); stop at the first \(J\) with
+\(x_J\ge2^{-8}\). Then:
+\begin{enumerate}[(i)]
+\item \(a_r\ge4\), all rates lie in \((0,1]\), and \(\pi_r=\prod_{i<r}a_i/M_1\);
+\item \(\pi_1\bar\ell+s(\pi_1)\le h/2\), and
+\(s(\pi_{r+1})+a_rs(\pi_r)\le h/2\) for \(r<J\);
+\item \(J\le\lceil\lgx\lgx(h/T)\rceil+1\);
+\item \(s(\pi_J)/\pi_J\le86T\bar\ell/h\).
+\end{enumerate}
+Put \(A=\prod_{i=1}^{J-1}a_i\), \(A_0=A\) and
+\(A_r=\prod_{i=r+1}^{J-1}a_i\) for \(1\le r<J\). For arbitrary integer
+vectors \(K_1,\dots,K_J\), with \(E_0=K_1\) and
+\(E_r=K_{r+1}-a_rK_r\), the identities
+\(K_J=\sum_{r=0}^{J-1}A_rE_r\) and \(\pi_J=A/M_1\) hold.
+\end{imported}
+
+The telescoping identity holds for \emph{any} proposed vectors, not
+only for nested samples; \cref{lem:certify}(d) uses it for arbitrary witness vectors.
+
+\begin{imported}[{\cite[Lemmas~4.1--4.4 and the paragraph after Lemma~4.3]{NagCG}}]\label{imp:window}
+Let \(\cP\) be the set of primes in \((P/2,P]\) and
+\(D'=1+\sum_{p\in\cP}(p-1)\). For a finitely supported
+\(F:\Z^d\to\Q\) and a prime \(p\), let
+\(F_p(\rho)=\sum_{y\equiv\rho\ (\mathrm{mod}\ p)}F(y)\) for
+\(\rho\in(\Z/p)^d\).
+\begin{enumerate}[(a)]
+\item A rational function supported on at most \(D'\) consecutive
+integers with \(F_p=0\) for all \(p\in\cP\) is zero.
+\item Let \(S_\varphi(q)=\sum_{t\le q}t\varphi(t)\), with \(\varphi\)
+Euler's function, and let \(L_2\) be the largest \(L\ge2\) with
+\(S_\varphi(\lfloor(D'-1)/(L-1)\rfloor)\ge L\), or \(L_2=1\) if there is
+none. A rational function supported on a given box in \(\Z^2\) with
+both sides at most \(L_2\) is uniquely determined, among such
+functions, by its push-forwards \(F_p\), \(p\in\cP\).
+\item As \(P\to\infty\), \(D'=\Theta(P^2/\ln P)\) and
+\(L_2=\Theta(P^{3/2}/(\ln P)^{3/4})\).
+\end{enumerate}
+Exact Gaussian elimination, with one unknown per box point and one
+equation per residue class, finds the unique solution when the data
+come from a function on the box.
+\end{imported}
+
+Part~(b) is the quantitative modular form, proved
+in~\cite{NagCG}, of Hajdu and Tijdeman's factorization method for
+discrete tomography~\cite[Theorem~1]{HT01}. If \(L>D'\) then
+\(\lfloor(D'-1)/(L-1)\rfloor=0\) and \(S_\varphi(0)=0<L\), so
+\(L_2\le D'\).
+
+\begin{imported}[{\cite[Section~2.3]{BT94}}]\label{imp:amp}
+For \(e\ge1\),
+\[\Amp_e(t)=1-(1-t)^e\sum_{j=0}^{e-1}\binom{e-1+j}jt^j\]
+is an integer polynomial of degree \(2e-1\). Modulo \(p^e\), it maps
+every integer congruent to \(0\) modulo \(p\) to \(0\) and every integer
+congruent to \(1\) modulo \(p\) to \(1\).
+\end{imported}
+
+This is the modulus-amplifying polynomial of Beigel and
+Tarui~\cite[Section~2.3]{BT94}.
+

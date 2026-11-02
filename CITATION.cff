@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use this Lean proof, please cite the paper it formalizes."
+title: "Near-Cubic Gate and Near-Quartic Wire Lower Bounds for SYM∘THR Circuits: Lean formalization"
+type: software
+version: "1.0"
+date-released: "2026-11-02"
+authors:
+  - family-names: Nag
+    given-names: Dev
+    orcid: "https://orcid.org/0009-0006-7304-8082"
+repository-code: "https://github.com/devnag/wire4_gate3"
+license: Apache-2.0
+preferred-citation:
+  type: unpublished
+  title: "Near-Cubic Gate and Near-Quartic Wire Lower Bounds for SYM∘THR Circuits"
+  authors:
+    - family-names: Nag
+      given-names: Dev
+      orcid: "https://orcid.org/0009-0006-7304-8082"
+  year: 2026
+  month: 11
+  notes: "November 2, 2026. The LaTeX source in paper/paper.tex is this version; the correspondence of the joint theorem with the Lean statement and the six published statements are documented in SourceMapping/."

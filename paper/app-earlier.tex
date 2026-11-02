@@ -1,0 +1,3242 @@
+\section{Proofs of statements from earlier work}\label[appendix]{app:earlier}
+The following proofs make the supporting interfaces self-contained.
+Citations identify the origin of an argument, rather than an assumed
+result. The published foundations are those of
+\cref{par:five-inputs}; standard field, probability, and arithmetic
+facts are used in their usual published forms. In the reproduced
+machine constructions, local exponents named \(G\) denote the
+general-circuit exponent written \(G^\star\) in \cref{app:transfer};
+other variables are local to their stated interfaces.
+
+
+\subsection{The product-star partition}
+\label{earlier:imp:partition}
+This is \cite[Lemma~A.1]{Nag72}; the proof is reproduced with notation adapted.
+
+\begin{proof}
+Use $rb$ coordinates in $r$ blocks, leaving the others unchanged.
+Let $H$ be the $s\times b$ matrix whose columns are the nonzero vectors
+of $\F_2^s$. Its rank is $s$, so its kernel $\mathcal C$ has
+$2^{b-s}$ elements. Every $x\in\F_2^b$ has exactly one representation
+$x=c+e$, with $c\in\mathcal C$ and
+$e\in\{0,e_1,\ldots,e_b\}$: the syndrome $Hx$ uniquely specifies $e$.
+The same assertion holds with centers in any fixed coset of $\mathcal C$.
+Use all $2^s$ cosets in each block. This gives $2^{rs}$ partitions,
+and the displayed cardinalities follow by multiplication, including the
+unblocked coordinates as center coordinates.
+
+A uniform coset followed by a uniform center is uniform on a block.
+Choose all errors independently of both. This proves the averaging
+claim. Assign $r/2$ whole blocks to each side. Each contributes exactly
+$b-s$ free center bits, so the two blocked parts have equal dimension.
+Split the remaining $n-rb$ coordinates as evenly as possible. A fixed
+linear basis of each code gives polynomial-time encoding and decoding.
+Finally $b+1> (n/r+1)/2$, hence $b+1=\Theta(n/r)$.
+\end{proof}
+
+\subsection{Range of the four-corner difference}
+\label{earlier:imp:range}
+This is \cite[Lemma~A.2]{Nag72}; the proof is reproduced with notation adapted.
+
+\begin{proof}
+The underlying real scores at the corners have the form
+$a,a+\ell,a+t,a+\ell+t$: the left and right error supports are
+disjoint. Their opposite diagonal sums agree. A difference of $2$
+would require the two positively signed threshold values in
+the defining four-corner difference to be one and the other two to be zero. Their score
+sums would then be respectively at least and strictly below twice the
+threshold, a contradiction. The case $-2$ is identical with the
+diagonals reversed. \end{proof}
+
+\subsection{The influence estimate}
+This elementary argument is reproduced from \cite[Lemma~A.3]{Nag72}.
+
+\begin{lemma}[A threshold's total influence]
+\label{earlier:star-influence}
+If a threshold depends on $f$ input coordinates, then
+$\sum_i\Inf_i(T)\le\sqrt f$ under the uniform cube distribution.
+\end{lemma}
+\begin{proof}
+Complement coordinates of negative weight to make the function monotone.
+These complements preserve every influence. Use spin variables $X_i$
+and the spin-valued output $g=2T-1$. For a monotone function,
+conditioning on all coordinates except $i$ shows
+$\E[g(X)X_i]=\Inf_i(T)$: the conditional expectation is one exactly
+when coordinate $i$ is pivotal and zero otherwise. Therefore
+\[
+\sum_i\Inf_i(T)=\E\!\left[g(X)\sum_{i\in\supp T}X_i\right]
+\le (\E g^2)^{1/2}
+     \left(\E\left(\sum_{i\in\supp T}X_i\right)^2\right)^{1/2}
+=\sqrt f.
+\]
+This elementary consequence of unateness is the only influence bound
+needed below.
+\end{proof}
+
+\subsection{The mixed-dependence population bound}
+\label{earlier:imp:population}
+This is \cite[Theorem~A.4]{Nag72}; the proof is reproduced with notation adapted.
+
+Write $I_L(T)=\sum_{i\text{ on the left}}\Inf_i(T)$ and let $f_R$
+be the right support size. The estimate proved below is
+\[
+\Pr[\Delta_T\ne0]\le
+\frac{2I_L(T)}{b+1}\min\{1,f_R/(b+1)\}
+\le\frac{2f}{(b+1)^{3/2}}
+\le6\frac{r^{3/2}f}{n^{3/2}}.
+\]
+\begin{proof}
+If $v$ misses the support, the mixed difference is zero. Otherwise,
+$\Delta_T\ne0$ requires at least one of the left paths from $c$ to
+$c+u$, or from $c+v$ to $c+v+u$, to cross a pivotal edge. Order the
+selected left coordinates canonically. After fixing both errors, every
+intermediate vertex is a fixed translate of the uniform ambient center,
+and so is uniform. The union bound on the two paths is
+$2\sum_{i\text{ selected on left}}\Inf_i(T)$.
+
+The errors on the two sides are independent. Each left coordinate is
+selected with probability $1/(b+1)$, and a union bound on the right
+support gives $\Pr[v\text{ hits support}]\le
+\min\{1,f_R/(b+1)\}$. Averaging the path bound proves the first
+inequality. Apply \cref{earlier:star-influence} and
+$\min\{1,t\}\le\sqrt t$ with $t=f/(b+1)$ for the second.
+The last follows from \cref{imp:partition}. Sum over bottom gates;
+their support sizes sum to at most the wire count.
+\end{proof}
+
+\subsection{A sharp disjoint exact-child decomposition}
+\label{earlier:imp:disjoint}
+This is \cite[Lemma~C.2]{Nag72}, whose exact-child construction is \cite[Lemma~A.4]{NagCubic}; the proof is reproduced with notation adapted.
+
+\begin{proof} Put \(a_i=|w_i|\), let \(z_i=x_i\) when \(w_i\ge0\) and
+\(z_i=1-x_i\) when \(w_i<0\), and set
+
+\[
+A_- = \sum_{i:w_i<0}a_i,
+\qquad
+T'=T+A_-.
+\]
+
+The identity
+
+\[
+\sum_iw_ix_i=\sum_i a_i z_i-A_-
+\]
+
+reduces the gate to \(\mathbf1[\sum_i a_i z_i>T']\). If \(T'<0\), use
+the single always-true equation \(0=0\); if \(T'\ge\sum_i a_i\), use the
+single always-false equation \(0=1\). Hence assume
+\(0\le T'<\sum_i a_i\). Let \(L\) be the least positive integer for
+which \(T',a_1,\ldots,a_f\le2^L-1\). Then \(L\le\ell\), and write
+
+\[
+a_i=\sum_{b=1}^L2^{b-1}a_{i,b},
+\qquad a_{i,b}\in\{0,1\}.
+\]
+
+For \((a,b)\in[f]\times[L]\), define the partial score
+
+\[
+P_{a,b}(z)
+={}
+\sum_{i=1}^f z_i
+\left(
+\sum_{j>b}2^{j-1}a_{i,j}
+{}+{}
+\mathbf1[i\ge a]\,2^{b-1}a_{i,b}
+\right).
+\]
+
+Prepend the explicit sentinel \(0\), and then order these scores as
+
+\[
+P_{f,L},P_{f-1,L},\ldots,P_{1,L},
+P_{f,L-1},\ldots,P_{1,1}.
+\]
+
+The sequence is nondecreasing and ends at \(\sum_i a_i z_i\). Let
+\(P^-_{a,b}\) denote the entry immediately before \(P_{a,b}\), with the
+prepended sentinel used at the first position. Directly from the
+definition,
+
+\[
+P_{a,b}-P^-_{a,b}=2^{b-1}a_{a,b}z_a.
+\]
+
+Consequently, on every accepting input there is a unique first pair
+\((a,b)\) whose partial score exceeds \(T'\). At that pair
+\(P^-_{a,b}\le T'<P_{a,b}\), so its step is nonzero and hence
+\(a_{a,b}=z_a=1\). Write
+
+\[
+T'=2^{b-1}Q_b+R_b,
+\qquad
+0\le R_b<2^{b-1},
+\qquad
+Q_b\ge0.
+\]
+
+Both \(P_{a,b}\) and \(P^-_{a,b}=P_{a,b}-2^{b-1}\) are multiples of
+\(2^{b-1}\). Therefore the two inequalities \(P^-_{a,b}\le T'<P_{a,b}\)
+hold if and only if \(P_{a,b}=2^{b-1}(Q_b+1)\). Thus \((a,b)\) is the
+first crossing if and only if
+
+\[
+a_{a,b}=1,
+\qquad z_a=1,
+\qquad
+P_{a,b}(z)=2^{b-1}(Q_b+1).
+\]
+
+For a zero bit \(a_{a,b}\) omit the child. For a one bit use the single
+exact equation
+
+\[
+2P_{a,b}(z)+z_a=2^b(Q_b+1)+1.
+\]
+
+Parity in the child equation forces \(z_a=1\), after which the equation is
+precisely the crossing conditions. Thus each accepting input satisfies its unique
+first-crossing child and every rejecting input satisfies none: the OR is
+disjoint.
+
+There are at most \(fL\) nonconstant children. A coefficient on the left
+of the child equation is at most \(2(2^L-1)+1=2^{L+1}-1\). Since
+\(Q_b\le2^{L-b+1}-1\), its right-hand side is at most \(2^{L+1}+1\).
+Substitution of \(z_i=1-x_i\) negates the corresponding coefficient and
+subtracts it from the target, giving coefficients of magnitude at most \((f+2)2^{\ell+1}\), hence the \(O(\ell+\log(f+2))\) bits of \cref{imp:disjoint}. Finally, in the nonconstant case
+\(T'<\sum_{i=1}^f a_i\le fB_0'\), so \(L\le\ell\); all loops and
+arithmetic are polynomial in the displayed output size. \end{proof}
+
+\subsection{Separated pullback through the center coordinates}
+\label{earlier:imp:pullback}
+This is \cite[Lemma~C.3]{Nag72}; the proof is reproduced with notation adapted.
+
+\begin{proof}
+Write an original child as $c_j+\sum_i d_{j,i}x_i=0$.  Put its constant and the terms whose coordinate depends on $z_{\rm L}$ into $a_j(z_{\rm L})$, and the remaining terms into $b_j(z_{\rm R})$.  Evaluating at most $n$ coordinate
+functions and adding polynomial-bit integers takes polynomial time and
+increases bit length by at most $O(\log n)$.  The identity and disjointness
+hold for every original Boolean input, so substitution preserves both.
+
+\end{proof}
+In the product-star parametrization, keep each entire code block on one
+column side.  Each coordinate of its center, including the subsequent
+exclusive-or with a fixed error row, then depends on that column side
+alone.  \Cref{imp:pullback} applies even though a center bit may be a
+parity of many message bits.  It does \emph{not} assert that a real
+threshold remains a real threshold under a linear map over
+$\mathbb F_2$.  
+
+
+
+\subsection{Stacking equations}
+\label{earlier:imp:stack}
+This is \cite[Lemma~C.6]{Nag72}; the proof is reproduced with notation adapted.
+
+\begin{proof}
+The forward implication is immediate.  Otherwise choose the largest $j$
+with $E_j(z)\ne0$.  Its contribution has magnitude at least $H^{j-1}$,
+whereas all lower contributions have total magnitude at most
+$V(H^{j-1}-1)/(H-1)<H^{j-1}$.  Cancellation is impossible.
+Sum the left half-scores and the right half-scores separately with the
+same powers of $H$.  Since $H=2V+2$, the largest power has
+$O(t\log(V+2))$ bits, proving the bounds.  For the empty conjunction,
+use the equation $0=0$.
+\end{proof}
+
+\paragraph{The published multiplication input.}
+\begin{imported}[Williams]\label{earlier:rectangular-input}
+There is one deterministic multitape Turing machine that, for all
+sufficiently large \(N\), multiplies over the integers any two
+\(0\)-\(1\) matrices of dimensions \(N\times\ceil{N^{0.1}}\) and
+\(\ceil{N^{0.1}}\times N\) in \(N^2\poly(\log N)\) steps.
+\end{imported}
+This is \cite[Corollary~4.4 and Appendix~C]{WilACC14}.
+
+\subsection{Signed rectangular multiplication}
+This is \cite[Lemma~C.4]{Nag72}; the proof is reproduced with notation adapted.
+
+\begin{lemma}[Signed-by-Boolean multiplication]
+\label{earlier:alg-rectangular}
+Fix $C$.  Suppose $d\le\lceil U^{0.1}\rceil$,
+$A\in\mathbb Z^{U\times d}$, and $B\in\{0,1\}^{d\times U}$.
+If the entries of $A$ have at most $(\log_2(U+2))^C$ bits, then the exact
+product $AB$ takes $U^2\poly(\log U)$ bit operations.
+\end{lemma}
+
+\begin{proof}
+Let $b$ bound the magnitude bit length, and write
+$A=\sum_{t=0}^{b-1}2^t(A_t^+-A_t^-)$, using separate Boolean magnitude
+planes for positive and negative entries.  Apply \cref{earlier:rectangular-input} to
+the $2b$ products $A_t^\pm B$, padding the middle dimension with zeros.
+Their entries lie in $[0,d]$, so signed recombination uses
+$O(b+\log(d+1))$ bits per answer and the asserted total time.  This is
+the binary-slicing reduction of \cite[Lemma~B.2]{NagCubic}.
+\end{proof}
+
+\subsection{The separated exact printer}
+\label{earlier:imp:printer}
+This is \cite[Theorem~C.5]{Nag72}; the proof is reproduced with notation adapted.
+
+\begin{proof}
+This is the weighted-dominance proof of
+\cite[Theorem~B.3]{NagCubic}, with arbitrary evaluable half-scores in
+place of linear half-scores.  We give the reduction to verify that this is
+the only property of linearity it uses.  Replace an equality by the two
+successor cuts
+\[
+ \ind[E_i=0]=\ind[E_i\ge0]-\ind[E_i\ge1].
+\]
+For even $n_{\mathrm{out}}$, put $U=2^{n_{\mathrm{out}}/2}$.  Enumerate the half-scores of the resulting
+$m\le2s$ cuts to express the required table as
+\[
+ P[a,b]=\sum_{j=1}^m\omega_j\ind[A[a,j]\le B[j,b]].
+\]
+This takes $Um\poly(n)$ time.  For all sufficiently large $n_{\mathrm{out}}$,
+$m\le2U^{0.02}\le U^{0.049}$.  Pad the gate dimension to
+$\lceil U^{0.049}\rceil$ using zero coefficients.
+
+For each $j$, sort the $2U$ labeled entries in its $A$ column and $B$
+row, putting every $A$ entry before every $B$ entry at an equal numerical
+value.  Thus a weak comparison is true exactly when the $A$ rank is
+earlier.  Partition the ordered list into consecutive buckets of at most
+$\lceil U^{0.951}\rceil$ entries.  For each pair $(a,j)$, inspect the
+$B$ entries in the same bucket, and add $\omega_j$ precisely when their
+ranks are ordered correctly.  There are $O(U^2)$ such inspections.
+
+For the remaining comparisons, form
+\[
+ A'[a,(j,h)]=\omega_j\ind[A[a,j]\text{ is in bucket }h],
+ \qquad
+ B'[(j,h),b]=\ind[B[j,b]\text{ is in a later bucket than }h].
+\]
+The common dimension is $O(U^{0.098})$, hence at most
+$\lceil U^{0.1}\rceil$ eventually.  \cref{earlier:alg-rectangular}
+computes $A'B'$ in $U^2\poly(n)$ bit operations.  Its entries are exactly
+the cross-bucket contributions.  Add the already computed same-bucket
+contributions.  All sorting, table construction, and additions fit the
+same bound.  Coefficient and output lengths remain polynomial because
+each output is a sum of at most $2s$ polynomial-bit integers.
+
+For odd $n_{\mathrm{out}}$, add one ignored bit to the smaller half, run the even case,
+and retain its zero slice.  This multiplies time by at most two.
+The finitely many sizes below the onset of \cref{earlier:rectangular-input} can be treated directly.
+At no point was a half-score required to be linear in its argument.
+\end{proof}
+
+\subsection{A short seed and exact conditional expectations}
+\label{earlier:imp:seed}
+This is \cite[Lemma~F.2]{Nag72}; the proof is reproduced with notation adapted.
+
+\begin{proof}
+Use the standard polynomial-evaluation construction of limited
+independence, in the universal-hashing tradition of
+Carter--Wegman~\cite{CarterWegman}; its needed properties are verified
+here. Take $\ell\ge\max\{k,\lceil\log_2(Q+1)\rceil\}$ and a field
+$\F_{2^\ell}$. Label the $Q$ samples by distinct field elements.
+Evaluate a uniformly random polynomial of degree $2h-1$ at those labels
+and project each value to $k$ binary coordinates. Evaluations at any
+$2h$ distinct labels are independent uniform field elements, so the
+projected positions are $2h$-wise independent and uniform on $[N]^2$.
+The seed consists of $2h\ell$ binary coefficient bits. A defining
+irreducible polynomial and the arithmetic can be found and implemented
+in $2^{O(\ell)}$ elementary preprocessing time, which is allowed below;
+no randomness in field construction is needed.
+
+For a fixed prefix, every assertion that a sample lies at a specified
+position is a system of binary linear equations in the remaining seed
+bits. A product of such indicators is their conjunction. Gaussian
+elimination gives conditional probability zero if it is inconsistent,
+and $2^{-a}$ if its remaining rank is $a$. The denominator divides
+$2^S$. The trace expansion is finite, so these probabilities compute
+all conditional coefficients exactly. Repeated sample labels simply
+repeat or augment the same system.
+
+The averaging identity
+is the ordinary partition of the remaining uniform seed space into its
+two equally sized children. 
+\end{proof}
+
+\subsection{Recovering distributions from modular counts}\label{earlier:g:sec:windows}\label{earlier:gate-proof-group}\label{earlier:gate-window}
+
+This reproduces \cite[Section~4]{NagCG}, with notation adapted. The counter of \cref{sec:printing} will supply exact residue counts of
+integer scores. Residues must determine a \emph{distribution}, not just
+a single integer. For example, knowing how often a score is even does not
+identify which even scores occurred. Our reconstruction lemmas apply
+to arbitrary rational-valued functions; positivity is not required.
+This permits a clean uniqueness proof by subtracting two candidate
+distributions.
+
+Let \(\cP\) be a nonempty finite set of primes and put
+\[
+ D'=1+\sum_{p\in\cP}(p-1).
+\]
+For a finitely supported function \(F:\Z^d\to\Q\), define its
+modular push-forward by
+\[
+ F_p(\rho)=\sum_{u\equiv\rho\pmod p}F(u),
+ \qquad\rho\in(\Z/p\Z)^d.
+\]
+Thus \(F_p\) records the total mass of each residue class.
+
+\subsection{One score: a roots-of-unity argument}
+
+\begin{lemma}\label{earlier:g:lem:one-window}
+If \(F:\Z\to\Q\) is supported on at most \(D'\) consecutive
+integers and \(F_p=0\) for every \(p\in\cP\), then \(F=0\).
+\end{lemma}
+\begin{proof}
+Shift the support to \(\{0,\ldots,D'-1\}\) and form
+\(f(t)=\sum_uF(u)t^u\). For every \(p\)-th root of unity \(\zeta\),
+\[
+ f(\zeta)=\sum_{\rho=0}^{p-1}F_p(\rho)\zeta^\rho=0.
+\]
+Distinct primes' root sets intersect only at one. Their union therefore
+contains \(D'\) distinct roots. A polynomial of degree below \(D'\)
+with this many roots is zero.
+\end{proof}
+
+\subsection{Two scores: short projections and binomial factors}
+
+Let \(\varphi\) be Euler's totient function and set
+\(S(q)=\sum_{m=1}^q m\varphi(m)\), with \(S(0)=0\).
+Hajdu and Tijdeman's discrete-tomography method~\cite[Theorem~1 and
+its preliminary divisibility lemma]{HT01} turns zero line sums into
+binomial divisibility. We prove this over \(\Q\) and count the usable
+directions.
+
+\begin{lemma}\label{earlier:g:lem:two-window}
+Let \(L\ge2\) and
+\(q=\floor{(D'-1)/(L-1)}\). If \(S(q)\ge L\), then a
+rational-valued function supported on a given box with both sides at
+most \(L\) is uniquely determined, among functions supported on that
+box, by its push-forwards \(F_p\), \(p\in\cP\).
+\end{lemma}
+
+\emph{Idea of proof.} Take the difference of two functions with the
+same data. Each of its projections along a short primitive direction is
+a one-score function with zero data, hence zero by the one-score lemma.
+Each vanishing projection makes an irreducible binomial divide the
+generating polynomial. These binomials have more total degree in one
+variable than the polynomial has, so the difference is zero.
+
+\begin{proof}
+Subtract two functions with the same data and translate their common
+box to \(\{0,\ldots,L-1\}^2\). It suffices to show that a function
+with zero data is zero. Write its generating polynomial as
+\[
+ f(u,v)=\sum_{a,b=0}^{L-1}F(a,b)u^av^b.
+\]
+
+\emph{First, every short primitive projection is zero.}
+A vector \((\alpha,\beta)\ne(0,0)\) is primitive if
+\(\gcd(\abs\alpha,\abs\beta)=1\). If
+\(\abs\alpha+\abs\beta\le q\), then
+\[
+ G(c)=\sum_{\alpha a+\beta b=c}F(a,b)
+\]
+is supported on an interval containing at most
+\((L-1)q+1\le D'\) integers. Its residue data are zero, since
+projection commutes with reduction modulo \(p\). By
+\cref{earlier:g:lem:one-window}, \(G=0\). Equivalently,
+\(f(t^\alpha,t^\beta)=0\) in \(\Q[t,t^{-1}]\).
+
+\emph{Second, each vanishing projection forces a distinct prime factor.}
+Choose one vector from each pair \(\pm(\alpha,\beta)\), normalized so
+that \(\alpha\ge0\), and \(\beta=1\) if \(\alpha=0\).
+The kernel of the substitution \(u\mapsto t^\alpha,v\mapsto t^\beta\)
+on \(\Q[u,v]\) is generated by the binomial
+\[
+ B_{\alpha,\beta}=
+ \begin{cases}
+ u^\beta-v^\alpha,&\beta\ge0,\\
+ u^{\abs\beta}v^\alpha-1,&\beta<0.
+ \end{cases}
+\]
+In the Laurent polynomial ring,
+choose integers \(i,j\) with \(\alpha i+\beta j=1\).
+The monomials \(\omega_1=u^iv^j\) and \(\omega_2=u^\beta v^{-\alpha}\)
+form a coordinate system, because their exponent matrix has
+determinant \(-1\). Substitution sends \(\omega_1\) to \(t\) and
+\(\omega_2\) to one, so its kernel there is \((\omega_2-1)\). Up to a Laurent monomial unit, this is
+the displayed binomial. That binomial has no factor \(u\) or \(v\).
+It is irreducible in \(\Q[u,v]\): a factorization gives a Laurent
+unit factor, since \(\omega_2-1\) is irreducible in the Laurent ring,
+hence a monomial, which must be constant.
+Clearing Laurent denominators and using unique factorization gives
+the asserted polynomial kernel.
+
+Nonparallel primitive directions give nonassociate binomials:
+substitution in the other direction gives two powers of \(t\)
+whose exponents differ by \(\pm(\alpha\beta'-\beta\alpha')\ne0\).
+By unique factorization, the product of these binomials divides \(f\).
+
+\emph{Finally, there are too many factors for a nonzero \(f\).}
+The sum of their degrees in \(u\) is
+\(\sum\abs\beta\), over primitive directions modulo sign of norm
+at most \(q\). At norm one, the horizontal and vertical directions
+contribute one in total. At norm \(m\ge2\), the directions contribute
+\[
+ 2\sum_{\substack{1\le a<m\\\gcd(a,m)=1}}(m-a)
+ =m\varphi(m),
+\]
+using the symmetry \(a\leftrightarrow m-a\). Thus the product has
+\(u\)-degree \(S(q)\ge L\), whereas \(\deg_uf\le L-1\).
+This is impossible unless \(f=0\).
+\end{proof}
+
+For a concrete picture, the projection \((\alpha,\beta)=(1,1)\)
+adds masses along diagonals \(a+b=c\). If all those sums vanish,
+\(u-v\) divides \(f\). The projection \((1,-1)\) instead forces
+\(uv-1\). The lemma uses many such independent factors, not just
+the coordinate projections.
+
+\begin{lemma}\label{earlier:g:lem:window-size}
+For every integer \(q\ge1\),
+\[
+ S(q)\ge\frac{2q^3}{\pi^2}-q^2(4/3+\ln q).
+\]
+Call \(L\ge2\) admissible if \(S(\floor{(D'-1)/(L-1)})\ge L\), as in
+\cref{earlier:g:lem:two-window}. Let \(L_2\) be the largest admissible \(L\),
+or one if none exists. Then
+\(L_2=\Theta(D'^{3/4})\) as \(D'\to\infty\).
+In particular \(L_2\ge\floor{(3/5)D'^{3/4}}\) for all sufficiently
+large \(D'\).
+\end{lemma}
+The proof is a standard totient-summation calculation, given in
+\cref{earlier:g:app:window-size}.
+
+Uniqueness also gives an algorithm: introduce one rational unknown
+per box point and one equation per residue class. The matrix entries
+are zero or one. Exact Gaussian elimination finds the unique
+distribution whenever the data come from a function on the box.
+An algorithm may also detect inconsistency and report uncertainty.
+A box with one point is determined by its total mass, so the
+singleton convention in the definition of \(L_2\) is also sound.
+
+\subsection{How many useful primes are available?}
+
+For an integer \(P\ge3\), let \(\cP\) consist of all primes in
+\((P/2,P]\). Only the order of magnitude of this set is needed.
+
+\begin{lemma}\label{earlier:g:lem:primes}
+For this prime set, as \(P\to\infty\),
+\[
+ D'=\Theta(P^2/\ln P),\qquad
+ L_2=\Theta\!\left(P^{3/2}/(\ln P)^{3/4}\right).
+\]
+\end{lemma}
+\begin{proof}
+By Chebyshev-type bounds (for instance Erd\H{o}s' proof of
+Bertrand's postulate~\cite{Erdos32}), the interval \((P/2,P]\)
+contains \(\Theta(P/\ln P)\) primes.
+Each such prime contributes
+more than \(P/2-1\) and at most \(P\) to \(D'\), so
+\(D'=\Theta(P^2/\ln P)\). Apply \cref{earlier:g:lem:window-size}.
+\end{proof}
+
+\begin{remark}[The limitation of full-box residue reconstruction]\label{earlier:g:rem:rank}
+For distributions on \(\{0,\ldots,L-1\}^d\), the residue map has
+rank at most \(1+\sum_{p\in\cP}(p^d-1)\): all primes report the
+same total mass. Injectivity therefore requires
+\(L^d\le1+\sum_p(p^d-1)\).
+For two scores this yields
+\(L=O(P^{3/2}/\sqrt{\ln P})\). Our box bound has the same power
+of \(P\), with an additional factor \((\ln P)^{1/4}\) loss.
+This is a restriction on recovering \emph{arbitrary} box-supported
+distributions from these data, not an impossibility theorem for all
+circuit-analysis methods or for more structured distributions.
+\end{remark}
+
+
+
+\subsection{Totient sums and the two-score window}\label{earlier:g:app:window-size}\label{earlier:gate-window-size}
+\begin{proof}[Proof of \cref{earlier:g:lem:window-size}]
+This reproduces \cite[Appendix~A]{NagCG}, with notation adapted. These are standard totient-summation calculations; see
+Apostol~\cite[Chapters~2--3 and~11]{Apostol76} for the M\"obius
+identities, arithmetic averages, and Euler products.
+Write \(\mu\) for the M\"obius function. Since
+\(m\varphi(m)=\sum_{d\mid m}\mu(d)m^2/d\),
+\[
+ S(q)=\sum_{d\le q}\mu(d)d\sum_{e\le q/d}e^2.
+\]
+The sum-of-squares formula gives
+\(\abs{\sum_{e\le y}e^2-y^3/3}\le y^2\) for \(y\ge1\).
+Therefore
+\[
+ S(q)\ge\frac{q^3}{3}\sum_{d\le q}\frac{\mu(d)}{d^2}
+          -q^2\sum_{d\le q}\frac1d.
+\]
+Use \(\sum_{d\ge1}\mu(d)/d^2=6/\pi^2\), a tail of magnitude at most
+\(1/q\), and \(\sum_{d\le q}1/d\le1+\ln q\).
+For \(L=\floor{cD'^{3/4}}\), the associated \(q\) is
+\((1/c+o(1))D'^{1/4}\). Thus \(S(q)\ge L\) eventually whenever
+\(c^4<2/\pi^2\); this includes \(c=3/5\).
+Conversely \(S(q)\le\sum_{m\le q}m^2=O(q^3)\), and
+\(q\le(D'-1)/(L-1)\), so every admissible \(L\) is
+\(O(D'^{3/4})\).
+\end{proof}
+
+
+
+
+\subsection{Nested subsampling produces short integer digits}\label{earlier:g:sec:chains}\label{earlier:gate-chain}
+
+This reproduces \cite[Section~5]{NagCG}, with notation adapted. We now turn a potentially large live sum into short forms that can
+be identified from one residue. Sampling at a single very small rate
+would make the first sampled sum short, but leave a poor estimate of
+the original sum. The chain increases the rate while keeping each
+new correction short. Integer rate ratios preserve exact arithmetic.
+
+\begin{lemma}[Choice of rates]\label{earlier:g:lem:chain}
+Let \(T>0\), let \(h\) be an integer with \(h\ge64T\), and let
+\(\ell_0\ge0\). Define
+\[
+ \bar\ell=\max\{\ell_0,h^2/(256T)\},\quad
+ \pi^*=\frac{h^2}{8T\bar\ell},\quad
+ s(\pi)=\sqrt{2T\pi\bar\ell}+\frac{2T}{3},
+\]
+\[
+ M_1=\ceil{4\bar\ell/h},\qquad \pi_1=1/M_1.
+\]
+While \(x_j=\pi_j/\pi^*<2^{-8}\), set
+\[
+ a_j=\floor{1/(4\sqrt{x_j})},\qquad \pi_{j+1}=a_j\pi_j.
+\]
+Stop at the first index \(J\) with \(x_J\ge2^{-8}\). Then
+\begin{enumerate}[label=(\roman*)]
+\item \(a_j\ge4\), all rates lie in \((0,1]\), and
+\(\pi_j=\prod_{i<j}a_i/M_1\).
+\item \(\pi_1\bar\ell+s(\pi_1)\le h/2\), and
+\(s(\pi_{j+1})+a_js(\pi_j)\le h/2\) for \(j<J\).
+\item \(J\le\ceil{\lgx\lgx(h/T)}+1\).
+\item \(s(\pi_J)/\pi_J\le86T\bar\ell/h\).
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+Since \(h\ge64T\), the second entry of the maximum gives
+\(\bar\ell\ge h^2/(256T)\ge h/4\).
+Thus \(4\bar\ell/h\le M_1\le8\bar\ell/h\), and
+\[
+ T/h\le x_1\le2T/h\le1/32.
+\]
+Write \(\tau(\pi)=\sqrt{2T\pi\bar\ell}
+=(h/2)\sqrt{\pi/\pi^*}\).
+For the first digit,
+\(\pi_1\bar\ell\le h/4\),
+\(\tau(\pi_1)\le\sqrt{Th/2}\le h/8\), and \(2T/3\le h/96\).
+
+During a step, \(a_j\ge4\),
+\(a_j\sqrt{x_j}\le1/4\), and
+\(a_jx_j\le\sqrt{x_j}/4\), so \(\sqrt{a_jx_j}\le x_j^{1/4}/2<1/8\). Consequently
+\[
+ \tau(\pi_{j+1})+a_j\tau(\pi_j)
+ =\frac h2\bigl(\sqrt{a_jx_j}+a_j\sqrt{x_j}\bigr)
+ \le\frac{3h}{16}.
+\]
+The \(x_j\) increase, so
+\(a_j\le\sqrt{h/T}/4\), and
+\[
+ (1+a_j)\frac{2T}{3}
+ \le h/96+\sqrt{hT}/6\le h/32.
+\]
+These bounds prove (ii).
+Every newly produced \(x_{j+1}\) is below \(1/64\), while
+\(x_1\le1/32\). Also \(\pi^*\le32\), so all rates are at most one.
+
+Since \(1/(4\sqrt{x_j})>4\) during a step, flooring loses at most
+a factor two, and
+\(x_{j+1}\ge\sqrt{x_j}/8\).
+For \(y_j=\lgx(1/x_j)\), this means
+\(y_{j+1}-6\le(y_j-6)/2\).
+If the chain has not stopped earlier, iteration gives
+\(y_j\le6+2^{-(j-1)}y_1\), with
+\(y_1\le\lgx(h/T)\). A step at index \(j\) requires \(y_j>8\), hence
+\(2^{j-1}<y_1/2\) and \(j<\lgx y_1\). Applied to \(j=J-1\) when
+\(J\ge2\), this gives \(J<\lgx\lgx(h/T)+1\), which proves (iii).
+At the stopping index, \(x_J\ge2^{-8}\), so
+\(\pi_J\ge h^2/(2048T\bar\ell)\); with \(T/h\le1/64\) this gives
+\[
+ \frac{s(\pi_J)}{\pi_J}
+ \le\frac{64T\bar\ell}{h}
+       +\frac{1366T^2\bar\ell}{h^2}
+ \le\frac{86T\bar\ell}{h}.
+\]
+This proves (iv) and completes the argument.
+\end{proof}
+
+Expand a top sum \(X\) into signed unit copies \(\sigma_tg_{i(t)}\).
+Choose independent uniform \(u_t\in[0,1]\) and define
+\[
+ K_j=\sum_t\ind[u_t\le\pi_j]\sigma_tg_{i(t)},\qquad
+ E_0=K_1,\quad E_j=K_{j+1}-a_jK_j\ (1\le j<J).
+\]
+Let
+\[
+ A=\prod_{i=1}^{J-1}a_i,\qquad A_0=A,\qquad
+ A_j=\prod_{i=j+1}^{J-1}a_i\quad(1\le j<J).
+\]
+The identities
+\begin{equation}\label{earlier:g:eq:telescope}
+ K_J=\sum_{j=0}^{J-1}A_jE_j,\qquad \pi_J=A/M_1
+\end{equation}
+follow by repeatedly substituting \(K_{j+1}=a_jK_j+E_j\).
+The first identity holds for \emph{any} proposed coefficient vectors
+\(K_1,\ldots,K_J\), whether or not they arose from nested sampling.
+\Cref{prop:sound} uses this.
+
+
+
+\subsection{The Beigel--Tarui lifting polynomial}
+\label{earlier:gate-amp}
+This reproduces \cite[Lemma~6.6]{NagCG}, with notation adapted.
+
+\begin{lemma}\label{earlier:g:lem:amp}
+For \(e\ge1\), define
+\[
+ \Amp_e(t)=1-(1-t)^e\sum_{j=0}^{e-1}\binom{e-1+j}{j}t^j.
+\]
+This integer polynomial has degree \(2e-1\), with
+\(t^e\mid\Amp_e(t)\) and \((1-t)^e\mid1-\Amp_e(t)\).
+Consequently, modulo \(p^e\), it maps an integer congruent to zero
+modulo \(p\) to zero, and one congruent to one to one.
+\end{lemma}
+This is the modulus-amplifying polynomial of Beigel and
+Tarui~\cite[Section~2.3]{BT94}.
+\begin{proof}
+The power-series identity
+\((1-t)^{-e}=\sum_{j\ge0}\binom{e-1+j}{j}t^j\) shows that truncating
+at degree \(e-1\) leaves an error divisible by \(t^e\).
+Multiplication by \((1-t)^e\) proves the first divisibility assertion.
+The second is immediate from the definition. Both imply the stated
+congruences, including for negative integer arguments.
+\end{proof}
+
+
+
+\subsection{Pointwise proximity and the five-weight gadget}
+\label{earlier:gate-pcpp-gadget}
+This reproduces \cite[Sections~11.1--11.3]{NagCG}, with notation adapted.
+
+\begin{imported}[Pointwise three-query PCPP]\label{earlier:g:imp:three-pcpp}
+There are a rational constant $0<\gamma<1$, a polynomial-time
+computable linear encoding $\operatorname{Enc}$, and a polynomial-time
+transformation taking a Boolean circuit $D$ on $q$ inputs to a
+polynomial-size list of three-literal clauses on variables $Y\cup Z$,
+such that the following hold for every $x\in\{0,1\}^q$ with
+$Y=\operatorname{Enc}(x)$:
+\begin{itemize}
+\item If $D(x)=1$, an auxiliary assignment computable in polynomial
+time satisfies every clause.
+\item If $D(x)=0$, every auxiliary assignment leaves at least a
+$\gamma$ fraction of the clauses false.
+\end{itemize}
+Each systematic coordinate is a parity of input coordinates. The
+number of clauses can be taken to be a power of two.
+\end{imported}
+
+This is the pointwise form of Chen--Williams' perfectly complete
+three-query PCPP~\cite[Lemma~24 and Appendix~A]{CW19}, using their
+linear code and decoder~\cite[Lemma~27]{CW19}, which \cref{earlier:release-interfaces} derives from~\cite[Lemma~26]{CW19}. As in the proof of
+\cite[Theorem~5]{CW19}, here is the reduction to the stated form. Take a fixed proximity radius smaller than the
+code's decoding radius, totalize the decoder by returning an arbitrary
+fixed string on failure, and apply the PCPP to
+$\widetilde D(y)=D(\operatorname{Dec}(y))$. If $D(x)=0$, every word sufficiently
+close to $\operatorname{Enc}(x)$ decodes to $x$, and is therefore
+rejected by $\widetilde D$. Thus $\operatorname{Enc}(x)$ is farther than the
+proximity radius from every accepting input of $\widetilde D$, and proximity
+soundness applies. If $D(x)=1$, perfect completeness and the efficient
+honest-proof procedure of~\cite[Lemma~24]{CW19} apply. The underlying proximity construction
+is due to Ben-Sasson, Goldreich, Harsha, Sudan, and
+Vadhan~\cite{BGHSV06}. In the constant-size clause conversion in
+the proof of \cite[Lemma~24]{CW19}, pad to a power-of-two number of
+clauses with tautologies before selecting a clause uniformly. This
+preserves perfect completeness and changes only the fixed rejection
+constant. Finally choose a smaller rational $\gamma$ if necessary.
+
+For one three-literal clause, let $x_1,x_2,x_3$ be its literal values.
+The classical Garey--Johnson--Stockmeyer gadget~\cite{GJS76}, in
+the form recorded by Chen--Williams~\cite[Lemma~47]{CW19}, introduces
+a Boolean helper $y$ and uses the ten constraints
+\[
+ x_1,\ x_2,\ x_3,\quad
+ \neg x_1\vee\neg x_2,\
+ \neg x_2\vee\neg x_3,\
+ \neg x_3\vee\neg x_1,\quad
+ y,\quad x_1\vee\neg y,\ x_2\vee\neg y,\ x_3\vee\neg y.
+\]
+If $k=x_1+x_2+x_3$, their total satisfaction score is
+$\operatorname{sat}(x,y)=6+k-\binom{k}{2}+y(k-2)$. We use the penalty
+\begin{align}
+ Q(x_1,x_2,x_3,y)
+ &=7-\operatorname{sat}(x,y)\notag\\
+ &=1-\sum_i x_i+\sum_{i<j}x_ix_j+2y-y\sum_i x_i.
+ \label{earlier:g:eq:gadget-penalty}
+\end{align}
+Its values on Boolean arguments are
+\[
+\begin{array}{c|rrrr}
+ k&0&1&2&3\\ \hline
+ Q(k,0)&1&0&0&1\\
+ Q(k,1)&3&1&0&0
+\end{array}
+\]
+Thus $Q\ge0$, and a false original clause forces $Q\ge1$ for
+either helper. For a true original clause, the choice
+$y^*=x_1x_2x_3$ gives penalty zero.
+
+\begin{lemma}[Weighted stability of the gadget]
+\label{earlier:g:lem:gadget-stability}
+For every true honest triple $x\ne000$, with $y^*=x_1x_2x_3$, and
+every Boolean replacement $x',y'$, we have
+\[
+ Q(x',y')\le\sum_{i=1}^3|x_i-x_i'|+2|y^*-y'|.
+\]
+\end{lemma}
+\begin{proof}
+If $y'=y^*=0$, the honest triple has weight one or two. The only
+nonzero penalties with helper zero occur at weights zero and three,
+each requiring an input change. If $y'=y^*=1$, the honest triple
+is $111$, and the table gives $Q(k',1)\le3-k'$, its Hamming distance
+from that triple. If the helper changes, its weight already pays two.
+The only penalty exceeding two is $Q(0,1)=3$; this also requires at
+least one input change from a true honest triple.
+\end{proof}
+
+The aggregate seven-versus-six score is classical~\cite{GJS76}, and
+Chen--Williams use it in this aggregate form to prove
+\cite[Lemma~25]{CW19}; what is added here is its weighted stability
+under proof-table errors. This estimate uses cancellation within the
+ten-clause score. Applying
+a separate union bound to every clause would discard that cancellation.
+The helper has weight two, and each original coordinate has weight one.
+
+\subsection{A certified upper estimate using pair means}
+
+Writing the two-literal clauses in the XOR basis, as Chen--Williams
+do for two-query predicates~\cite[proof of Theorem~5]{CW19}, the
+identity $ab=(a+b-(a\oplus b))/2$ gives
+\begin{equation}\label{earlier:g:eq:gadget-pair-identity}
+ Q=1+\frac12\left(
+ y-\sum_i x_i-\sum_{i<j}(x_i\oplus x_j)
+                 +\sum_i(x_i\oplus y)\right).
+\end{equation}
+There are ten probability terms, all with coefficient of magnitude
+$1/2$. A literal is a guessed Boolean proof coordinate or its
+complement, or a prescribed systematic parity or its complement. Hence every nonexact
+term is a single-circuit, pair-XOR, or circuit-XOR-raw-parity call.
+Pure parity terms, constants, and repeated-coordinate identities are
+evaluated exactly. No closure of the target class under XOR is used.
+
+For each nonexact term let $(\widehat p,\widehat\kappa)$ be the
+counter's estimate and certified radius, and let $\sigma\in\{-1,1\}$
+be its sign in \cref{earlier:g:eq:gadget-pair-identity}. Substitute
+$\sigma\widehat p+\widehat\kappa$ for the signed probability and
+average the resulting expressions over all gadgets. Call the result
+$U$, and write $\mathbb E Q$ for the exact average of the penalty over
+gadgets and over $x\in\{0,1\}^q$, evaluated on the guessed coordinates.
+Soundness of the intervals gives
+\begin{equation}\label{earlier:g:eq:gadget-upper}
+ U\ge\mathbb E Q\quad\text{for every witness}.
+\end{equation}
+For a useful witness (\cref{prop:complete}) with all radii at most
+$\omega$, it also gives
+\begin{equation}\label{earlier:g:eq:gadget-upper-complete}
+ U\le\mathbb E Q+10\omega.
+\end{equation}
+Indeed a signed probability endpoint loses at most $2\omega$, and
+its coefficient has magnitude $1/2$. Arbitrary witnesses may return
+broader intervals; only the existence of a useful witness asserts the
+small-radius bound.
+
+
+
+\subsection{The succinct source construction}\label{earlier:source-construction}
+This is \cite[Section~11.4]{NagCG}; the construction is reproduced
+with notation adapted. The general-circuit exponent is \({G^\star}\)
+as in \cref{sec:ae-constants}; \(h_{\rm sim}=6\) by
+\cref{lem:ae-wires}. The derived short-PCP interface is
+\cref{imp:transfer-short-pcp}.
+
+For a general circuit $B$ with
+$a\ge\nu$ inputs, let $\mathrm{tt}_N(B)\in\{0,1\}^N$ be the word whose
+$i$th bit is $B(\mathrm{bin}_\nu(i)0^{a-\nu})$, where
+$\mathrm{bin}_\nu(i)$ is the $\nu$-bit binary expansion of $i<N$. Fix a
+self-delimiting binary description of general circuits that lists the
+gates, so that a description of $n$ bits has at most $n$ gates, and
+whose length is polynomial in the numbers of gates and inputs. Fix an integer
+$G'\ge2$, depending only on ${G^\star}$ and on this description format, such
+that for all large $\nu$ every description of a circuit with at most
+$q^{G^\star}$ gates on $q$ inputs has fewer than $\nu^{G'}$ bits. Such a $G'$
+exists: these descriptions have length at most a fixed polynomial in
+$q=O(\nu)$ whose degree depends only on ${G^\star}$ and the format, and any $G'$
+above that degree works. Put
+\[
+ L_\nu=\nu^{G'},
+\]
+and, when the description of $B$ has at most $L_\nu$ bits, let
+$\langle B\rangle_\nu\in\{0,1\}^{L_\nu}$ be that description followed by
+zeros.
+
+\Cref{earlier:g:lem:succinct-verifier} in \cref{earlier:g:app:multitape} gives one
+deterministic multitape verifier $\mathcal V_{{G^\star}}(u,y)$, a nondecreasing
+time bound $T_{{G^\star}}(n)\ge n$ within which $\mathcal V_{{G^\star}}$ halts on every input
+of length $n$ and every witness, and a constant $c_{{G^\star}}$. They satisfy
+$T_{{G^\star}}(L_\nu)=c_{{G^\star}}\Tclk(N)$, and, for every such $B$, some witness of length
+$T_{{G^\star}}(L_\nu)$ makes $\mathcal V_{{G^\star}}$ accept $\langle B\rangle_\nu$ exactly
+when $\mathrm{tt}_N(B)\in L_{\Tclk}$. The only size bound that
+$\mathcal V_{{G^\star}}$ places on $B$ is the length $L_\nu$, which depends on
+$N$ and the fixed $G'$ alone; the weak machine enforces the bound $q^{G^\star}$
+separately. Only three properties of $L_\nu$ are used:
+\begin{itemize}
+\item it is a fixed polynomial in $\nu$;
+\item it has degree at least two;
+\item it eventually exceeds the description length of every circuit
+with at most $q^{G^\star}$ gates on $q$ inputs.
+\end{itemize}
+$L_\nu$ is fixed before $\mathcal V_{{G^\star}}$, and these
+properties hold whatever constants are chosen after it.
+
+We apply \cref{imp:transfer-short-pcp} once, to $\mathcal V_{{G^\star}}$ with the time bound
+$T_{{G^\star}}$, which is computable from the input length in polynomial time, as
+that input requires (\cref{earlier:g:lem:succinct-verifier}(i)). On an input $\langle B\rangle_\nu$ it constructs, in time
+$\poly(L_\nu,\log T_{{G^\star}}(L_\nu))=\nu^{O_{{G^\star},C_{\rm clk}}(1)}$, an oracle circuit
+$C^O_{\langle B\rangle_\nu}$ of size $\nu^{O_{{G^\star},C_{\rm clk}}(1)}$ with
+$\ell_{\rm out}=\lgx\Tclk(N)+O(\log\log\Tclk(N))$ inputs. Pad it to the
+exact native width
+\[
+ q(N)=\lceil\log_2\Tclk(N)\rceil+
+ A_{\rm pad}\lceil\log_2(\log_2\Tclk(N)+2)\rceil+A_{\rm pad},
+\]
+by adding inputs that it ignores, for a sufficiently large fixed integer
+$A_{\rm pad}$, chosen after $C_{\rm clk}$ as at the end of
+\cref{earlier:g:app:multitape} so that $\ell_{\rm out}\le q(N)$. Then
+$q=\Theta(\log N)$ and $2^q/\Tclk(N)=q^{O(1)}$.
+
+
+\paragraph{The outer verifier.}
+The source-circuit test is
+\begin{equation}\label{earlier:g:eq:source-check}
+ B_{\rm src}\bigl(\mathrm{bin}_\nu(i)0^{q-\nu}\bigr)=\zeta_i
+ \qquad\text{for every }i<N,
+\end{equation}
+that is, $\mathrm{tt}_N(B_{\rm src})=\zeta$, and rejects otherwise. It
+constructs $C^O_{\langle B_{\rm src}\rangle_\nu}$, whose number
+$\ell_{\rm out}$ of inputs may depend on $B_{\rm src}$, and guesses a
+general circuit $B_{\rm pf}$ with $q$ inputs and at most $q^{G^\star}$ gates,
+the outer proof oracle, again rejecting malformed descriptions. It
+answers an oracle query $a\in\{0,1\}^{\ell_{\rm out}}$ by
+\[
+ O_{B_{\rm pf}}(a)=B_{\rm pf}\bigl(a0^{q-\ell_{\rm out}}\bigr),
+\]
+the same zero padding as in \eqref{earlier:g:eq:source-check}. Write
+$B=(B_{\rm src},B_{\rm pf})$. Substituting $O_{B_{\rm pf}}$ for every
+oracle gate and negating the output gives the outer verifier
+\[
+ D_B(x)=\neg\,C^{O_{B_{\rm pf}}}_{\langle B_{\rm src}\rangle_\nu}
+ (x_1,\ldots,x_{\ell_{\rm out}}),\qquad x\in\{0,1\}^q,
+\]
+which ignores its last $q-\ell_{\rm out}$ inputs. The negation turns
+the convention of \cref{imp:transfer-short-pcp} into the usual one: $D_B(x)=1$
+means that the outer verifier accepts the random string $x$. Since
+$L_\nu\le q^{G'}$, $D_B$ is a circuit of size $q^{O_{{G^\star},C_{\rm clk}}(1)}$ on $q$
+inputs. The exponent depends on $C_{\rm clk}$ as well, through
+$\mathcal V_{{G^\star}}$; the constants that depend on
+it, beginning with the exponent $d_{{G^\star}}$ below, are chosen after
+$C_{\rm clk}$ (\cref{earlier:g:app:multitape}). Apply \cref{earlier:g:imp:three-pcpp}. Choose a fixed $d_{{G^\star}}$ bounding
+all resulting clause counts and repeat the whole clause list to
+exactly
+\[
+ M=2^{\lceil d_{{G^\star}}\log_2(q+2)\rceil}
+\]
+clauses. If the list is longer than $M$, which happens at only
+finitely many lengths, the machine rejects. The original length divides
+this number. This fixes the eventual table arity independently of the
+guessed pair.
+
+
+\subsection{Multitape readings of the refuter and the succinct verifier}\label{earlier:r:app:multitape}\label{earlier:g:app:multitape}\label{earlier:gate-models}
+
+This is \cite[Appendix~C]{NagCG}; its proof is reproduced here, with notation adapted. The Lean companion derives the refuter separately, through its source adapters; the written argument is not a transcription of that formal proof. This appendix supplies the machine-model facts used by the lower-bound
+transfer (\cref{app:transfer}). The transfer applies \cref{imp:transfer-refuter} and \cref{imp:transfer-short-pcp} to
+multitape machines, the model of \cref{sec:prelim}. The refuter's
+proof in \cite[Section~4]{CLW20}, however, assumes random-access
+machines for simplicity. The appendix has three parts.
+\begin{itemize}
+\item \Cref{earlier:r:lem:multitape-refuter} derives the multitape reading of the
+refuter from the proof in \cite[Section~4]{CLW20}. It imports the
+accepting-time universal simulation of~\cite{SFM78,BGW70}, used with
+genuine input and witness prefixes, and it gives
+the hierarchy language \(L_{\Tclk}\) a multitape verifier
+\(\mathcal D\). \Cref{earlier:r:cor:framed-refuter} then proves the exact framed
+convention of the Lean interface, including at linear clocks.
+\item \Cref{earlier:r:lem:succinct-verifier} constructs the one fixed machine to
+which the short PCP is applied, the succinct hierarchy verifier
+\(\mathcal V_G\). It reads a source input through the short description
+of a circuit and runs \(\mathcal D\) on the described word.
+\Cref{earlier:r:app:short-pcp-proof} proves the short PCP for it.
+\item The paragraph after \cref{earlier:r:lem:succinct-verifier} fixes the order
+in which the constants of the transfer are chosen.
+\end{itemize}
+
+\begin{lemma}[Multitape refuter]\label{earlier:r:lem:multitape-refuter}\label{earlier:g:lem:multitape-refuter}
+\Cref{imp:transfer-refuter} holds with every machine in it, the class
+\(\NTIME\) and the procedure \(R_{\Tclk}\) read for multitape Turing
+machines, with the same quantifier order. The language \(L_{\Tclk}\) has a
+nondeterministic multitape verifier that halts within \(O(\Tclk(N))\)
+steps on every input and every guess.
+\end{lemma}
+
+\emph{Idea of proof.} The diagonal language of Chen, Lyu, and Williams
+runs each enumerated machine through a universal simulation. We use the
+accepting-time simulation of Seiferas, Fischer, and Meyer for multitape
+machines, under an explicit clock of \(O(\Tclk(N))\) steps (Step~1).
+For each admitted machine, every verdict required by the diagonal
+recurrence has a faithful accepting simulation that survives this
+clock at large lengths; other branches may time out. Thus
+\cite[Lemma~4.3]{CLW20} holds for it (Step~2). The rest
+of their proof uses the machine model only through that lemma and
+through SAT-oracle queries, which the Cook--Levin tableau handles for
+multitape machines (Step~3). So their refuter applies verbatim
+(Step~4), and the guess budgets are unchanged (Step~5).
+
+\begin{proof}
+\emph{Conventions.} A nondeterministic multitape machine reads its
+guessed bits from a witness tape and is deterministic once the witness
+is fixed. It guesses at most \(g(N)\) bits when every run on an input of
+length \(N\) reads at most \(g(N)\) witness cells. Fix \(\Tclk\), which is
+computable from \(1^N\) in \(O(\Tclk(N))\) steps, and an enumeration of
+these machines. As in \cite[Section~4.1]{CLW20}, \(V_M(x,T,z)\) is the
+outcome of running \(M\) on \(x\) with witness \(z\) for at most \(T\)
+steps. It is \(\bot\) when the run does not halt within \(T\) steps or
+reads more than \(\abs z\) witness bits. A machine that guesses at most
+\(g(N)\le\abs z\) bits behaves the same with the witness \(z\) and with
+its prefix of length \(g(N)\). So it may equally be given exactly
+\(g(N)\) witness bits. This proof uses the ordinary witness-tape
+convention. \Cref{earlier:r:cor:framed-refuter} treats the framed convention
+directly, without adding preprocessing to the weak machine.
+
+\emph{The universal simulation.} We use the accepted-input time
+definition of~\cite[p.~147]{SFM78}, its tape-reduction Lemma~3
+(pp.~149--150), and its universal-simulation Condition~2 (p.~152).
+Composing the tape reduction with that simulator gives a fixed
+universal nondeterministic acceptor \(U\) that preserves the language
+of each simulated machine \(P\): if \(P\)
+has an accepting computation of length \(t\) on \(u\), then \(U\)
+on its code and \(u\) has one of length at most \(c_P(t+1)\).
+Here \(c_P\) depends only on \(P\); the additive one covers
+initialization and zero-step computations. No halting or time-bound
+hypothesis is imposed on other inputs or branches. The tape reduction
+is due to Book, Greibach, and Wegbreit~\cite{BGW70};
+\cite{SFM78} sketches its construction and states Condition~2 as a
+property of the program coding. Fortnow and Santhanam use the
+linear-time simulation in their hierarchy argument
+\cite[proof of Theorem~7.1]{FS16}.
+
+\emph{Shared prefix simulation.} First prepare the actual input and
+supplied witness tapes, with their prescribed boundaries and heads at
+zero, in a uniform \(c_0N\) setup independent of \(M\). For each
+simulation the hierarchy verifier guesses a positive length \(r\) in
+unary and copies cells \(0,\ldots,r-1\) of both prepared tapes,
+including genuine blank cells when necessary. It packs these two
+prefixes, their boundary flags, and cutoff markers at cell \(r\)
+into one binary word of length \(O(r+1)\), using a fixed encoding
+independent of \(M\). The contents and flags are copied, not guessed.
+Two fixed acceptors \(P_M^+\) and \(P_M^-\) unpack this word into
+separate tapes, copying the second prefix to a work tape and rewinding
+in \(O_M(r+1)\) time. They then execute the deterministic computation
+of \(M\) with this witness fixed, accepting only upon, respectively,
+an accepting or a rejecting halt of \(M\). Reaching a cutoff aborts
+without either verdict, before executing an original transition there.
+The cutoff and boundary flags are kept on protected tracks, so writes
+by \(M\) cannot erase them. In the present ordinary-witness convention,
+an attempt to read beyond the supplied witness has exactly the
+\(V_M\) failure behavior \(\bot\), and neither acceptor accepts it.
+In the framed convention of \cref{earlier:r:cor:framed-refuter}, the copied
+tapes instead include the prescribed frame terminators and blank
+zeros beyond them, with no artificial failure at a frame terminator.
+These are separate acceptors for the two verdicts; we never complement
+the universal acceptor.
+
+For every guessed \(r\), the initial simulated cells agree with the
+original tapes. Induction on the simulated steps, including their
+writes, preserves the state, heads, and all visited cells until a
+cutoff or a genuine halt. Hence every verified verdict is genuine.
+Conversely, if the original computation halts in \(t\) steps, the
+choice \(r=t+2\) keeps both heads strictly before the cutoffs: a head
+starts at zero and moves by at most one cell per step. Prefix copying,
+unpacking, and this computation cost \(O_M(t+1)\), and the universal
+simulation therefore has a corresponding accepting branch within
+\(a_M+b_M(t+1)\) steps, after increasing fixed constants. The choice
+of \(r\) is existential in this argument; the algorithm does not
+compute \(t\) or a runtime bound for \(M\). The original work tapes
+remain unbounded. A computation on some other prefix can run
+arbitrarily long without reaching a cutoff, which is why we use an
+accepting-time simulation rather than assert a time bound for every
+input of \(P_M^+\) or \(P_M^-\).
+
+\emph{Step 1: the hierarchy verifier.} Let \(\mathcal D\) be the following
+clocked variant of the algorithm \(A^{\Tclk}_{\rm FS}\) of
+\cite[Definition~4.2]{CLW20}. First \(\mathcal D\) computes \(\Tclk(N)\)
+and prepares its clock in \(O(\Tclk(N)+1)\) steps.
+It then parses its input as \(\langle M,N,z\rangle\) with
+\(\abs z=\floor{N/10}\), rejecting otherwise. This takes at most \(c_0N\)
+steps for a constant \(c_0\) that does not depend on \(M\), enlarged
+to include preparation of the actual tapes described below. It then
+uses the shared prefix construction for two universal simulations:
+\begin{enumerate}[label=(\alph*)]
+\item the rejecting-verdict acceptor \(P_M^-\), for \(M\) on input
+\(\langle M,N,0^{\floor{N/10}}\rangle\) with witness \(z\);
+\item when \(z\ne1^{\floor{N/10}}\), the accepting-verdict acceptor
+\(P_M^+\), for \(M\) on input
+\(\langle M,N,z+1\rangle\) with a guessed witness of \(\floor{N/10}\)
+bits.
+\end{enumerate}
+It accepts exactly when the first simulation and, when required, the
+second simulation accept. The original run in (a) has a fixed witness
+and is deterministic; an accepted first simulation certifies its
+rejecting halt, never a cutoff or a failed simulation. The clock
+rejects every branch whose steps after clock preparation exceed
+\((c_0+2)(\Tclk(N)+1)\), including overlong prefix guesses,
+machine-description preparation, and universal-simulation branches.
+Hence every branch halts within \(O(\Tclk(N)+1)\) steps on every
+input, and \(L_{\Tclk}=L(\mathcal D)\) has the stated verifier.
+
+The language \(L(\mathcal D)\) may differ from \(L(A^{\Tclk}_{\rm FS})\)
+on inputs where a simulation exceeds the clock or the encoded machine
+breaks its promise. Step~2 shows that it obeys the formula of
+\cite[Lemma~4.3]{CLW20} on every input that the proofs use.
+
+\emph{Step 2: Lemma~4.3 of \cite{CLW20} holds for every admitted machine.}
+Fix \(M\) that runs in time \(t_M(N)=o(\Tclk(N))\) on every input and
+witness and guesses at most \(\floor{N/10}\) bits. Consider an input
+\(x^{(N)}_i=\langle M,N,w^{(N)}_i\rangle\) of \cite[Section~4.2]{CLW20}.
+Whenever the original computations give the requested verdicts, the
+shared prefix argument supplies a branch verifying them with
+\(r=t_M(N)+2\). After computing \(\Tclk(N)\) and preparing the
+clock, its total cost is at most
+\[
+ c_0N+a_M+2b_M(t_M(N)+1)
+ <(c_0+2)(\Tclk(N)+1)
+\]
+for all sufficiently large \(N\), since \(N\le\Tclk(N)\) and
+\(t_M(N)=o(\Tclk(N))\). The constants \(a_M,b_M\) cover the fixed
+machine descriptions and prefix simulations; only \(c_0\) is uniform
+in \(M\). Thus every required verdict has an accepting simulation
+that survives the cap, whereas faithfulness rules out any branch
+certifying a false verdict. Other branches can time out. Every
+run of \(M\) halts within \(t_M(N)\le\Tclk(N)\) steps and reads at most
+\(\floor{N/10}\) witness bits. Hence \(\mathcal D\) accepts
+\(x^{(N)}_i\) exactly when \(V_M(x^{(N)}_1,\Tclk(N),w^{(N)}_i)=0\) and,
+for \(i<2^{\floor{N/10}}\), \(M(x^{(N)}_{i+1})=1\). This is the formula
+of \cite[Lemma~4.3]{CLW20}, which therefore holds for \(\mathcal D\) and
+\(M\) at every sufficiently large \(N\). The overhead is the constant
+factor \(b_M\), so the little-\(o\) promise needs no logarithmic slack.
+
+\emph{Step 3: the oracle queries.} The proofs of \cite[Theorems~1.12
+and~4.6]{CLW20} use the machine model only through Lemma~4.3 and through
+SAT-oracle queries of three kinds:
+\begin{itemize}
+\item whether \(\mathcal D\) accepts a given input;
+\item whether \(M\) accepts a given input within \(\Tclk(N)\) steps with
+some witness in a given lexicographic interval;
+\item whether \(V_M(x,\Tclk(N),w)=1\) for given \(x\) and \(w\).
+\end{itemize}
+Each query concerns runs of \(O(\Tclk(N))\) steps of one nondeterministic
+multitape machine. The Cook--Levin tableau turns it into a CNF formula
+of size \(O(\Tclk(N)^2)\). The formula is constructed in
+\(\poly(\Tclk(N))\) time by a polynomial whose degree does not depend on
+\(M\); for queries about \(M\), only the constant factor depends on
+\(M\).
+For the companion's exact SAT oracle, apply the standard equisatisfiable
+Tseitin conversion and repeat literals in unit and binary clauses so
+that every clause has exactly three literals; an empty clause is
+represented by a fixed contradictory pair of padded unit clauses.
+Encode each such clause using the companion's native literal-list
+coding, and encode the formula using its balanced clause-list coding.
+Because the clause length is fixed and the outer list is balanced,
+these encodings and the query framing have polynomial length and
+construction time, with a degree independent of \(M\). Thus the oracle
+answers and the stated polynomial bounds are preserved.
+
+\emph{Step 4: the refuter.} With Steps~2 and~3, the proof of
+\cite[Theorem~4.6]{CLW20} applies verbatim. \(R_{\Tclk}\) first asks
+whether \(M\) accepts \(x^{(N)}_1\). If not, it runs the binary search of
+\cite[Corollary~4.5]{CLW20} on the lists \(\mathcal D(x^{(N)}_i)\) and
+\(M(x^{(N)}_i)\), \(1\le i\le2^{\floor{N/10}}\). If so, it finds by
+binary search the least \(j\) with \(V_M(x^{(N)}_1,\Tclk(N),w^{(N)}_j)=1\)
+and runs the same search on the first \(j\) entries. Either way it makes
+\(O(N)\) adaptive queries and runs in \(\poly(\Tclk(N))\) time, with a
+degree that does not depend on \(M\). At every sufficiently large \(N\) it
+returns a word \(x^{(N)}_p\) with \(\mathcal D(x^{(N)}_p)\ne M(x^{(N)}_p)\).
+
+\emph{Step 5: the guess budgets.} The guesses made by the simulations in
+Step~1 are guesses of \(\mathcal D\), not of \(M\), so the promise on \(M\)
+is unchanged. The weak machine of
+\cref{app:transfer} guesses at most
+\(\floor{N/16}\le\floor{N/10}\) bits and runs in time \(o(\Tclk(N))\), so
+the lemma applies to it.
+\end{proof}
+
+\begin{corollary}[Refuter for framed machines]\label{earlier:r:cor:framed-refuter}\label{earlier:g:cor:framed-refuter}
+The conclusion of \cref{imp:transfer-refuter} also holds with the following
+convention, for every time-constructible
+\(N\le\Tclk(N)\le2^{\poly(N)}\). Set \(g(N)=\floor{N/16}\) and
+\[
+ \operatorname{fr}(b_1\cdots b_m)=1b_1\,1b_2\cdots1b_m\,0,
+ \qquad \operatorname{fr}(\epsilon)=0.
+\]
+A weak machine is a deterministic multitape verifier whose initial
+tapes contain \(\operatorname{fr}(x)\) and
+\(\operatorname{fr}(w)\), with \(\abs x=N\) and \(\abs w=g(N)\);
+all other tapes are blank, all heads start at the leftmost cell, and
+blank cells contain zero. It halts within \(t_M(N)=o(\Tclk(N))\)
+steps for every such \(x,w\), and \(M(x)=1\) means that some such
+\(w\) is accepted. The hierarchy language has a verifier with the
+same framing convention, time bound \(c(\Tclk(N)+1)\), and exactly
+\(c(\Tclk(N)+1)\) witness bits, for a fixed positive integer \(c\).
+The hierarchy language and the refuter are fixed before \(M\); only
+the eventual onset and the coefficient in the refuter's polynomial
+time bound may depend on \(M\).
+\end{corollary}
+
+\begin{proof}
+We apply the diagonal construction in the proof of
+\cref{earlier:r:lem:multitape-refuter} directly to an enumeration of these
+framed verifiers. Thus \(M\) retains its original runtime and its
+original initial tapes. The two conventions may give different
+hierarchy languages, as \cref{imp:transfer-refuter} permits.
+
+For fixed \(M,N\), enumerate all \(g(N)\)-bit strings as
+\(w_1,\ldots,w_s\), where \(s=2^{g(N)}\), and use the length-\(N\)
+records \(x_i=\langle M,N,w_i\rangle\) of~\cite[Section~4.1]{CLW20}.
+For every fixed \(M\) these records exist at all sufficiently large
+\(N\). Write \(V_M^{\rm fr}(x,t,w)\) for the outcome of the original
+verifier within \(t\) steps on exactly the two framed tapes above,
+with value \(\bot\) if it has not halted. In particular the terminator
+is placed immediately after the \(g(N)\)th witness bit; no longer
+witness is substituted for \(w\).
+
+\emph{Uniform setup cost.} On the record \(x_i\), the hierarchy
+verifier prepares \(\operatorname{fr}(x_1)\) and
+\(\operatorname{fr}(w_i)\) for the first simulation. For the second
+simulation, when \(i<s\), it prepares \(\operatorname{fr}(x_{i+1})\)
+and \(\operatorname{fr}(v)\), where it guesses exactly \(g(N)\) bits
+\(v\). Parsing the outer record, incrementing its witness field,
+writing these frames, and returning their heads to zero cost at most
+\(c_0N\) steps, for an absolute constant \(c_0\). The frames have
+lengths \(2N+1\) and \(2g(N)+1\). Their bit representation is
+independent of \(M\); it does not encode every data bit by a
+machine-dependent block.
+
+Apply the shared prefix simulation from the proof of
+\cref{earlier:r:lem:multitape-refuter} to these prepared framed tapes. The
+copied data include the actual terminator immediately after the
+prescribed witness, if it lies within the prefix, and actual blank
+zeros beyond it. Thus the deterministic computations being verified
+have exactly the initial tapes in the statement, even if \(M\)
+reads or writes past a frame terminator. Only the separate protected
+prefix cutoff aborts without a verdict. In particular an aborted
+prefix does not supply the rejecting verdict required in the first
+simulation.
+
+For each promised computation choose \(r=t_M(N)+2\) in that argument.
+The fixed-machine decoding cost is \(a_M\), and prefix processing
+and a useful accepting simulation cost at most
+\(b_M(t_M(N)+1)\) per run. Whenever the original computations give
+the requested verdicts, there is therefore a branch verifying both
+with total cost at most
+\[
+ c_0N+a_M+2b_M(t_M(N)+1).
+\]
+Here \(c_0\) is independent of the enumerated machine, while
+\(a_M,b_M\) may depend on it. In particular there is no
+machine-dependent coefficient multiplying the initial data length.
+
+After computing \(\Tclk(N)\) and preparing a clock, impose the
+uniform step cap \((c_0+2)(\Tclk(N)+1)\), as in Step~1 of
+\cref{earlier:r:lem:multitape-refuter}. For each fixed promised \(M\),
+\[
+ c_0N+a_M+2b_M(t_M(N)+1)
+ <(c_0+2)(\Tclk(N)+1)
+\]
+eventually, since \(N\le\Tclk(N)\) and
+\(t_M(N)=o(\Tclk(N))\). The cap rejects overlong branches; an
+invalid simulation cannot certify a verdict. Every required verdict
+has an accepting simulation within the cap at these lengths, and
+faithfulness prevents spurious accepting branches.
+The resulting diagonal language, say \(L^{\rm fr}_{\Tclk}\), thus
+satisfies the exact recurrence
+\[
+ L^{\rm fr}_{\Tclk}(x_i)=
+ \ind[V_M^{\rm fr}(x_1,\Tclk(N),w_i)=0]\cdot
+ \begin{cases}
+ M(x_{i+1}),&i<s,\\
+ 1,&i=s.
+ \end{cases}
+\]
+This is the identity used by~\cite[Lemma~4.3 and Theorem~4.6]{CLW20},
+with \(g(N)\) in place of \(\floor{N/10}\). Its proof and the
+binary-search refuter use only the complete enumeration of witnesses,
+so Steps~3--4 of \cref{earlier:r:lem:multitape-refuter} apply. The SAT queries
+now encode the specified framed tapes and their fixed terminators.
+Their initial descriptions have length \(O(N)\), and their time
+bounds are \(O(\Tclk(N))\); the same polynomial tableau bounds and
+\(O(N)\) query count follow. Encoding the refuter's request and output
+with the companion's nested frame encoding changes these polynomial bounds
+only by constant factors. The polynomial degree is fixed with the
+refuter, before \(M\).
+
+Finally the clocked diagonal verifier uses \(O(\Tclk(N)+1)\) steps
+and nondeterministic bits on every branch. A deterministic verifier
+reads those choices from a framed witness, decoding each requested bit
+in constant time. Taking a sufficiently large fixed integer \(c\)
+gives both the step bound and the witness length
+\(c(\Tclk(N)+1)\); unused witness bits are ignored. This is the
+hierarchy convention in the statement. All setup and simulation
+guesses belong to this hierarchy verifier. The weak machine still has
+exactly \(g(N)\) witness bits and its original runtime. The argument
+uses only \(N\le\Tclk(N)\), so it includes linear clocks.
+\end{proof}
+
+\begin{lemma}[Succinct hierarchy verifier]\label{earlier:r:lem:succinct-verifier}\label{earlier:g:lem:succinct-verifier}
+Fix integers \(G\ge1\), \(G'\ge2\) and \(C_{\rm clk}\ge2\), let
+\(\Tclk(N)=N^{C_{\rm clk}}\), let \(\mathcal D\) be the verifier of
+\(L_{\Tclk}\) from \cref{earlier:r:lem:multitape-refuter}, and let
+\(L_\nu=\nu^{G'}\). Use the self-delimiting binary description of
+general circuits fixed in \cref{app:transfer}, and let
+\(\mathrm{tt}_N\) and \(\langle B\rangle_\nu\) be as there. There are a deterministic multitape machine
+\(\mathcal V_G(u,y)\), with input \(u\) and witness \(y\), and a constant
+\(c_G\ge1\) such that, with
+\[
+ T_G(n)=c_G\,2^{C_{\rm clk}\floor{n^{1/G'}}},
+\]
+the following hold.
+\begin{enumerate}[label=(\roman*)]
+\item \(T_G\) is nondecreasing, \(T_G(n)\ge n\) for every \(n\ge1\),
+\(T_G(n)\) is computable from \(n\) in \(\poly(n)\) steps, and
+\(T_G(L_\nu)=c_G\Tclk(2^\nu)\) for every \(\nu\ge1\).
+\item For every \(n\ge1\), every \(u\in\{0,1\}^n\) and every \(y\),
+\(\mathcal V_G\) halts within \(T_G(n)\) steps.
+\item Let \(\nu\ge1\) and \(N=2^\nu\), and let \(B\) be a general circuit
+with at least \(\nu\) inputs whose description has at most \(L_\nu\)
+bits. Some \(y\) of length \(T_G(L_\nu)\) makes
+\(\mathcal V_G(\langle B\rangle_\nu,y)\) accept if and only if
+\(\mathrm{tt}_N(B)\in L_{\Tclk}\).
+\end{enumerate}
+\end{lemma}
+
+\emph{Idea of proof.} The verifier \(\mathcal V_G\) checks that its
+input has the length \(L_\nu\) of a padded description. It then expands
+the described circuit \(B\) into its truth table \(\mathrm{tt}_N(B)\)
+and runs \(\mathcal D\) on that word with its own witness. Expanding
+takes \(O(NL_\nu^3)\) steps and running \(\mathcal D\) takes
+\(O(\Tclk(N))\) steps, so at the lengths \(L_\nu\) the time bound
+\(T_G\) is a constant multiple of \(\Tclk(N)\). At every other length
+\(\mathcal V_G\) rejects within \(O(n)\) steps.
+
+\begin{proof}
+On \((u,y)\) with \(\abs u=n\), the machine \(\mathcal V_G\) works in four
+stages.
+\begin{enumerate}[label=(\arabic*)]
+\item It writes \(n\) in binary, computes \(\nu=\floor{n^{1/G'}}\), and
+rejects unless \(\nu\ge1\) and \(n=\nu^{G'}\). This takes \(O(n)\)
+steps.
+\item It parses \(u\) as the description of a general circuit \(B\)
+followed by zeros. It rejects if the description is malformed or \(B\)
+has fewer than \(\nu\) inputs. This takes \(O(n)\) steps.
+\item For \(i=0,1,\ldots,N-1\), where \(N=2^\nu\), it evaluates \(B\) at
+\(\mathrm{bin}_\nu(i)0^{a-\nu}\), where \(a\) is the number of inputs of
+\(B\). It writes the value into cell \(i\) of a work tape, which then
+holds \(\mathrm{tt}_N(B)\). The circuit has at most \(n\) gates. Keeping
+the gate values on a tape and fetching the two arguments of each gate by
+a scan evaluates it in \(O(n^3)\) steps. So this stage takes
+\(O(Nn^3)\) steps.
+\item It runs \(\mathcal D\) on \(\mathrm{tt}_N(B)\) and accepts exactly
+when \(\mathcal D\) accepts. The work tape of stage~(3) serves as the
+input tape of \(\mathcal D\), its own witness tape as the witness tape
+of \(\mathcal D\), and further work tapes as those of \(\mathcal D\). By
+\cref{earlier:r:lem:multitape-refuter} this takes at most
+\(c_{\mathcal D}\Tclk(N)\) steps for a constant \(c_{\mathcal D}\).
+\end{enumerate}
+If \(n=L_\nu\), the total is
+\[
+ O(n)+O(NL_\nu^3)+c_{\mathcal D}\Tclk(N)\le c'2^{C_{\rm clk}\nu}
+\]
+for a constant \(c'\), because \(L_\nu^3=\nu^{3G'}\) and
+\(C_{\rm clk}\ge2\). Otherwise the run stops in stage~(1) within
+\(c''n\) steps, and \(n<(\nu+1)^{G'}\) with \(\nu=\floor{n^{1/G'}}\).
+Choose \(c_G\ge c'\) so large that
+\(c_G2^{C_{\rm clk}\nu}\ge(c''+1)(\nu+1)^{G'}\) for every \(\nu\ge1\).
+This is possible because \((\nu+1)^{G'}2^{-C_{\rm clk}\nu}\) is bounded.
+Then (ii) holds, and so does \(T_G(n)\ge n\). The other assertions of (i)
+are immediate from the definition.
+
+For (iii), if \(\mathcal V_G(\langle B\rangle_\nu,y)\) accepts, then
+\(\mathcal D\) accepts \(\mathrm{tt}_N(B)\) with a witness, so
+\(\mathrm{tt}_N(B)\in L(\mathcal D)=L_{\Tclk}\). Conversely, suppose that
+\(\mathrm{tt}_N(B)\in L_{\Tclk}\), and take an accepting run of
+\(\mathcal D\) on it. The run has at most
+\(c_{\mathcal D}\Tclk(N)\le T_G(L_\nu)\) steps, so it reads only witness
+cells below \(T_G(L_\nu)\). Writing the witness bits it reads into a word
+\(y\) of length \(T_G(L_\nu)\), with zeros elsewhere, gives the same run,
+and \(\mathcal V_G(\langle B\rangle_\nu,y)\) accepts.
+\end{proof}
+
+\paragraph{Use in the transfer and the order of constants.} In
+\cref{app:transfer}, \(\mathcal D\) is the
+multitape verifier of \(L_{\Tclk}\) from \cref{earlier:r:lem:multitape-refuter},
+with \(\Tclk(N)=N^{C_{\rm clk}}\), and \cref{imp:transfer-short-pcp} is applied to
+\(\mathcal V_G\) with the time bound \(T_G\). The constants are chosen
+in this order.
+\begin{enumerate}
+\item \(d_0=2\). It
+bounds the exponent of \(N\) in the check \eqref{earlier:g:eq:source-check} and
+depends on no PCP construction.
+\item The general-circuit exponent \(G\), from \(h_{\rm sim}\) and
+\(b_{\rm amp}\); it does not depend on \(C_{\rm clk}\).
+\item The exponent \(G'\ge2\), from \(G\) and the description format of
+general circuits (\cref{app:transfer}). It fixes
+\(L_\nu=\nu^{G'}\), and it does not depend on \(C_{\rm clk}\) or
+\(A_{\rm pad}\).
+\item An integer \(C_{\rm clk}>d_0+2\). This fixes \(\mathcal D\), and
+\cref{earlier:r:lem:succinct-verifier} then fixes \(\mathcal V_G\), \(c_G\) and
+\(T_G\).
+\item \Cref{imp:transfer-short-pcp}, applied to \(\mathcal V_G\) and \(T_G\), fixes
+a constant \(c_\ell\ge1\) with
+\[
+ \ell\le\lgx T_G(n)+c_\ell\lgx(\lgx T_G(n)+2)
+\]
+for every \(n\), and the polynomials bounding the size of \(C^O_u\) and
+the running time of its construction. (\Cref{earlier:r:thm:short-pcp-ours} derives
+them from the constants of~\cite{BCGT13} and of
+\cref{earlier:r:lem:acsp-degree,earlier:r:lem:generator}.)
+\item An integer \(A_{\rm pad}\ge c_\ell\) with
+\(A_{\rm pad}\ge b+c_\ell\lgx(b+1)\), where \(b=\lgx c_G\). For
+\(N=2^\nu\) write \(\tau=\lgx\Tclk(N)=C_{\rm clk}\nu\). Since
+\(T_G(L_\nu)=c_G2^\tau\) and \(\tau+b+2\le(\tau+2)(b+1)\),
+\[
+ \ell_{\rm out}\le\tau+b+c_\ell\lgx(\tau+b+2)
+ \le\tau+c_\ell\lgx(\tau+2)+b+c_\ell\lgx(b+1)\le q(N).
+\]
+So the outer verifier fits the native width. Its oracle queries
+\(a\in\{0,1\}^{\ell_{\rm out}}\) can be zero-padded to the \(q\)
+inputs of \(B_{\rm pf}\), and the tables \(X_\zeta\) and
+\(\widehat O^*\) of \cref{earlier:g:sec:gadget-extract} have
+\(q\) inputs. Moreover
+\[
+ 2^{q(N)}\le2\cdot4^{A_{\rm pad}}\Tclk(N)(\lgx\Tclk(N)+2)^{A_{\rm pad}},
+\]
+so \(2^q/\Tclk(N)=q^{O(1)}\).
+\item Then the remaining constants, in this order:
+\begin{itemize}
+\item the clause-count exponent \(d_G\);
+\item finally the padding and cap constants: \(K_{\rm amp}\),
+\(B_{\rm len}\) and \(K_d\) in
+\cref{app:transfer}.
+\end{itemize}
+The constant \(\eta_0\) of \cref{app:transfer} depends only on
+\cref{thm:counter}.
+\end{enumerate}
+No constant depends on one chosen after it. In particular,
+\(\mathcal V_G\) bounds the size of a source circuit only through the
+length \(L_\nu\). That length depends on \(N\) and \(G'\) alone, not on
+\(q\) or \(A_{\rm pad}\). The weak machine enforces the bound \(q^G\)
+itself.
+
+\subsection{Extracting the weighted hard table}\label{earlier:gate-canonical}
+
+This reproduces \cite[Section~11.5]{NagCG}, with notation adapted. \label{earlier:g:sec:gadget-extract}
+
+Fix such a rejected yes-instance $\zeta\in\{0,1\}^N$, with $N=2^\nu$. The
+two cases below, the
+SAT-checked canonical choices, and the clause-indexed proof table
+follow Chen--Lyu--Williams~\cite[Sections~6.2.4--6.2.5]{CLW20}.
+Their proof of~\cite[Lemma~6.5]{CLW20} averages cofactors into
+real-valued proofs; we instead select one
+Boolean cofactor per name and weight the list positions. Call a general
+circuit with $q$ inputs and at most $q^{G^\star}$ gates a \emph{source circuit
+for $\zeta$} if it satisfies \eqref{earlier:g:eq:source-check}. Descriptions are
+ordered lexicographically, and ``first'' refers to this order. The
+canonical choices are made in three steps, which yield the three cases
+named in \cref{sec:ae-extract}.
+\begin{enumerate}[label=(\roman*)]
+\item (\textsc{NoSource}) If $\zeta$ has no source circuit, let $X_\zeta:\{0,1\}^q\to\{0,1\}$ map
+$u$ to $\zeta_i$, where $\mathrm{bin}_\nu(i)$ is the first $\nu$ coordinates
+of $u$. A general circuit of at most $q^{G^\star}$ gates computing $X_\zeta$ would
+be a source circuit for $\zeta$. Hence $X_\zeta$ has general circuit complexity
+greater than $q^{G^\star}$.
+\item Otherwise let $B^*_{\rm src}$ be the first source circuit for $\zeta$.
+Then $\mathrm{tt}_N(B^*_{\rm src})=\zeta\in L_{\Tclk}$, so some witness of
+length $T_{{G^\star}}(L_\nu)$ makes $\mathcal V_{{G^\star}}$ accept
+$\langle B^*_{\rm src}\rangle_\nu$, and \cref{imp:transfer-short-pcp} provides an
+oracle on $\ell_{\rm out}$ inputs that makes
+$C^O_{\langle B^*_{\rm src}\rangle_\nu}$ unsatisfiable, that is,
+accepted on every random string. Let $O^*$ be the first such oracle,
+viewed as a truth table, and let $\widehat O^*(av)=O^*(a)$ for
+$a\in\{0,1\}^{\ell_{\rm out}}$ and $v\in\{0,1\}^{q-\ell_{\rm out}}$.
+\item (\textsc{NoProof}) If no general circuit $B_{\rm pf}$ with $q$ inputs and at most
+$q^{G^\star}$ gates satisfies $O_{B_{\rm pf}}=O^*$, then $\widehat O^*$ has
+general circuit complexity greater than $q^{G^\star}$, since a circuit computing
+it would satisfy that equation.
+\end{enumerate}
+Cases (\textsc{NoSource}) and (\textsc{NoProof}) are treated together. In each of them
+we obtain a function on $q$ inputs with general circuit complexity
+greater than $q^{G^\star}$. By
+\cref{imp:transfer-amplification} and the choice of ${G^\star}$, the
+amplified function, on at most $a_{{G^\star}}q$ inputs, has agreement $1/2+o(1)$
+against every target circuit considered here. This is eventually below
+$1-\gamma/5+\epsilon$.
+
+Otherwise, in case (\textsc{Tautology}), let $B^*_{\rm pf}$ be the first
+general circuit with $q$ inputs and at most $q^{G^\star}$ gates such that
+$O_{B^*_{\rm pf}}=O^*$, and put
+$B=(B^*_{\rm src},B^*_{\rm pf})$. Then $D_B$ is a tautology, because
+$C^{O^*}_{\langle B^*_{\rm src}\rangle_\nu}$ is unsatisfiable, and its
+source circuit passes the check \eqref{earlier:g:eq:source-check}, so the weak
+machine can guess $B$. This canonical choice suffices: the argument
+below uses only that $B$ is a pair whose source circuit passes the
+check, that $D_B$ is a tautology, and that the weak machine rejected $\zeta$
+on every branch, including those that guess $B$. The efficient honest proof from
+\cref{earlier:g:imp:three-pcpp} defines Boolean coordinate functions $\Pi_X(x)$
+that make every three-literal clause true. For each fresh helper, define its
+honest function to be the AND of that clause's three honest literal
+values. For gadget $a$, form the five-entry list of underlying
+coordinate names
+\[
+ (X_{a,1},X_{a,2},X_{a,3},Y_a,Y_a).
+\]
+The first three entries are unsigned names: the clause's literal
+signs remain in the verifier, not in the table definition. Fill
+$P_q$ address positions by cycling through this list, and define
+the target table to return the corresponding honest coordinate.
+Its exact arity is
+\begin{equation}\label{earlier:g:eq:gadget-table-arity}
+ q_0(q)=q+\log_2M+\log_2P_q=q+O(\log q).
+\end{equation}
+
+
+
+\paragraph{Weighted-cofactor incidence.}\label{earlier:weighted-incidence}
+Let \(M_{\rm cl}=M\) be the number of gadgets, let \(P_q\ge5\) be the positions per gadget, and put \(t=\lfloor P_q/5\rfloor\).
+Suppose a Boolean candidate table \(C(x,\alpha)\) has uniform error \(\delta\) against the honest table above. For each auxiliary unsigned name \(X\), choose an address cofactor minimizing its error \(e_X\) against \(\Pi_X\); systematic names use their prescribed parities and have \(e_X=0\).
+Let \(I_X\) be its total stability weight across the gadgets: one for each literal position and two for each helper. The five-entry lists repeat every name in at least \(tI_X\) table positions, so
+\[
+ t\sum_X I_Xe_X\le M_{\rm cl}P_q\delta.
+\]
+Weighted gadget stability (\cref{earlier:g:lem:gadget-stability}), averaged over gadgets and inputs, therefore gives
+\[
+ \E Q\le\frac1{M_{\rm cl}}\sum_X I_Xe_X
+ \le\frac{P_q}{t}\delta\le(5+\epsilon)\delta.
+\]
+For the paper's choice \(P_q=128/\epsilon\), with \(0<\epsilon<1\), we have \(t\ge4/\epsilon\), so \(P_q/t\le5+4/t\le5+\epsilon\).
+Repeated names are counted with their multiplicities, complements preserve error, and systematic positions only strengthen the table-error bound. This is the incidence argument of~\cite[Equation~(18)]{NagCG}.
+
+\subsection{Uniform recovery of the canonical choices}\label{earlier:uniform-recovery}
+This is \cite[Section~11.6]{NagCG}; the proof is reproduced with
+notation adapted. 
+
+All canonical choices are recoverable in $\ENP$.
+The fixed-machine refuter runs in $\operatorname{poly}(\Tclk(N_\nu))
+=2^{O(q)}$ time with SAT access. The choices of
+\cref{app:transfer} are recovered in three stages, by prefix
+self-reduction on SAT formulas of size $2^{O(q)}$. First, a formula over
+the description of $B_{\rm src}$ with the $N$ constraints
+\eqref{earlier:g:eq:source-check}, of size $Nq^{O({G^\star})}$, finds the first source
+circuit $B^*_{\rm src}$, or shows that there is none, in which case the
+table is $X_\zeta$. Second, the algorithm of \cref{imp:transfer-short-pcp} is run
+deterministically on $\langle B^*_{\rm src}\rangle_\nu$, in
+$q^{O_{{G^\star},C_{\rm clk}}(1)}$ time; a formula with one variable per oracle address and the
+constraints $C^O_{\langle B^*_{\rm src}\rangle_\nu}(R)=0$ for all
+$2^{\ell_{\rm out}}$ inputs $R$, of size
+$2^{2\ell_{\rm out}}q^{O_{{G^\star},C_{\rm clk}}(1)}=2^{O(q)}$ (each oracle gate
+becomes a selector over the $2^{\ell_{\rm out}}$ oracle variables),
+finds the first oracle $O^*$. Third, a formula over the description of
+$B_{\rm pf}$ with the $2^{\ell_{\rm out}}$ constraints
+$B_{\rm pf}(a0^{q-\ell_{\rm out}})=O^*(a)$, of size
+$2^{\ell_{\rm out}}q^{O({G^\star})}$, finds the first $B^*_{\rm pf}$, or shows
+that there is none, in which case the table is $\widehat O^*$. No formula
+contains the algorithm of \cref{imp:transfer-short-pcp}. Run the general amplifier
+on $X_\zeta$ or $\widehat O^*$. If no oracle $O^*$ exists at an exceptional
+initial source length, the second stage detects that case and the slice
+is set to zero. In the Tautology case, the honest PCPP proof and each AND helper are
+computable in polynomial time once the pair is known. The fixed-error schedule of \cref{sec:ae-params} is computable in polynomial time in $q$. Since $q=O(n)$,
+the final functions belong to $\ENP$.
+
+
+\subsection{Exact conditional cycle potentials}\label{earlier:conditional-potentials}
+This section gives the conditional-expectation calculation used by the counter.
+
+\begin{corollary}[Conditional potentials]\label{cor:conditional}
+Use the generator of \cref{imp:seed} with \(h=m\) and seed length
+\(S\). For a seed prefix \(\pi\) put \(c_\pi(w)=\E[\Gamma_w\mid\pi]\).
+Then \(2^Sc_\pi(w)\in\Z\), \(|c_\pi(w)|\le(N^2Q)^{2m}\), \(c_\pi(w)\)
+does not depend on \(z\), it is computable exactly in
+\((Q+1)^{2m}\poly(n,S)\) time, and
+\[
+ \E[\Phi_z\mid\pi]=\frac{2|\Theta|}{4^m}\sum_wc_\pi(w)\,\mask_w(z)\sum_\sigma\kappa_\sigma
+ \ind[Y_{1,\sigma}(z,w)=0]\,\ind[Y_{2,\sigma}(z,w)=0].
+\]
+For the empty prefix, \(\E\Phi_z\) equals its value under independent
+uniform samples.
+\end{corollary}
+\begin{proof}
+Expand \(\Gamma_w=\prod_{l=1}^{2m}\bigl(Q-N^2\sum_{j=1}^Q\ind[(U_j,V_j)=e_l]\bigr)\)
+into \((Q+1)^{2m}\) products, each an integer times a conjunction of at
+most \(2m\) events ``sample \(j\) lies at \(e_l\)''. By
+\cref{imp:seed} each conjunction has conditional probability \(0\) or
+\(2^{-a}\) with \(a\le S\), computed by Gaussian elimination; repeated
+sample labels or repeated walk points only repeat or augment the
+linear system, and a label required to lie at two different points
+gives probability \(0\). Since \(\mask_w(z)\) and the indicators do not
+depend on the seed, linearity gives the display. The bound
+\(|\Gamma(x)|\le N^2Q\) gives the bound on \(|c_\pi|\). Each
+conjunction involves at most \(2m\) distinct labels, and the positions
+are \(2m\)-wise independent and uniform, so the unconditional
+expectation of every term equals its value under independent samples.
+\end{proof}
+
+\subsection{The short PCP for the verifiers used here}\label{earlier:r:app:short-pcp-proof}\label{earlier:release-short-pcp}
+
+This is \cite[Appendix~D]{NagCG}; the complete proof of \cite{NagCG} is reproduced with notation adapted.
+Its two published premises are the BCGT verifier and Shoup's
+irreducible-polynomial algorithm from \cref{par:five-inputs}. This appendix proves \cref{imp:transfer-short-pcp}, the short PCP in the form of
+Murray and Williams, for deterministic multitape verifiers with
+computable time bounds (\cref{earlier:r:thm:short-pcp-ours}). This case covers its
+only use. The transfer applies \cref{imp:transfer-short-pcp} to one verifier: the
+succinct hierarchy verifier \(\mathcal V_G\) of
+\cref{earlier:r:lem:succinct-verifier}, in \cref{app:transfer}.
+We use the PCP construction of Ben-Sasson, Chiesa, Genkin, and Tromer
+for algebraic constraint problems~\cite{BCGT13} and import two
+results: their strong Reed--Solomon proximity verifiers, with the
+soundness bounds of~\cite[Theorem~11.1]{BCGT13}, and Shoup's deterministic
+algorithm for irreducible polynomials~\cite[Corollary~3.2]{Sho88}, as
+used in~\cite[Algorithm~17]{BCGT13}. The reduction from the verifier to
+an algebraic constraint problem is proved here. References to numbered
+statements of~\cite{BCGT13} are to its full version.
+
+\paragraph{Plan of the proof.} The verifier is first simulated by a
+random-access machine whose run has an exact length. That run is then
+written as an assignment to the points of an affine subspace of a
+binary field, so that local polynomial equations hold everywhere on the
+subspace exactly when the run accepts. The PCP of~\cite{BCGT13} checks
+such an assignment. It amplifies the soundness of its proximity
+sub-verifiers by naive sequential repetition, which multiplies the
+randomness by a polylogarithmic factor~\cite[Remark~11.2 and
+Lemmas~C.6--C.8]{BCGT13}, whereas \cref{imp:transfer-short-pcp} has randomness
+\(\lgx T+O(\log\log T)\). We therefore run each sub-verifier once and
+amplify the whole verifier with a small-bias set, as
+in~\cite[Section~4.4]{BV14}. The appendix has the following parts.
+\begin{itemize}
+\item \Cref{earlier:r:lem:small-bias,earlier:r:lem:patch-r}: small-bias sets and the
+amplification that uses them; \cref{earlier:r:lem:rs-recursion}: the randomness
+and proof length of one run of a Reed--Solomon proximity verifier.
+\item \Cref{earlier:r:def:ram,earlier:r:lem:tm-ram}: random-access machines, and the
+simulation of a multitape verifier by one whose run has an exact
+length.
+\item \Cref{earlier:r:def:acsp}: affine constraint instances, the problem the PCP
+checks.
+\item \Cref{earlier:r:thm:trace}: an accepting run as an event trace, checked by
+local equations in time order and in address order.
+\item \Cref{earlier:r:thm:embedding}: the event trace as an affine constraint
+instance, with a routing network joining the two orders;
+\cref{earlier:r:lem:acsp-degree,earlier:r:lem:generator}: its degree, its field, and its
+uniform construction.
+\item \Cref{earlier:r:thm:short-pcp-ours}: assembly in four steps.
+\item The routine proof of \cref{earlier:r:lem:tm-ram} comes last.
+\end{itemize}
+
+\emph{Notation.} As in \cref{imp:transfer-short-pcp}, \(n\) and \(T(n)\) are the
+input length and the time bound of a general verifier. All other
+symbols introduced in this appendix are local to it. Logarithms are
+base two. Write \(\alpha\cdot\sigma\) for the inner product over
+\(\mathbb F_2\).
+
+\subsection{Small-bias sets and one Reed--Solomon test}
+
+\begin{lemma}[Small-bias sets]\label{earlier:r:lem:small-bias}
+Let \(r\ge1\) and \(0<\varepsilon<1\). A multiset
+\(S\subseteq\{0,1\}^r\) is \emph{\(\varepsilon\)-biased} if
+\(\abs{\E_{\sigma\in S}(-1)^{\alpha\cdot\sigma}}\le\varepsilon\) for every
+nonzero \(\alpha\in\{0,1\}^r\).
+\begin{enumerate}[label=(\roman*)]
+\item An \(\varepsilon\)-biased multiset of size less than
+\((2r/\varepsilon)^2\) can be computed deterministically in
+\(\poly(r/\varepsilon)\) steps.
+\item If \(S\) is \(\varepsilon\)-biased and
+\(\mathcal B\subseteq\{0,1\}^r\) has density \(\mu>0\), then the set of
+\(R\in\{0,1\}^r\) with \(R\oplus\sigma\notin\mathcal B\) for every
+\(\sigma\in S\) has density at most \(\varepsilon^2/\mu\).
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+(i) This is the powering construction of Alon, Goldreich, H\aa{}stad,
+and Peralta~\cite{AGHP92}; see also Naor and Naor~\cite{NN93}. Let \(m\)
+be the least integer with \(2^m\ge r/\varepsilon\), so that
+\(2^m<2r/\varepsilon\). Find an irreducible polynomial of degree \(m\)
+over \(\mathbb F_2\) by exhaustive search, in \(2^m\poly(m)\) steps, and
+identify \(\mathbb F_{2^m}\) with \(\mathbb F_2^m\). For
+\(a,b\in\mathbb F_{2^m}\) let \(\sigma_{a,b}\in\{0,1\}^r\) have
+coordinates \(a^j\cdot b\), \(0\le j<r\), and let \(S\) consist of all
+\(2^{2m}<(2r/\varepsilon)^2\) vectors \(\sigma_{a,b}\). For nonzero
+\(\alpha\), \(\alpha\cdot\sigma_{a,b}=p_\alpha(a)\cdot b\), where
+\(p_\alpha(X)=\sum_j\alpha_jX^j\) is a nonzero polynomial of degree less
+than \(r\). If \(p_\alpha(a)\ne0\), the bit \(p_\alpha(a)\cdot b\) is
+unbiased over \(b\), and \(p_\alpha(a)=0\) for fewer than \(r\) values
+of \(a\). Hence the bias is less than \(r/2^m\le\varepsilon\).
+
+(ii) Let \(g(R)=\E_{\sigma\in S}\ind_{\mathcal B}(R\oplus\sigma)\), and
+write \(\widehat h(\alpha)=\E_R h(R)(-1)^{\alpha\cdot R}\). Then
+\(\E_Rg(R)=\mu\) and
+\(\widehat g(\alpha)=\widehat{\ind_{\mathcal B}}(\alpha)
+\E_{\sigma\in S}(-1)^{\alpha\cdot\sigma}\). By Parseval,
+\[
+ \E_R\bigl(g(R)-\mu\bigr)^2=\sum_{\alpha\ne0}\widehat g(\alpha)^2
+ \le\varepsilon^2\sum_{\alpha\ne0}\widehat{\ind_{\mathcal B}}(\alpha)^2
+ =\varepsilon^2(\mu-\mu^2).
+\]
+On the set in question \(g=0\), so \((g-\mu)^2=\mu^2\) there, and its
+density is at most \(\varepsilon^2(\mu-\mu^2)/\mu^2\le\varepsilon^2/\mu\).
+\end{proof}
+
+Part (ii) is the hitting property~\cite[Lemma~4.7]{BV14}. Equivalently,
+it follows from the expander mixing lemma of Alon and
+Chung~\cite{AC88} for the Cayley graph of \(\mathbb F_2^r\) generated by
+\(S\), whose nontrivial eigenvalues are the biases
+\(\E_{\sigma\in S}(-1)^{\alpha\cdot\sigma}\).
+
+\begin{lemma}[Randomness-efficient amplification]\label{earlier:r:lem:patch-r}
+Let \(V_0\) be a PCP verifier that uses \(r_0\) random bits on an
+instance \(x\), and let \(0<s\le1\) and \(0<\sigma_0\le1\). Let
+\(S\subseteq\{0,1\}^{r_0}\) be \(\varepsilon\)-biased with
+\(\varepsilon^2\le s\sigma_0\). Let \(V\) accept \(x\) with proof \(\pi\)
+and random string \(R\in\{0,1\}^{r_0}\) exactly when \(V_0\) accepts
+\(x\) with \(\pi\) and \(R\oplus\sigma\) for every \(\sigma\in S\).
+\begin{enumerate}[label=(\roman*)]
+\item \(V\) uses \(r_0\) random bits and \(\abs S\) times as many queries
+as \(V_0\); if \(V_0\) is non-adaptive, so is \(V\).
+\item A proof that \(V_0\) accepts with probability one is accepted by
+\(V\) with probability one.
+\item If \(V_0\) rejects \(\pi\) with probability at least \(\sigma_0\),
+then \(V\) accepts \(\pi\) with probability at most \(s\).
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+Parts (i) and (ii) are immediate, because \(R\oplus\sigma\) is again a
+random string of \(V_0\). For (iii), let \(\mathcal B\) be the set of
+random strings on which \(V_0\) rejects \(\pi\); its density is
+\(\mu\ge\sigma_0\). The verifier \(V\) accepts exactly on the set of
+\cref{earlier:r:lem:small-bias}(ii), whose density is at most
+\(\varepsilon^2/\mu\le s\sigma_0/\sigma_0=s\).
+\end{proof}
+
+The proximity sub-verifiers of~\cite{BCGT13} test whether a function on
+an affine subspace of the field is close to the evaluation table of a
+polynomial of bounded degree, a Reed--Solomon codeword. Their basic
+case is the verifier \(V_{\rm RS,=}\) with its prover \(P_{\rm RS,=}\)
+\cite[Algorithms~16 and~7]{BCGT13}, which recurse on subspaces of
+about half the dimension. On a subspace of dimension \(\kappa\), the
+number of random bits of \(V_{\rm RS,=}\) and the number of field
+elements in the proof of \(P_{\rm RS,=}\) are given by the
+recursions~(27) and~(28) of~\cite[Section~C.8]{BCGT13}. These
+recursions depend on the parameter tuple
+\((\eta,\kappa_0,\gamma_{\rm rep},\mu_{\rm rep})\)
+of~\cite[Theorem~11.1]{BCGT13}. We use the tuple
+\((\eta,\kappa_0,\gamma_{\rm rep},\mu_{\rm rep})=(2,4,0,1)\), which
+satisfies the conditions listed in that theorem (Equation~(6)
+of~\cite[Theorem~11.3]{BCGT13}).
+At this tuple the two recursions read as follows.
+
+\begin{lemma}[One Reed--Solomon test at the tuple \((2,4,0,1)\)]\label{earlier:r:lem:rs-recursion}
+Define \(\mathrm{rand}_=(\kappa)=\mathrm{len}_=(\kappa)=0\) for
+\(\kappa\le4\) and, for \(\kappa\ge5\),
+\[
+\begin{aligned}
+ \mathrm{rand}_=(\kappa)&=1+\max\bigl\{\ceil{\kappa/2}
+ +\mathrm{rand}_=(\floor{\kappa/2}+2),\
+ \floor{\kappa/2}+1+\mathrm{rand}_=(\ceil{\kappa/2})\bigr\},\\
+ \mathrm{len}_=(\kappa)&=2^{\ceil{\kappa/2}}\cdot2^{\floor{\kappa/2}+2}
+ +2^{\ceil{\kappa/2}}\,\mathrm{len}_=(\floor{\kappa/2}+2)
+ +2^{\floor{\kappa/2}+1}\,\mathrm{len}_=(\ceil{\kappa/2}).
+\end{aligned}
+\]
+Then for every integer \(\kappa\ge1\),
+\[
+ \mathrm{rand}_=(\kappa)\le\kappa+3\lgx(2\kappa),\qquad
+ \mathrm{len}_=(\kappa)\le2^\kappa\kappa^3.
+\]
+\end{lemma}
+\begin{proof}
+For \(\kappa\le4\) both functions vanish, so both bounds hold. We first
+show, by strong induction on \(\kappa\ge5\), that for every integer
+\(j\) with \(\kappa-4<2^j\),
+\begin{equation}\label{earlier:r:eq:rs-induction}
+ \mathrm{rand}_=(\kappa)+3\le\kappa+3j,\qquad
+ \mathrm{len}_=(\kappa)+2^\kappa\le2^\kappa6^j.
+\end{equation}
+Here \(j\ge1\), because \(\kappa-4\ge1\). The two arguments
+\(a=\floor{\kappa/2}+2\) and \(b=\ceil{\kappa/2}\) of the recursion are
+smaller than \(\kappa\). Moreover \(a-4=\floor{(\kappa-4)/2}\) and
+\(b-4<a-4\), so \(a-4\) and \(b-4\) are less than \(2^{j-1}\). Hence each
+\(c\in\{a,b\}\) satisfies \eqref{earlier:r:eq:rs-induction} with \(j-1\) in place
+of \(j\) when \(c\ge5\), by induction. When \(c\le4\), it has
+\(\mathrm{rand}_=(c)=\mathrm{len}_=(c)=0\).
+
+\emph{Randomness.} Since \(\ceil{\kappa/2}+a=\kappa+2\) and
+\(\floor{\kappa/2}+1+b=\kappa+1\), a branch of the maximum whose
+argument \(c\) is at least \(5\) is at most \(\kappa+2+3(j-1)-3\). A
+branch with \(c\le4\) is at most \(\floor{\kappa/2}+1\le\kappa-1\). Both
+are at most \(\kappa+3j-4\), so
+\(\mathrm{rand}_=(\kappa)\le\kappa+3j-3\).
+
+\emph{Length.} By the cases above,
+\(\mathrm{len}_=(c)+2^c\le2^c6^{j-1}\) for \(c\in\{a,b\}\). Multiply
+the case \(c=a\) by \(2^{\ceil{\kappa/2}}\) and the case \(c=b\) by
+\(2^{\floor{\kappa/2}+1}\). Since
+\(2^{\ceil{\kappa/2}}\cdot2^a=4\cdot2^\kappa\) and
+\(2^{\floor{\kappa/2}+1}\cdot2^b=2\cdot2^\kappa\), adding the two
+inequalities gives
+\[
+ \mathrm{len}_=(\kappa)+2\cdot2^\kappa
+ \le6\cdot2^\kappa6^{j-1}=2^\kappa6^j,
+\]
+which implies \eqref{earlier:r:eq:rs-induction}.
+
+Now let \(\kappa\ge5\), let \(m=\floor{\lgx(\kappa-4)}\), so that
+\(2^m\le\kappa-4<2^{m+1}\), and apply \eqref{earlier:r:eq:rs-induction} with
+\(j=m+1\). Since \(2^{m+1}\le2(\kappa-4)<2\kappa\), we have
+\(m+1\le\lgx(2\kappa)\), and therefore
+\(\mathrm{rand}_=(\kappa)\le\kappa+3(m+1)-3\le\kappa+3\lgx(2\kappa)\).
+For the length, \(\mathrm{len}_=(\kappa)\le2^\kappa6^{m+1}\), and
+\(6^{m+1}\le(2^m+4)^3\le\kappa^3\). The first of these inequalities is
+checked directly for \(m\le6\), with equality at \(m=5\). For \(m\ge7\),
+\(6^{m+1}\le8^m=(2^m)^3\), since it holds at \(m=7\) and, as \(m\) increases by
+one, the two sides grow by the factors \(6\) and \(8\).
+\end{proof}
+
+\begin{remark}[The general bound in {\cite[Lemma~C.1]{BCGT13}}]\label{earlier:r:rem:bcgt-c1}
+We use \cref{earlier:r:lem:rs-recursion} instead of~\cite[Lemma~C.1]{BCGT13}; at the tuple \((2,4,0,1)\) it gives the same bounds, proved directly from recursions~(27)--(28).
+\end{remark}
+
+\subsection{Random-access machines}
+
+The verifier is first simulated by a random-access machine, because
+memory accesses of such a machine can be checked by sorting
+(\cref{earlier:r:thm:trace}).
+
+\begin{definition}[Random-access machines]\label{earlier:r:def:ram}
+A \emph{random-access machine} \(M\) has a word width \(w\ge1\), a
+number \(K\) of registers, and a code \((I_0,\ldots,I_{L-1})\) with
+\(1\le L\le2^w\). A \emph{word} is an integer in \([0,2^w)\), written
+with \(w\) bits. A \emph{configuration} consists of a program counter
+\(\mathit{pc}\), which is a word, and registers \(r_0,\ldots,r_{K-1}\),
+each a word or the end-of-tape symbol \(\#\). The memory has \(2^w\)
+cells, each holding a word. Two read-only tapes, tape~A for the input
+and tape~B for the witness, are read in consecutive words of \(w\)
+bits; bit \(j\) of a word is the \(j\)-th bit of its block, least
+significant first. An operand is a register, \(\mathit{pc}\) or a constant word; a
+register holding \(\#\) reads as \(0\). The instructions are:
+\begin{itemize}
+\item \(\mathtt{readA}\,i\) and \(\mathtt{readB}\,i\): \(r_i\) receives a
+word or \(\#\);
+\item \(\mathtt{load}\,i\,j\): \(r_j\leftarrow\mathrm{mem}[r_i]\), and
+\(\mathtt{store}\,j\,x\): \(\mathrm{mem}[r_j]\leftarrow x\);
+\item \(\mathtt{iseof}\,i\,j\): \(r_i\leftarrow1\) if \(r_j=\#\), and
+\(r_i\leftarrow0\) otherwise;
+\item \(\mathtt{arith}\,o\,i\,x\,y\): \(r_i\leftarrow o(x,y)\) for
+\(o\in\{\mathrm{add},\mathrm{sub},\mathrm{and},\mathrm{cmp}\}\), where
+addition and subtraction are modulo \(2^w\), \(\mathrm{and}\) is
+bitwise, and \(\mathrm{cmp}(x,y)\) is \(1\), \(0\) or \(2^w-1\)
+according as \(x<y\), \(x=y\) or \(x>y\);
+\item \(\mathtt{nop}\);
+\item \(\mathtt{je}\,i\,c\), \(\mathtt{jne}\,i\,c\) and
+\(\mathtt{jmp}\,c\): \(\mathit{pc}\leftarrow c\bmod2^w\) if \(r_i=0\),
+if \(r_i\ne0\), or always;
+\item \(\mathtt{out}\,\mathrm{accept}\) and
+\(\mathtt{out}\,\mathrm{reject}\): halt.
+\end{itemize}
+Every instruction except a taken jump and \(\mathtt{out}\) also sets
+\(\mathit{pc}\leftarrow\mathit{pc}+1\bmod2^w\). A configuration whose
+\(\mathit{pc}\) is at least \(L\) or points to \(\mathtt{out}\) has no
+successor. The initial configuration has \(\mathit{pc}=0\) and all
+registers \(0\); a configuration is accepting if
+\(I_{\mathit{pc}}=\mathtt{out}\,\mathrm{accept}\).
+
+Let \(T\ge1\). An \emph{accepting run of length \(T\)} on binary
+strings \((\bar x,y)\) consists of configurations
+\(S^0,\ldots,S^{T-1}\) and memories
+\(\mathrm{mem}_0,\ldots,\mathrm{mem}_{T-1}\) such that \(S^0\) is
+initial, \(\mathrm{mem}_0=0\), \(S^{T-1}\) is accepting, and
+\((S^{i+1},\mathrm{mem}_{i+1})\) results from \((S^i,\mathrm{mem}_i)\)
+by executing \(I_{\mathit{pc}}\) for every \(i<T-1\); moreover the
+words other than \(\#\) that the run reads from tape~A, concatenated in
+time order, form a prefix of \(\bar x\), and those read from tape~B form
+a prefix of \(y\). The machine \emph{accepts \(\bar x\) in time \(T\)}
+if it has such a run for some \(y\) with \(\abs y\le T\).
+\end{definition}
+
+A read may return \(\#\) at any step; the prefix conditions make every
+word that is returned the next word of its tape. This frees the trace
+from tracking where a tape ends. The machines \(M_n\) never rely on it:
+a read of \(\#\) sends them into a loop that never halts
+(\cref{earlier:r:lem:tm-ram}).
+
+\begin{lemma}[Multitape machines as random-access machines]\label{earlier:r:lem:tm-ram}
+Let \(V(x,y)\) be a deterministic multitape machine that halts within
+\(T(n)\ge n\) steps on every \(x\in\{0,1\}^n\) and every \(y\). There are
+constants \(c_V,K,L\ge1\) with the following properties. For each
+\(n\ge2\) let the word width
+\(w_n=2^{\ceil{\lgx(\ceil{\lgx T(n)}+c_V)}}\) be the least power of two
+with \(w_n\ge\ceil{\lgx T(n)}+c_V\), for \(x\in\{0,1\}^n\) let
+\(\bar x=x10^j\) be its padding to length
+\(2^{\ceil{\lgx\max(n+1,w_n)}}\), a multiple of \(w_n\), and let \(T_n\)
+be the least power of two with \(T_n\ge c_V(T(n)+w_n)\). There is a
+random-access machine \(M_n\) with word width \(w_n\), \(K\) registers
+and a code of length \(L\) such that, for every \(x\in\{0,1\}^n\),
+\(V(x,y)\) accepts for some \(y\in\{0,1\}^{T(n)}\) if and only if
+\(M_n\) accepts \(\bar x\) in time \(T_n\). Moreover
+\(\abs{\bar x}\le T_n<2^{w_n}\), and the code of \(M_n\) is a fixed
+code, depending only on \(V\), into which the integers \(n\),
+\(T(n)\) and \(T_n-8\) are written.
+\end{lemma}
+
+The proof of \cref{earlier:r:lem:tm-ram} is a direct simulation followed by an
+idle phase that pads the run to exactly \(T_n\) configurations. It is
+routine, and we give it at the end of this appendix.
+
+\subsection{Affine constraint instances}
+
+The target of the reduction is the following algebraic problem. Let
+\(\mathrm{irr}\in\mathbb F_2[X]\) be irreducible of degree \(f\), and
+let \(F=\mathbb F_2[X]/(\mathrm{irr})\), the field with \(2^f\)
+elements. An affine subspace of \(F\) over \(\mathbb F_2\) is given by a
+basis \(b_1,\ldots,b_m\) and an offset \(o\); its \(i\)-th element,
+\(0\le i<2^m\), is \(o+\sum_ji_jb_j\), where \(i_1,i_2,\ldots\) are the
+binary digits of \(i\), least significant first.
+
+\begin{definition}[Affine constraint instances]\label{earlier:r:def:acsp}
+An \emph{affine constraint instance} consists of an irreducible
+\(\mathrm{irr}\) of degree \(f\), an affine subspace \(H\subseteq F\) of
+dimension \(m_H\), neighbors \(N_\nu(X)=a_\nu X+b_\nu\) with
+\(a_\nu\ne0\), for \(1\le\nu\le c_N\) and some \(c_N\ge1\), a constraint
+polynomial \(P(X,Y_1,\ldots,Y_{c_N})\) over \(F\) given by an arithmetic
+circuit, and an affine subspace \(I\subseteq H\) of dimension \(m\).
+Give \(X\) weight \(1\) and each \(Y_\nu\) weight \(2^{m_H}-1\). The
+instance has \emph{degree bound} \(d_B\) if every monomial of \(P\) has
+weight at most \(d_B\); we require \(4d_B\le2^f\). The instance
+\emph{accepts} a binary string \(\bar x\) of length \(2^m\) if some
+\(A\in F[X]\) of degree less than \(2^{m_H}\) satisfies
+\[
+ P\bigl(\alpha,A(N_1(\alpha)),\ldots,A(N_{c_N}(\alpha))\bigr)=0
+ \qquad\text{for every }\alpha\in H,
+\]
+and \(A(\alpha_i)=\bar x_i\) for every \(i<2^m\), where \(\alpha_i\) is
+the \(i\)-th element of \(I\) and the bits \(0,1\) are read in \(F\).
+\end{definition}
+
+If \(\deg A<2^{m_H}\), then
+\(B_A(X)=P(X,A(N_1(X)),\ldots,A(N_{c_N}(X)))\) has degree at most
+\(d_B\): substituting \(A\circ N_\nu\), of degree at most
+\(2^{m_H}-1\), raises no monomial above its weight. This is the succinct
+algebraic constraint satisfaction problem
+of~\cite[Definition~7.1]{BCGT13} at a single instance, with affine
+neighbors. The weighted bound \(4d_B\le2^f\) implies its degree
+condition~(3) and, as just shown, bounds every composition \(B_A\); we
+use this stronger sufficient condition.
+
+\subsection{The run as an event trace}\label{earlier:r:app:event-trace}
+
+\emph{Idea.} A run is checked locally in two orders. In time order,
+each step relates two consecutive configurations, which is a local
+check, except that a \(\mathtt{load}\) must return the value last stored
+at its address, possibly many steps earlier. In address order, with
+ties broken by time, every \(\mathtt{load}\) directly follows the last
+access to its cell, so the memory check is local again. The trace
+therefore lists each memory access, and each word read from the input
+tape, as a \emph{record}: once in time order, at the step that makes
+it, and once in sorted order. The two lists must be equal as multisets;
+in the affine instance a routing network enforces this
+(\cref{earlier:r:lem:routing}). Checking random-access memory by sorting is a
+standard technique; the argument below is self-contained.
+
+Fix a machine \(M\) with word width \(w=2^\omega\), \(K\) registers and
+code length \(L\); an integer \(\tau\ge\max(1,\omega)\) with
+\(T=2^\tau<2^w\) (for \(M_n\), \(T=T_n\), not \(T(n)\)); and a string \(\bar x\) whose length is a multiple of
+\(w\) and at most \(T\). Put \(\beta=\tau-\omega\),
+\(N_A=\abs{\bar x}/w\), \(N=2T\) and \(\kappa_{\rm key}=w+\tau+2\). Every slot
+below holds one bit; a \(w\)-bit word \(v\) occupies \(w\) slots
+\(v[0],\ldots,v[w-1]\), least significant first.
+
+\begin{definition}[Event trace]\label{earlier:r:def:event-trace}
+A \emph{record} consists of an activity bit \(\mathit{act}\), a region
+bit \(\mathit{rgn}\) (\(0\) for memory, \(1\) for tape~A), an address or
+tape index \(\mathit{ad}<2^w\), a phase bit \(\mathit{ph}\), a time stamp
+\(\mathit{ts}<2^\tau\), a value \(\mathit{va}<2^w\), and a store bit
+\(\mathit{st}\). Its \emph{key} is
+\(\mathit{ts}+2^\tau\mathit{ph}+2^{\tau+1}\mathit{ad}
++2^{\tau+1+w}\mathit{rgn}<2^{\kappa_{\rm key}}\). The active records are memory
+accesses \((1,0,a,1,i,v,\mathit{st})\) at address \(a\) and step \(i\)
+with value \(v\), tape-A reads \((1,1,c,1,i,v,0)\) of the \(c\)-th word
+read, at step \(i\), and input words \((1,1,c,0,0,v,0)\), word \(c\) of
+\(\bar x\). The \emph{sentinel} is \((1,0,0,0,0,0,0)\).
+
+The \emph{event trace} \(\mathrm{ET}(M,\tau,\bar x)\) is the following
+system of bit slots and equations over \(\mathbb F_2\).
+\begin{itemize}
+\item \(T\) \emph{time rows} \(\rho_0,\ldots,\rho_{T-1}\). Row \(\rho_i\)
+holds the current and the next configuration (\(\mathit{pc}\), and for
+each register \(r\) a flag \(\mathit{fl}_r\), set for \(\#\), and a word
+\(\mathit{rg}_r\); next values are primed), a one-hot instruction vector
+\(e_0,\ldots,e_{L-1}\) with its prefix-or \(o_0,\ldots,o_{L-1}\), operand
+words \(X,Y\) and a flag \(X_F\), the results \(\mathit{AD},\mathit{SB},
+\mathit{AN}\) of addition, subtraction and conjunction with carries
+\(\mathit{ca}_j\), borrows \(\mathit{bo}_j\), a prefix-or
+\(\mathit{oz}_j\) and a bit \(\mathit{gt}\), a result word \(Z\) with flag
+\(Z_F\), a tape word \(R_V\) with flag \(R_F\), a memory word \(M_V\),
+a record \(\mathrm{REC}\) whose time stamp \(\mathit{ts}\) is the row's
+time stamp, its successor \(\mathit{ts}'\), the counts \(c_A\) and
+\(c_B\) of words read so far from tapes A and~B (\(\tau\) and
+\(\beta+1\) bits) with successors \(c_A',c_B'\), increments \(a_A,a_B\),
+and the carries \(\mathit{tc}_j,\mathit{ac}_j,\mathit{bc}_j\) of the
+three counters.
+\item \(N\) \emph{sorted vertices} \(\sigma_0,\ldots,\sigma_{N-1}\), each
+with a record \(\mathrm{REC}\), a copy \(\mathrm{PREV}\) of the first
+six fields of the previous record, written \(\mathit{pact}\),
+\(\mathit{prgn}\), \(\mathit{pad}\), \(\mathit{pph}\), \(\mathit{pts}\)
+and \(\mathit{pva}\), and auxiliary bits \(\mathit{both}\),
+\(\mathit{ob}_l\), \(\mathit{so}_l\), \(u\), \(g\), \(\mathit{EV}\),
+\(g_{A1}\) and \(g_A\).
+\item \(N_A\) \emph{input records} \(\iota_0,\ldots,\iota_{N_A-1}\) and
+\(N-T-N_A\) \emph{dummy records}, each a record only.
+\end{itemize}
+The \emph{source list} is \((\mathrm{REC}(\rho_0),\ldots,
+\mathrm{REC}(\rho_{T-1}),\iota_0,\ldots,\iota_{N_A-1})\) followed by the
+dummies; it has length \(N\). The equations are listed below:
+(T1)--(T10) at every time row, (S1)--(S5) at every sorted vertex, the
+boundary and copy equations (B1)--(B5), and
+\begin{enumerate}[label=(\Alph*),start=7]
+\item every slot is a bit, and
+\setcounter{enumi}{15}
+\item the source list and \((\mathrm{REC}(\sigma_0),\ldots,
+\mathrm{REC}(\sigma_{N-1}))\) are equal as multisets.
+\end{enumerate}
+The system is \emph{satisfiable} if some assignment of bits to all
+slots satisfies every equation.
+\end{definition}
+
+\emph{Code tables.} Let \(e(Q)=\sum_{p\in Q}e_p\) for a set
+\(Q\subseteq[0,L)\) of code positions, a linear form in the slots. The
+sets used are \(\mathrm{Ld}\), \(\mathrm{St}\), \(\mathrm{RdA}\),
+\(\mathrm{RdB}\), \(\mathrm{Eof}\), \(\mathrm{Jmp}\), \(\mathrm{Je}\),
+\(\mathrm{Jne}\), \(\mathrm{Out}\) and \(\mathrm{Ar}_o\) (the positions of
+\(\mathtt{load}\), \(\mathtt{store}\), \(\mathtt{readA}\),
+\(\mathtt{readB}\), \(\mathtt{iseof}\), the three jumps, \(\mathtt{out}\)
+and \(\mathtt{arith}\,o\)), \(\mathrm{Rd}=\mathrm{RdA}\cup\mathrm{RdB}\),
+\(\mathrm{Acc}\) (the positions of \(\mathtt{out}\,\mathrm{accept}\)),
+\(\mathrm{Seq}\) (the positions of all instructions other than jumps and
+\(\mathtt{out}\)), and \(\mathrm{Wr}_r\) (the positions of the
+instructions that write register \(r\)). For \(p<L\) let
+\(p^+=p+1\bmod2^w\), let \(c_p=c\bmod2^w\) for a jump to \(c\), and let
+\(s^X_p[j]\), \(s^Y_p[j]\) be bit \(j\) of the operands that \(I_p\)
+places on the buses: \((x,y)\) for \(\mathtt{arith}\,o\,i\,x\,y\);
+\((r_i,0)\) for \(\mathtt{je}\) and \(\mathtt{jne}\) on \(r_i\); \(r_i\)
+on \(X\) for \(\mathtt{load}\,i\,j\); \((r_j,x)\) for
+\(\mathtt{store}\,j\,x\); and \(0\) otherwise. Each is a current slot or
+a constant bit. All sums are in \(\mathbb F_2\), and \(j\) ranges over
+the bit positions of the word concerned.
+
+\emph{Time rows.}
+\begin{enumerate}[label=(T\arabic*)]
+\item \(\mathit{fl}_r\,\mathit{rg}_r[j]=0\).
+\item \(o_0=e_0\); \(o_p=o_{p-1}+e_p\) and \(e_po_{p-1}=0\) for
+\(1\le p<L\); \(o_{L-1}=1\); \(\mathit{pc}[j]=\sum_p\mathrm{bit}_j(p)e_p\).
+\item \(X[j]=\sum_pe_ps^X_p[j]\), \(Y[j]=\sum_pe_ps^Y_p[j]\), and
+\(X_F=\sum e_p\mathit{fl}_{j'}\) over the positions \(p\) with
+\(I_p=\mathtt{iseof}\,i\,j'\).
+\item With \(\mathit{ca}_0=\mathit{bo}_0=0\):
+\(\mathit{AD}[j]=X[j]+Y[j]+\mathit{ca}_j\) and
+\(\mathit{ca}_{j+1}=X[j]Y[j]+X[j]\mathit{ca}_j+Y[j]\mathit{ca}_j\)
+(\(j+1<w\)); \(\mathit{SB}[j]=X[j]+Y[j]+\mathit{bo}_j\) and
+\(\mathit{bo}_{j+1}=(1+X[j])(Y[j]+\mathit{bo}_j)+Y[j]\mathit{bo}_j\);
+\(\mathit{AN}[j]=X[j]Y[j]\); \(\mathit{oz}_0=\mathit{SB}[0]\) and
+\(\mathit{oz}_j=\mathit{oz}_{j-1}+\mathit{SB}[j]+\mathit{oz}_{j-1}
+\mathit{SB}[j]\); \(\mathit{gt}=(1+\mathit{bo}_w)\mathit{oz}_{w-1}\).
+\item \(R_FR_V[j]=0\) and \(e(\mathrm{St})(M_V[j]+Y[j])=0\).
+\item \(Z[j]=e(\mathrm{Ar}_{\rm add})\mathit{AD}[j]
++e(\mathrm{Ar}_{\rm sub})\mathit{SB}[j]+e(\mathrm{Ar}_{\rm and})
+\mathit{AN}[j]+e(\mathrm{Ar}_{\rm cmp})\mathit{CMP}_j+e(\mathrm{Ld})
+M_V[j]+e(\mathrm{Rd})R_V[j]+[j=0]\,e(\mathrm{Eof})X_F\), where
+\(\mathit{CMP}_0=\mathit{bo}_w+\mathit{gt}\) and
+\(\mathit{CMP}_j=\mathit{gt}\) for \(j\ge1\); and
+\(Z_F=e(\mathrm{Rd})R_F\).
+\item \(\mathit{rg}_r'[j]=e(\mathrm{Wr}_r)Z[j]+(1+e(\mathrm{Wr}_r))
+\mathit{rg}_r[j]\) and \(\mathit{fl}_r'=e(\mathrm{Wr}_r)Z_F
++(1+e(\mathrm{Wr}_r))\mathit{fl}_r\).
+\item With \(z=\mathit{oz}_{w-1}\),
+\begin{multline*}
+ \mathit{pc}'[j]=\sum_{\mathrm{Seq}}e_p\mathrm{bit}_j(p^+)
+ +\sum_{\mathrm{Out}}e_p\mathrm{bit}_j(p)
+ +\sum_{\mathrm{Jmp}}e_p\mathrm{bit}_j(c_p)\\
+ +\sum_{\mathrm{Je}}\bigl(e_pz\,\mathrm{bit}_j(p^+)
+ +(e_p+e_pz)\mathrm{bit}_j(c_p)\bigr)
+ +\sum_{\mathrm{Jne}}\bigl(e_pz\,\mathrm{bit}_j(c_p)
+ +(e_p+e_pz)\mathrm{bit}_j(p^+)\bigr).
+\end{multline*}
+\item \(\mathit{act}=e(\mathrm{Ld})+e(\mathrm{St})+a_A\),
+\(\mathit{rgn}=a_A\),
+\(\mathit{ad}[j]=(e(\mathrm{Ld})+e(\mathrm{St}))X[j]+a_Ac_A[j]\)
+(with \(c_A[j]=0\) for \(j\ge\tau\)), \(\mathit{ph}=1\),
+\(\mathit{va}[j]=(e(\mathrm{Ld})+e(\mathrm{St}))M_V[j]+a_AR_V[j]\),
+\(\mathit{st}=e(\mathrm{St})\).
+\item With \(\mathit{tc}_0=1\): \(\mathit{ts}'[j]=\mathit{ts}[j]
++\mathit{tc}_j\) and \(\mathit{tc}_{j+1}=\mathit{ts}[j]\mathit{tc}_j\).
+\(a_A=e(\mathrm{RdA})(1+R_F)\) and, with \(\mathit{ac}_0=a_A\),
+\(c_A'[j]=c_A[j]+\mathit{ac}_j\) and
+\(\mathit{ac}_{j+1}=c_A[j]\mathit{ac}_j\). Likewise
+\(a_B=e(\mathrm{RdB})(1+R_F)\) and \(c_B'=c_B+a_B\) with carries
+\(\mathit{bc}_j\). Finally \(a_Bc_B[\beta]=0\).
+\end{enumerate}
+The last carries of \(\mathit{ts}'\), \(c_A'\) and \(c_B'\) are not
+kept, so these counters work modulo \(2^\tau\), \(2^\tau\) and
+\(2^{\beta+1}\). In words: (T1) a register holding \(\#\) has word
+\(0\); (T2) \(\mathit{pc}\) is decoded one-hot; (T3) the operand buses;
+(T4) sum, difference, conjunction and comparison; (T5) the read and
+store channels; (T6) the result; (T7) the register write; (T8) the next
+\(\mathit{pc}\); (T9) the row's record; (T10) the time stamp and the read
+counters.
+
+\emph{Sorted vertices.} Let \(K_l\) and \(P_l\), \(l<\kappa_{\rm key}\), be the key
+bits of \(\mathrm{REC}\) and of \(\mathrm{PREV}\), least significant
+first.
+\begin{enumerate}[label=(S\arabic*)]
+\item \((1+\mathit{pact})\mathit{act}=0\) and
+\(\mathit{both}=\mathit{act}\cdot\mathit{pact}\).
+\item With \(\mathit{ob}_0=0\):
+\(\mathit{ob}_{l+1}=(1+P_l)(K_l+\mathit{ob}_l)+K_l\mathit{ob}_l\) for
+\(l<\kappa_{\rm key}\), and \(\mathit{both}(1+\mathit{ob}_{\kappa_{\rm key}})=0\).
+\item With \(d_0=\mathit{prgn}+\mathit{rgn}\) and
+\(d_{1+j}=\mathit{pad}[j]+\mathit{ad}[j]\): \(\mathit{so}_0=d_0\) and
+\(\mathit{so}_l=\mathit{so}_{l-1}+d_l+\mathit{so}_{l-1}d_l\) for
+\(1\le l\le w\).
+\item \(u=\mathit{act}(1+\mathit{rgn})\), \(g=u(1+\mathit{st})\),
+\(\mathit{EV}[j]=(1+\mathit{so}_w)\mathit{pva}[j]\) and
+\(g(\mathit{va}[j]+\mathit{EV}[j])=0\).
+\item \(g_{A1}=\mathit{act}\cdot\mathit{rgn}\),
+\(g_A=g_{A1}\mathit{ph}\), \(g_A\mathit{so}_w=0\),
+\(g_A\mathit{pph}=0\) and \(g_A(\mathit{va}[j]+\mathit{pva}[j])=0\).
+\end{enumerate}
+In words: (S1) active records come first; (S2) keys increase; (S3) the
+record names the same region and address as its predecessor exactly
+when \(\mathit{so}_w=0\); (S4) the memory rule; (S5) the input rule.
+
+\emph{Boundaries and copies.}
+\begin{enumerate}[label=(B\arabic*)]
+\item At \(\rho_0\): \(\mathit{pc}=0\), \(\mathit{fl}_r=0\) and
+\(\mathit{rg}_r=0\) for all \(r\), \(\mathit{ts}=0\), \(c_A=0\),
+\(c_B=0\).
+\item For \(i<T-1\): \(e(\mathrm{Out})=0\) at \(\rho_i\), and
+\(\rho_{i+1}\) has current configuration, \(\mathit{ts}\), \(c_A\) and
+\(c_B\) equal to the next configuration, \(\mathit{ts}'\), \(c_A'\)
+and \(c_B'\) of \(\rho_i\).
+\item At \(\rho_{T-1}\): \(e(\mathrm{Acc})=1\).
+\item \(\mathrm{PREV}(\sigma_0)\) is the sentinel's first six fields,
+and \(\mathrm{PREV}(\sigma_{j+1})\) is the first six fields of
+\(\mathrm{REC}(\sigma_j)\).
+\item \(\iota_c=(1,1,c,0,0,v_c,0)\) with \(v_c\) word \(c\) of
+\(\bar x\); every dummy record is zero.
+\end{enumerate}
+
+Every equation has degree at most two in the slots; the auxiliary slots
+\(Z_F\), \(a_A\), \(a_B\), \(u\), \(g\), \(g_{A1}\), \(g_A\),
+\(\mathit{EV}\), \(\mathit{both}\), \(\mathit{oz}_j\) and \(\mathit{gt}\)
+exist to keep it so.
+
+\begin{lemma}[Gadgets]\label{earlier:r:lem:trace-gadgets}
+Assume (G). For all words \(X,Y\), the equations (T4) have exactly one
+solution in the auxiliary slots: the carries, borrows and prefix-ors of
+the school methods. In it \(\mathit{AD}=X+Y\bmod2^w\),
+\(\mathit{SB}=X-Y\bmod2^w\), \(\mathit{bo}_w=[X<Y]\),
+\(\mathit{AN}=X\wedge Y\), \(\mathit{oz}_{w-1}=[X\ne Y]\),
+\(\mathit{gt}=[X>Y]\) and \(\mathit{CMP}=\mathrm{cmp}(X,Y)\). Likewise
+(T10) forces \(\mathit{ts}'=\mathit{ts}+1\bmod2^\tau\),
+\(c_A'=c_A+a_A\bmod2^\tau\) and \(c_B'=c_B+a_B\bmod2^{\beta+1}\), with
+unique carries.
+\end{lemma}
+\begin{proof}
+Each auxiliary slot is the left side of one equation whose right side
+uses inputs and earlier slots only, so the solution exists and is
+unique. By induction on \(j\),
+\(\mathit{ca}_j=\floor{(X\bmod2^j+Y\bmod2^j)/2^j}\), because over
+\(\mathbb F_2\) the carry equation is the majority of three bits;
+likewise \(\mathit{bo}_j=[X\bmod2^j<Y\bmod2^j]\), the majority of
+\(1+X[j]\), \(Y[j]\) and \(\mathit{bo}_j\), and
+\(\mathit{oz}_j=[\mathit{SB}\bmod2^{j+1}\ne0]\). Since \(\mathit{SB}=0\)
+exactly when \(X=Y\), \(\mathit{gt}=[X\ge Y\text{ and }X\ne Y]\). The
+counters are the case \(Y\in\{0,1\}\) of the adder.
+\end{proof}
+
+\begin{lemma}[One step]\label{earlier:r:lem:trace-step}
+Assume (G).
+\begin{enumerate}[label=(\roman*)]
+\item (T1) holds for a configuration block exactly when it encodes a
+configuration: a register is \(\#\) if its flag is set, and its word is
+then \(0\).
+\item (T2) holds exactly when \(\mathit{pc}<L\), \(e\) is the indicator
+vector of \(\mathit{pc}\), and \(o_p=[\mathit{pc}\le p]\).
+\item Let a time row satisfy (T1)--(T10), let \(S\) and \(S'\) be its
+current and next configurations, and let \(I=I_{\mathit{pc}}\). If \(I\)
+is not \(\mathtt{out}\), then \(S'\) results from \(S\) by executing
+\(I\) with the row's access: a \(\mathtt{load}\) receives \(M_V\) from
+address \(X\), a \(\mathtt{store}\) writes \(M_V=Y\) at address \(X\),
+and a read receives \(\#\) if \(R_F=1\) and \(R_V\) otherwise. If \(I\)
+is \(\mathtt{out}\), then \(S'=S\). Conversely, every such step, with
+the auxiliary slots of \cref{earlier:r:lem:trace-gadgets}, unused channels zero,
+and \(c_B[\beta]=0\) whenever \(I\) is a \(\mathtt{readB}\) that receives a
+word, satisfies (T1)--(T10).
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+(i) restates the encoding. (ii) The equations make \(o_p\) the number
+of ones among \(e_0,\ldots,e_p\), keep it at most one, and make it one
+at \(p=L-1\); then \(\mathit{pc}=\sum_pp\,e_p\). In characteristic two,
+\(\sum_pe_p=1\) alone would allow three ones; the prefix-or chain
+excludes this. (iii) By (ii) every \(e(Q)\) equals
+\([\mathit{pc}\in Q]\). (T3) puts the operands of \(I\) on the buses,
+\cref{earlier:r:lem:trace-gadgets} computes the four operations and the zero test
+\(z=[X\ne0]\) used by the conditional jumps, (T6) selects the value
+written, (T7) writes it into the register of \(I\) and copies the
+others, and (T8) computes the next \(\mathit{pc}\). A read of \(\#\)
+writes the flag \(1\) and the word \(0\) by (T5) and (T6). The converse
+is the same computation.
+\end{proof}
+
+\begin{lemma}[Memory by sorting]\label{earlier:r:lem:trace-memory}
+Let a time-ordered list of memory accesses be given, at distinct steps.
+The following are equivalent.
+\begin{enumerate}[label=(\alph*)]
+\item There are memories \(\mathrm{mem}_0=0,\mathrm{mem}_1,\ldots\) such
+that each store \((a,v)\) at step \(i\) gives
+\(\mathrm{mem}_{i+1}=\mathrm{mem}_i[a\mapsto v]\), every other step
+leaves the memory unchanged, and each load \((a,v)\) at step \(i\) has
+\(v=\mathrm{mem}_i(a)\).
+\item Each load \((a,v)\) at step \(i\) has \(v\) equal to the value of
+the latest access to \(a\) before step \(i\), or \(v=0\) if there is
+none.
+\item In the list of the memory records sorted by key and preceded by
+the sentinel, a load record whose predecessor has the same address has
+the predecessor's value, and every other load record has value \(0\).
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+(a)\(\Leftrightarrow\)(b): by induction on \(i\), \(\mathrm{mem}_i(a)\) is
+the value of the latest access to \(a\) before step \(i\), or \(0\).
+(b)\(\Leftrightarrow\)(c): the memory record of an access to \(a\) at
+step \(i\) has key \(2^{\tau+1}a+2^\tau+i\). In key order the records of
+one address are therefore consecutive and in time order. The
+predecessor of a load at \((a,i)\) is the latest access to \(a\) before
+\(i\) if there is one, and otherwise a record of a smaller address or
+the sentinel, whose address \(0\) and value \(0\) give the value \(0\)
+in either case.
+\end{proof}
+
+\begin{lemma}[Time stamps and counters]\label{earlier:r:lem:trace-counters}
+Assume (G), (T1)--(T10) at every time row, (B1) and (B2). Then
+\(\mathit{ts}(\rho_i)=i\), and \(c_A(\rho_i)\) and \(c_B(\rho_i)\) are
+the numbers of steps before \(i\) that read a word other than \(\#\)
+from tape~A and from tape~B. Hence at most \(2^\beta\) words are read
+from tape~B, of total length at most \(2^\beta w=T\). Conversely, if at
+most \(2^\beta\) such words are read, the honest counters satisfy
+\(a_Bc_B[\beta]=0\).
+\end{lemma}
+\begin{proof}
+Induction on \(i\) with \cref{earlier:r:lem:trace-gadgets}. The time stamp does
+not wrap, since \(i\le T-1<2^\tau\); nor does \(c_A\), since at most
+\(T-1\) steps precede \(\rho_{T-1}\). A read at \(c_B=2^\beta\) is
+excluded by \(a_Bc_B[\beta]=0\), so \(c_B\le2^\beta<2^{\beta+1}\).
+Conversely the \(r\)-th read happens at \(c_B=r-1<2^\beta\).
+\end{proof}
+
+\begin{lemma}[The sorted list]\label{earlier:r:lem:trace-sorted}
+Assume (G), (P), (S1)--(S5), (B4), (B5), the time-row equations, and
+\(\mathit{ts}(\rho_i)=i\) for all \(i\). Then the active sorted vertices
+form a prefix of \(\sigma_0,\ldots,\sigma_{N-1}\), which lists the active
+records of the source list in increasing key order. The memory records
+satisfy \cref{earlier:r:lem:trace-memory}(c), and every tape-A read record
+\((1,1,c,1,i,v,0)\) has \(c<N_A\) and \(v\) equal to word \(c\) of
+\(\bar x\). Conversely, let a source list have distinct active keys and
+pairwise distinct tape-A read indices \(c\), and let its memory and
+tape-A records have these two properties. Then sorting its active
+records by key, appending the inactive ones, and filling
+\(\mathrm{PREV}\) by (B4) satisfies (S1)--(S5) and (P).
+\end{lemma}
+\begin{proof}
+By (S1) activity does not increase along \(\sigma\), and the sentinel is
+active, so the active vertices form a prefix. By (S2) their keys
+increase strictly; by (P) they are the active source records in key
+order, and their keys are distinct. A memory load has \(u=g=1\), and
+(S4) is \cref{earlier:r:lem:trace-memory}(c), because \(\mathit{so}_w=0\) exactly
+when the two records name the same region and address. A tape-A read
+\((1,1,c,1,i,v,0)\) has \(g_A=1\), and (S5) makes its predecessor a
+record in region~\(1\) with index \(c\), phase \(0\) and value \(v\).
+Time rows have phase \(1\) by (T9), so the predecessor is \(\iota_c\),
+which exists only for \(c<N_A\) and has the value prescribed by (B5).
+For the converse, each predecessor in the sorted arrangement is as
+described, and the same computation verifies every equation. Distinct
+read indices are needed here: a second read of index \(c\) would have
+a read record of phase~\(1\) as its predecessor and violate (S5).
+\end{proof}
+
+\begin{theorem}[Event traces]\label{earlier:r:thm:trace}
+\(\mathrm{ET}(M,\tau,\bar x)\) is satisfiable if and only if \(M\)
+accepts \(\bar x\) in time \(T=2^\tau\).
+\end{theorem}
+\begin{proof}
+(\(\Rightarrow\)) Let \(S^i\) be the current configuration of \(\rho_i\)
+(\cref{earlier:r:lem:trace-step}(i)). By (B2) the next configuration of \(\rho_i\)
+is \(S^{i+1}\); by (B1) \(S^0\) is initial; by (B2) and (B3) no
+configuration before the last executes \(\mathtt{out}\), and
+\(S^{T-1}\) is accepting. \Cref{earlier:r:lem:trace-step}(iii) gives every step
+relative to its access, and \cref{earlier:r:lem:trace-counters} gives the time
+stamps, so the access records have distinct keys. By
+\cref{earlier:r:lem:trace-sorted,earlier:r:lem:trace-memory}, there are memories with
+\(\mathrm{mem}_0=0\) under which every step is a step of \(M\). The
+words read from tape~A have indices \(c=0,1,2,\ldots\) in time order
+(\cref{earlier:r:lem:trace-counters}), and each equals word \(c\) of \(\bar x\);
+so they form a prefix of \(\bar x\). Let \(y\) be the concatenation of
+the words read from tape~B; then \(\abs y\le T\) by
+\cref{earlier:r:lem:trace-counters}, and the run is accepting on \((\bar x,y)\).
+
+(\(\Leftarrow\)) Take an accepting run on \((\bar x,y)\) with
+\(\abs y\le T\). Fill \(\rho_i\) from \(S^i\), \(S^{i+1}\) and the
+access of step \(i\) (the loaded value \(\mathrm{mem}_i(a)\), the stored
+word, or the word read), with the auxiliary slots of
+\cref{earlier:r:lem:trace-gadgets}, unused channels zero, the next configuration of \(\rho_{T-1}\) equal
+to its current one, and honest time stamps and counters. At most \(\abs{\bar x}/w=N_A\) words
+are read from tape~A, and the \(c\)-th is word \(c\) of \(\bar x\); at
+most \(\abs y/w\le2^\beta\) words are read from tape~B, so the witness
+bound holds (\cref{earlier:r:lem:trace-counters}). Add the input and dummy
+records. The active keys are distinct: time-row records differ in their
+time stamps, input records in their indices, and the two kinds in their
+phase. The tape-A read indices are the counter values
+\(0,1,\ldots\). \Cref{earlier:r:lem:trace-sorted} now provides the sorted
+vertices, and every equation holds by
+\cref{earlier:r:lem:trace-gadgets,earlier:r:lem:trace-step,earlier:r:lem:trace-memory,earlier:r:lem:trace-counters}.
+\end{proof}
+
+\begin{corollary}[Event traces of verifiers]\label{earlier:r:cor:trace-verifier}
+Let \(V\), \(T(n)\) and \(M_n\) be as in \cref{earlier:r:lem:tm-ram}, let
+\(n\ge2\), and let \(T_n=2^{\tau_n}\). For every \(x\in\{0,1\}^n\),
+\(V(x,y)\) accepts for some \(y\in\{0,1\}^{T(n)}\) if and only if
+\(\mathrm{ET}(M_n,\tau_n,\bar x)\) is satisfiable.
+\end{corollary}
+\begin{proof}
+\Cref{earlier:r:lem:tm-ram} and \cref{earlier:r:thm:trace}. The hypotheses of the latter
+hold: \(\tau_n\ge\max(1,\omega)\) and \(\abs{\bar x}\le T_n<2^{w_n}\) by
+\cref{earlier:r:lem:tm-ram}, and \(w_n\) divides \(\abs{\bar x}\).
+\end{proof}
+
+\subsection{The event trace as an affine constraint instance}\label{earlier:r:app:affine-embedding}
+
+Throughout this subsection and the next, assume in addition that
+\(\abs{\bar x}=2^m\) for an integer \(m\) with \(\omega\le m\le\tau\).
+This holds for the padded inputs of \cref{earlier:r:lem:tm-ram}; the event-trace
+theorem itself does not need it.
+
+\emph{Idea.} Each slot of the event trace becomes a point of an affine
+subspace \(H\) of a binary field, and the assignment polynomial \(A\)
+holds its value there. Each equation, at each vertex, has its own host point in \(H\); a
+\emph{selector} polynomial switches the equation on at its host points
+only, and the equation reads the slots it needs at affine shifts
+\(\alpha+b\) of the host point \(\alpha\). Three kinds of reads occur: within a
+vertex, from a time row to its predecessor, and from a sorted vertex to
+its predecessor. The multiset equality (P) is not local. A Beneš
+network~\cite{Ben65} enforces it: between the source list and the sorted list there
+are \(2k_N-1\) layers of switches, each of which passes a pair of
+records straight or swaps them.
+
+\emph{Coordinates.} Let \(k_N=\tau+1\), so that \(N=2^{k_N}\); let
+\(\ell_S=\ceil{\lgx(2k_N)}\); let \(F_{\rm tags}=32+3K+2L\) (the number
+of field tags the placement below needs),
+\(d=\ceil{\lgx F_{\rm tags}}\), \(q=d+\omega\) and \(C=2^q\); and let
+\(m_H=k_N+\ell_S+q+4\). Given an irreducible \(\mathrm{irr}\) of degree
+\(f\ge m_H\), the residues \(e_b=X^b\), \(b<m_H\), are linearly
+independent over \(\mathbb F_2\). Let \(H\) be their span, with offset
+\(0\), so that \(\abs H=2^{m_H}=16NC2^{\ell_S}\). A point of \(H\) is
+labeled by a lane \(x<N\), a stage \(s<2^{\ell_S}\), a column \(c<C\), a
+role \(r<8\) and an area \(a<2\):
+\[
+ E(x,s,c,r,a)=\sum_{b<k_N}x_be_b+\sum_{b<\ell_S}s_be_{k_N+b}
+ +\sum_{b<q}c_be_{k_N+\ell_S+b}+\sum_{b<3}r_be_{k_N+\ell_S+q+b}
+ +a\,e_{m_H-1},
+\]
+where \(x_b\) is bit \(b\) of \(x\), and so on. A column \(c=2^\omega
+t+j\) names a field tag \(t<2^d\) and a bit index \(j<w\). Labels add by
+the bitwise exclusive-or of their coordinates.
+
+\emph{Placement.} A fixed catalog, which depends only on \(K\) and
+\(L\), assigns every slot and every equation its own point.
+\begin{itemize}
+\item \emph{Area~0, the network.} At stage \(s<2k_N\) and lane \(x\),
+role~\(0\) holds a network record of \(C\) bits, one per column: the
+seven record fields occupy their own field tags, the value field
+\(\mathit{va}\) at tag~\(0\) (the input subspace below relies on this),
+at bit index \(j\) for bit \(j\), and all other columns are padding. Stage~\(0\) holds the
+source list (\(\mathrm{REC}(\rho_i)\) at lane \(i<T\), \(\iota_c\) at
+lane \(T+c\), dummies at the other lanes), and stage \(2k_N-1\) holds
+\(\mathrm{REC}(\sigma_j)\) at lane \(j\). Role~\(1\) at a stage
+\(s<2k_N-1\) holds that stage's switch at the lane, copied in every
+column. The routing equation of a record bit is hosted at that bit's
+own point, the column equation of a switch at the switch's point, the
+bit check of a record bit at role~\(2\), the bit check of a switch at
+role~\(3\), and the pair equation at role~\(4\).
+\item \emph{Area~1, the machine.} The other slots of \(\rho_i\) are at
+stage~\(0\), lane \(i\), and those of \(\sigma_j\) at stage \(2k_N-1\),
+lane \(j\). Each word-sized block of a vertex has its own field tag;
+the blocks use at most \(31+2K+2L\) tags.
+\begin{itemize}
+\item Roles~\(0\) and~\(1\) hold data: current values in role~\(0\);
+next values, and \(\mathrm{PREV}\), in role~\(1\), in the column of the
+value they are copied to.
+\item Role~\(2\) hosts the equations, one field tag per equation
+\emph{template} and bit index \(j\) for the instance at \(j\). A template
+is one displayed equation of (T1)--(T10) or (S1)--(S5) for a fixed
+register \(r\) or code position \(p\); the \(\kappa_{\rm key}\)-bit borrow chain of
+(S2) is split into three templates of at most \(w\) instances each,
+since \(\kappa_{\rm key}\le2w+1\). There are exactly \(32+3K+2L\) time templates
+and \(17\) sorted-vertex templates, so \(F_{\rm tags}\) tags suffice.
+The initial carries \(\mathit{ca}_0\), \(\mathit{bo}_0\),
+\(\mathit{tc}_0\), \(\mathit{ac}_0\) and \(\mathit{bc}_0\) are
+shorthand for their displayed values, requiring no additional slots or
+templates. The respective template counts for (T1)--(T10) are
+\(K,\,2L+1,\,3,\,8,\,2,\,2,\,2K,\,1,\,6,\,9\), whose sum is
+\(32+3K+2L\).
+\item Roles~\(3\) and~\(4\) host the bit checks (G) of roles~\(0\)
+and~\(1\), in the same column.
+\item Role~\(5\) hosts (B1) and the time copies of (B2), role~\(6\)
+hosts (B4), and role~\(7\) hosts (B3) and (B5).
+\end{itemize}
+\end{itemize}
+
+\emph{Neighbors.} Every neighbor is a translation \(X\mapsto X+b\) with
+\(b\in H\), so it maps \(H\) onto \(H\). An equation hosted at a point
+\(\alpha\) reads its slots at \(\alpha+b\) for the following \(b\).
+\begin{itemize}
+\item \emph{Within a vertex:} the \(16C\) sums
+\(E(0,0,c,r,a)\) over all columns, roles and areas, which change no
+lane or stage bit; the exclusive-or of the host's and the target's
+column, role and area selects the target.
+\item \emph{Previous time row and previous sorted vertex:} for each
+\(t<k_N\), the translation by \(\Gamma_t=e_0+\cdots+e_t\) plus a fixed
+role and area mask. If \(t\) is the least set bit of the lane \(x\), then
+\(x\oplus(2^{t+1}-1)=x-1\), so this translation reads lane \(x-1\) at
+the same column. Two such families of \(k_N\) maps are used.
+\item \emph{Network edges:} the identity; for each stage \(s<2k_N-1\),
+the translation \(\delta_s\) that changes the stage label \(s\) to
+\(s+1\) and \(\delta_s+e_{d_s}\), which in addition flips lane bit
+\(d_s=\min(s,2k_N-2-s)\); the role masks used by the routing equations;
+the pair-partner translations \(E(0,0,0,5,0)+e_b\), \(b<k_N\), by which
+the pair equation at role~\(4\) reads the switch at role~\(1\) of lane
+\(x\oplus2^b\); the column successors \(\zeta_t=e_{k_N+\ell_S}+\cdots+e_{k_N+\ell_S+t}\),
+\(t<q\); and the lane flips \(e_b\), \(b<k_N\) (counted among the neighbors; no equation of this construction reads them).
+\end{itemize}
+Hence \(c_N\le8k_N+q+16C+3\). The identity is a neighbor, so
+\(c_N\ge1\).
+
+\emph{Selectors.} For each coordinate \(a<m_H\) there is a
+\emph{linearized} polynomial
+\(\lambda_a(X)=\sum_{r<m_H}c_{a,r}X^{2^r}\), of degree at most
+\(2^{m_H-1}\), with \(\lambda_a(e_b)=[a=b]\); since \(\lambda_a\) is
+\(\mathbb F_2\)-linear, \(\lambda_a(\sum_bu_be_b)=u_a\) for all bits
+\(u_b\). Indeed, the coefficients solve an \(m_H\times m_H\) linear
+system with matrix \((e_b^{2^r})_{b,r}\). A nonzero vector in its kernel
+would give a nonzero linearized polynomial of degree at most
+\(2^{m_H-1}\) vanishing on every \(e_b\), hence on all \(2^{m_H}\) points
+of \(H\), which is impossible; so the system is invertible. A
+\emph{pattern} is an assignment of bits to a set of distinct
+coordinates. It is emitted as
+\[
+ \chi_p(X)=\prod_{a:\,p(a)=1}\lambda_a(X)\prod_{a:\,p(a)=0}
+ \bigl(1+\lambda_a(X)\bigr),
+\]
+which on \(H\) is the indicator of the points whose coordinates agree
+with \(p\), and has degree at most \(m_H2^{m_H-1}\). The selector of an
+equation is the sum of a list of disjoint patterns: one pattern fixes
+the host's stage, column, role and area, and it is merged with the
+patterns of a lane condition. The lane conditions used are the time
+lanes, the input lanes, the dummy lanes, the first lane, the last time
+lane, the other time lanes, and, for each \(t\), the lanes whose least
+set bit is \(t\); each is a list of at most \(k_N\) patterns. Two patterns
+are merged by uniting their assignments before emission, and a conflict
+emits nothing. Every emitted pattern thus fixes each coordinate at most
+once.
+
+\emph{Routing equations.} Write \(D_s(x,c)\) for the network record bit
+at stage \(s\), lane \(x\), column \(c\), and \(W_s(x,c)\) for the switch
+value. At every stage \(s<2k_N-1\), every lane and every column, the
+host points of area~\(0\) carry the equations
+\begin{gather*}
+ D_s(x,c)+D_{s+1}(x,c)+W_s(x,c)\bigl(D_{s+1}(x,c)
+ +D_{s+1}(x\oplus2^{d_s},c)\bigr)=0,\\
+ W_s(x,c)^2+W_s(x,c)=0,\\
+ W_s(x,c)+W_s(x,c+1\bmod C)=0,\qquad
+ W_s(x,c)+W_s(x\oplus2^{d_s},c)=0,
+\end{gather*}
+and every network record bit satisfies \(D_s(x,c)^2+D_s(x,c)=0\). The
+column successor \(c\mapsto c+1\bmod C\) is the translation by
+\(\zeta_t\) at the columns whose lowest zero bit is \(t\), and by
+\(\zeta_{q-1}\) at the column of all ones; each case is selected by a
+column pattern.
+
+\begin{lemma}[Routing]\label{earlier:r:lem:routing}
+Let \(U,V:[0,N)\times[0,C)\to\{0,1\}\). Switch values satisfying the
+routing equations with \(D_0=U\) and \(D_{2k_N-1}=V\) exist if and only
+if some permutation \(\pi\) of \([0,N)\) satisfies
+\(V(\pi(x),c)=U(x,c)\) for all \(x\) and \(c\).
+\end{lemma}
+\begin{proof}
+Soundness. The switch equations make each \(W_s(x,c)\) a bit, constant
+in \(c\), and equal at the two lanes \(x\) and \(x\oplus2^{d_s}\). So the
+map \(p_s\) sending \(x\) to \(x\) or to \(x\oplus2^{d_s}\), according to
+the switch, is an involution, and the routing equation says
+\(D_{s+1}(p_s(x),c)=D_s(x,c)\) for every column. Composing the
+\(2k_N-1\) involutions gives \(\pi\); whole records move together, so
+no record is lost or duplicated, even when values repeat.
+
+Completeness, by induction on \(k_N\), following
+Beneš~\cite{Ben65}. For \(k_N=1\)
+one switch realizes either permutation of two lanes. For \(k_N\ge2\)
+form a bipartite multigraph whose left vertices are the source pairs
+\(\{x,x\oplus1\}\), whose right vertices are the destination pairs
+\(\{y,y\oplus1\}\), and which has one edge from the pair of \(x\) to the
+pair of \(\pi(x)\) for each \(x\). Every vertex has degree two, so the
+multigraph is a union of even cycles, and its edges can be colored
+\(0\) and \(1\) so that each vertex meets both colors. The first switch
+of each source pair sends its record of color \(b\) to the lane whose
+lowest bit is \(b\), and the last switch of each destination pair
+receives its color-\(b\) record from that lane. For each color the
+records induce a permutation of the remaining \(k_N-1\) lane bits,
+which is routed by induction inside the two subnetworks, whose
+dimension sequence is \(1,\ldots,k_N-1,\ldots,1\). Together with the
+first and last stages this is the sequence
+\(d_s=\min(s,2k_N-2-s)\). Copy every switch value to all columns and
+propagate the records through the network; then all equations hold.
+\end{proof}
+
+\emph{Input subspace.} Let \(I\) have offset \(E(T,0,0,0,0)\) and the basis
+\(e_{k_N+\ell_S},\ldots,e_{k_N+\ell_S+\omega-1}\),
+\(e_0,\ldots,e_{m-\omega-1}\), in this order. Since \(c<N_A\le T\) and \(T\) is a single lane bit,
+\(T+c=T\oplus c\), and the \(i\)-th element of \(I\) is the point of
+bit \(i\bmod w\) of the value of \(\iota_{\floor{i/w}}\), because
+\(\mathit{va}\) has field tag~\(0\). Thus the input clause of
+\cref{earlier:r:def:acsp} writes \(\bar x\) directly into the input records. When
+(B5) is compiled into \(P\), only the equations prescribing these
+records' value bits are omitted; the input clause enforces them
+instead. All other equations of (B5), including the zero values of the
+dummy records, are retained.
+
+\begin{theorem}[The affine instance]\label{earlier:r:thm:embedding}
+Let \(\mathcal I(M,\tau,\bar x)\) be the affine constraint instance with
+an irreducible polynomial of the degree \(f\) of \cref{earlier:r:lem:acsp-degree},
+the subspace \(H\), the neighbors
+above, the constraint polynomial \(P\) given by the sum, over the
+equations of the event trace other than the input-value equations of
+(B5), the routing equations and the bit checks, of the equation's
+selector times the equation, and the input subspace
+\(I\). It accepts \(\bar x\) if and only if
+\(\mathrm{ET}(M,\tau,\bar x)\) is satisfiable.
+\end{theorem}
+\begin{proof}
+At every point of \(H\) at most one selector is nonzero, because
+equations have distinct host points or disjoint lane conditions. So
+\(P(\alpha,A(\alpha+b_1),\ldots)\) vanishes on \(H\) exactly when every
+equation holds for the table of values of \(A\) on \(H\); all points read
+lie in \(H\), since every \(b_\nu\in H\). (\(\Rightarrow\)) Given \(A\),
+read the slots of the trace from its values on \(H\). Every compiled
+equation of the event trace holds, the bits are bits, and by \cref{earlier:r:lem:routing}
+the network records at the last stage are a permutation of those at
+stage~\(0\); hence so are their record fields, which is (P). The input
+clause gives the values of the input records, the remaining equations
+of (B5). (\(\Leftarrow\)) Given a
+satisfying assignment of the event trace, place its values, set unused
+network padding to \(0\), choose switches by \cref{earlier:r:lem:routing} for the
+permutation of (P), set all other points to \(0\), and let \(A\) be the
+interpolation polynomial of this table, of degree less than
+\(\abs H\). Every equation and the input clause hold.
+\end{proof}
+
+\subsection{Degree, field, and generator}
+
+\begin{lemma}[Degree and field]\label{earlier:r:lem:acsp-degree}
+The constraint polynomial \(P\) of \cref{earlier:r:thm:embedding}, as emitted, has
+weighted degree at most \(d_B=(m_H+4)2^{m_H}\). Let
+\(f=m_H+\ceil{\lgx(4(m_H+4))}\). Then \(4d_B\le2^f\), \(m_H+2\le f\)
+and \(2^f<8(m_H+4)2^{m_H}\). For the machine \(M_n\) of
+\cref{earlier:r:lem:tm-ram} with \(T_n=2^{\tau_n}\),
+\[
+ 2^f=O(T(n)\log^3T(n)),\qquad f=\log T(n)+O(\log\log T(n)),\qquad
+ c_N=O(\log T(n)),
+\]
+with constants depending only on \(V\).
+\end{lemma}
+\begin{proof}
+Every term is an emitted pattern, of degree at most \(m_H2^{m_H-1}\) in
+\(X\), times an equation of degree at most two in the \(Y_\nu\); the
+position constants of (B5) are single coordinates \(\lambda_a(X)\). A
+term therefore has weight at most
+\(m_H2^{m_H-1}+2(2^{m_H}-1)\le d_B\), and a sum of terms has no monomial
+outside theirs. The bound holds for the polynomial as emitted, not only
+on \(H\); this is why conditions are merged into single patterns before
+emission. The choice of \(f\) gives \(2^f\ge4(m_H+4)2^{m_H}=4d_B\) and
+\(2^f<8(m_H+4)2^{m_H}\). For \(M_n\), \(K\), \(L\) and \(F_{\rm tags}\)
+depend only on \(V\), while \(w_n\) and \(k_N=\tau_n+1\) are
+\(O(\log T(n))\) and \(T_n=O(T(n))\). Hence
+\(\abs H=16N2^{\ell_S} C=O(T(n)\log^2T(n))\), and the bounds follow.
+\end{proof}
+
+\begin{lemma}[Generator]\label{earlier:r:lem:generator}
+Fix \(V\). There is an algorithm that, given \(x\in\{0,1\}^n\) with
+\(n\ge2\) and an integer \(t\ge n\) in binary, outputs \(\bar x\) and
+the instance \(\mathcal I_x=\mathcal I(M_n,\tau_n,\bar x)\) of
+\cref{earlier:r:thm:embedding}, built with \(t\) in place of \(T(n)\) in
+\cref{earlier:r:lem:tm-ram}, in \(\poly(n,\log t)\) steps. The description of
+\(\mathcal I_x\) has \(\poly(\log t)\) bits, and its constraint circuit
+has \(O(\log^3t)\) gates, with constants depending only on \(V\).
+\end{lemma}
+\begin{proof}
+The algorithm computes the numbers \(w_n\), \(\tau_n\), \(m\), \(k_N\),
+\(\ell_S\), \(d\), \(q\), \(m_H\) and \(f\), all of \(O(\log t)\) bits, and
+writes \(\bar x\). It obtains \(\mathrm{irr}\) from Shoup's deterministic
+algorithm~\cite[Corollary~3.2]{Sho88}, which runs in \(\poly(f)\)
+time~\cite[Algorithm~17]{BCGT13}, and solves the \(m_H\times m_H\) system
+for the coefficients of the \(\lambda_a\) with \(O(m_H^3)\) field
+operations. It emits the neighbor offsets, which are sums of basis
+elements; the guard patterns, at most
+\(4C(k_N+3)+4k_N(q+3)+4=O(\log^2t)\) of them, each with at most \(m_H\)
+coordinates; and, for each equation family and bit index, the selector
+times the equation, whose reads are the offsets of its catalog
+entries. The code-dependent constants come from the fixed code of
+\(M_n\) with \(n\), \(t\) and \(T_n-8\) inserted. Each pattern costs
+\(O(m_H)\) gates and each equation \(O(L)\) gates, which gives
+\(O((m_H+K+L)\cdot\log^2t+m_H^2+c_N)=O(\log^3t)\) gates. Every loop
+runs over bit indices, code positions, registers, coordinates, neighbors
+or patterns, never over the points of \(H\), the steps of the run, or a
+witness; each field operation costs \(\poly(f)\) steps.
+\end{proof}
+
+\subsection{The short PCP}
+
+\begin{theorem}[\Cref{imp:transfer-short-pcp} for multitape verifiers]
+\label{earlier:r:thm:short-pcp-ours}
+Let \(V(x,y)\) be a deterministic multitape machine and \(T:\N\to\N\) a
+function with \(T(n)\ge n\), such that \(V\) halts within \(T(n)\) steps
+on every \(x\in\{0,1\}^n\) and every \(y\), and \(T(n)\) is computable
+from \(n\) in \(\poly(n,\log T(n))\) steps. Then, at every input length \(n\ge1\), the conclusion of
+\cref{imp:transfer-short-pcp} holds for \(V\) and \(T\). In particular it holds
+for \(\mathcal V_G\) and \(T_G\) of \cref{earlier:r:lem:succinct-verifier}.
+\end{theorem}
+
+\emph{Idea of proof.} \Cref{earlier:r:lem:tm-ram} turns \(V\) into a random-access
+machine whose run has exactly \(T_n\) configurations, and
+\cref{earlier:r:thm:trace,earlier:r:thm:embedding} turn the question whether that machine
+accepts into an affine constraint instance (Step~1). The PCP verifier
+of~\cite{BCGT13} for such
+instances repeats its proximity sub-verifiers, which costs randomness;
+we run each of them once (Step~2). The resulting verifier \(V_0\) is
+sound only in a weak sense: it rejects every proof of a false instance
+with probability at least \(1/\poly(\log T)\). A small-bias set amplifies this to soundness
+\(1/n\) without new random bits (Step~3). Finally, the verifier is
+written as a circuit whose proof reads are oracle gates (Step~4). The
+governing bounds are
+\[
+ \begin{aligned}
+ r_0&\le\log T+O(\log\log T),&\qquad
+ \sigma_0&\ge\frac1{\poly(\log T)},\\
+ \abs S&=\poly(n,\log T),&
+ \ell&=\log T+O(\log\log T).
+ \end{aligned}
+\]
+for the randomness, the base rejection probability, the size of the
+small-bias set, and the number of inputs of \(C^O_x\). Every step runs
+in time \(\poly(n,\log T)\).
+
+\begin{proof}
+For \(n=1\), use the zero-input constant-false circuit, as checked
+below in ``The exact Lean interface''; the fixed resource constants
+can cover this one length. Now fix \(n\ge2\) and
+\(x\in\{0,1\}^n\). Write \(T=T(n)\), and take \(w_n\),
+\(\bar x\), \(T_n\) and \(M_n\) from \cref{earlier:r:lem:tm-ram}. The construction
+needs \(T\) explicitly, because \(w_n\), \(T_n\) and the code of \(M_n\)
+depend on it. By hypothesis \(T\), and hence \(w_n\) and \(T_n\), are
+computed in \(\poly(n,\log T)\) steps. All logarithms below are base two, and
+\(\poly(n,\log T)\) bounds have polynomials depending only on \(V\) and
+\(T\).
+
+\emph{Step 1: reduction to an affine constraint instance.} Let
+\(T_n=2^{\tau_n}\). By \cref{earlier:r:cor:trace-verifier,earlier:r:thm:embedding},
+\(V(x,y)\) accepts for some \(y\) of length \(T\) if and only if the
+affine constraint instance \(\mathcal I_x=\mathcal I(M_n,\tau_n,\bar x)\)
+accepts \(\bar x\); here \(\abs{\bar x}=2^m\) with
+\(\omega_n\le m\le\tau_n\) for \(w_n=2^{\omega_n}\), by
+\cref{earlier:r:lem:tm-ram}. \Cref{earlier:r:lem:generator} computes \(\bar x\) and
+\(\mathcal I_x\) from \(x\) and \(T\) in \(\poly(n,\log T)\) steps. Its
+neighbors are translations, \(m_H+2\le f\), its input subspace has
+dimension \(\lgx\abs{\bar x}\), with \(1\le\lgx\abs{\bar x}\le\tau_n<m_H\),
+and, by \cref{earlier:r:lem:acsp-degree},
+\[
+ f=\log T+O(\log\log T),\qquad 1\le c_N=O(\log T).
+\]
+
+\emph{Step 2: the verifier with single sub-verifier runs.} Let \(V_0\)
+be the verifier of~\cite[Construction~8.5]{BCGT13} for
+\(\mathcal I_x\), with two changes. Each of the amplified
+proximity verifiers \(V_{\rm aRS}\) and \(V_{\rm aVRS}\) in its Steps~2,
+3 and~5 is replaced by a single run of the corresponding strong
+proximity verifier \(V_{\rm RS}\) or \(V_{\rm VRS}\); and the test of
+\(p_1\) uses the degree bound \(d_H\) below in place of the degree \(d\)
+of~\cite[Construction~8.5]{BCGT13}. All steps read
+prefixes of one random string, as in~\cite[Algorithm~9]{BCGT13}. The
+proof format is that of~\cite[Definition~8.4]{BCGT13}: five tables of
+elements of \(F\), namely an assignment table \(p_0\) and a composition
+table \(p_1\), both indexed by \(F\), and three proximity proofs. We
+encode them in binary with \(f\) bits per element. The test of \(p_1\)
+uses the degree bound \(d_H=2^{f-2}=\abs F/4\), which \(V_0\) computes
+from \(f\) alone; it bounds the degree \(d_B\) of \cref{earlier:r:lem:acsp-degree},
+since \(4d_B\le2^f\), and it is less than \(2^f\). We use the following
+properties.
+\begin{enumerate}[label=(\alph*)]
+\item \emph{Randomness and length.} The sub-verifiers use the
+parameter tuple \((\eta,\kappa_0,\gamma_{\rm rep},\mu_{\rm rep})=(2,4,0,1)\)
+fixed before \cref{earlier:r:lem:rs-recursion}. By~\cite[Lemmas~C.2--C.5]{BCGT13},
+one run of \(V_{\rm RS}\) or \(V_{\rm VRS}\) on a domain of dimension
+\(f\) uses at most \(\max\{\mathrm{rand}_=(f),f\}\) random bits, and its
+proof has at most \(2^f+(2^\eta+1)\bigl(2^f+2\,\mathrm{len}_=(f)\bigr)\)
+field elements. For the second bound, the degree bounds used by
+\(V_0\) are less than \(2^f\), so the number of blocks
+in~\cite[Lemma~C.3]{BCGT13} is at most \(2^\eta\). Since \(f\ge1\) and
+\(\eta=2\), \cref{earlier:r:lem:rs-recursion} bounds these quantities by
+\(f+3\log(2f)\) random bits and \(16\cdot2^ff^3\) field elements. The
+consistency test uses \(f\) bits. As the steps share their random
+string, \(V_0\) uses
+\[
+ r_0\le f+3\log(2f)=\log T+O(\log\log T)
+\]
+random bits; compare~\cite[Lemma~C.8]{BCGT13}, where each term is
+multiplied by the number of repetitions. The proof consists of two
+tables of \(2^f\) field elements and three proximity proofs. So the
+binary proof has \(L_\pi\) bits, where
+\[
+ L_\pi\le f\bigl(2\cdot2^f+3\cdot16\cdot2^ff^3\bigr)\le64\cdot2^ff^4,
+ \qquad \log L_\pi=\log T+O(\log\log T).
+\]
+\item \emph{Time and queries.} \(V_0\) runs in time
+\[
+ \poly(n,\log T).
+\]
+We bound the parts of its work in turn.
+\begin{itemize}
+\item \emph{Field operations.} The field \(F\) is represented by an
+irreducible polynomial that Shoup's deterministic algorithm finds in
+\(\poly(f)\) steps~\cite[Algorithm~17]{BCGT13}. So each field operation
+takes \(\poly(f)\) steps.
+\item \emph{Parameters.} The instance \(\mathcal I_x\) is generated in
+\(\poly(n,\log T)\) steps (\cref{earlier:r:lem:generator}). Its constraint
+circuit, which the consistency test evaluates once, has
+\(O(\log^3T)\) gates, and its \(c_N\) neighbors are translations.
+\item \emph{Sub-verifier runs.} A single run of \(V_{\rm RS}\) or
+\(V_{\rm VRS}\) takes \(\poly(f)\) field operations. Its recursion
+roughly halves the dimension of the current affine subspace at each
+level and does \(\poly(f)\) field operations per
+level~\cite[Algorithms~12--16]{BCGT13}.
+\item \emph{The instance.} The only step whose cost depends on
+\(\abs{\bar x}\) is the evaluation of the low-degree extension \(A_x\)
+of the instance at the queried points (Step~5
+of~\cite[Construction~8.5]{BCGT13}). By Lagrange interpolation over the
+input subspace \(I\) of size \(\abs{\bar x}\), each
+evaluation takes \(O(\abs{\bar x}^2)\) field operations, and
+\(\abs{\bar x}=O(n+\log T)\).
+\end{itemize}
+The queries of \(V_0\) are computed from the random string alone, by
+the non-adaptive decompositions of the single-run
+verifiers~\cite[Lemmas~12.16--12.20]{BCGT13}, combined as
+in~\cite[Lemma~12.23]{BCGT13}.
+\item \emph{Completeness.} Suppose that \(\mathcal I_x\) accepts
+\(\bar x\) with an assignment polynomial \(A\), and let \(A_x\) be the
+polynomial of degree less than \(2^m\) that interpolates \(\bar x\) on
+\(I\). Let \(\pi\) consist of the tables of \(A\) and of \(B_A\) on \(F\)
+together with the proximity proofs of~\cite[Construction~8.3]{BCGT13},
+with \(\pi_1\) computed for the degree bound \(d_H\).
+Each table tested by \(V_0\) is a codeword of the code tested there:
+\(A\) has degree less than \(2^{m_H}\), \(B_A\) has degree at most
+\(d_B\le d_H\) and vanishes on \(H\), and \(A-A_x\) has degree less than \(2^{m_H}\) and
+vanishes on \(I\). By the perfect completeness of the strong proximity
+verifiers~\cite[Definition~4.15 and Theorem~11.1]{BCGT13}, every single
+run accepts on every random string. The consistency test accepts, since
+\(p_1(\alpha)=B_A(\alpha)=P(\alpha,A(N_1(\alpha)),\ldots)\). So \(V_0\)
+accepts \(\pi\) with probability one.
+\item \emph{Base soundness.} Suppose that \(\mathcal I_x\) does not
+accept \(\bar x\), and let \(\pi\) be any proof. Put
+\(\delta=1/(8c_N)\); here \(c_N\ge1\), because the identity is a
+neighbor. We distinguish four cases. In Cases~1--3, one of the following
+holds: \(p_0\) has relative distance at least \(\delta\) from every
+polynomial of degree less than \(2^{m_H}\) (Case~1); \(p_1\) has relative
+distance at least \(1/8\) from every polynomial of degree at most \(d_H\)
+that vanishes on \(H\) (Case~2); or \(p_0-A_x\) has relative distance at
+least \(\delta\) from every polynomial of degree less than \(2^{m_H}\)
+that vanishes on \(I\) (Case~3). By strong soundness
+\cite[Definition~4.15]{BCGT13} and~\cite[Theorem~11.1]{BCGT13}, a single
+run of \(V_{\rm RS}\) or \(V_{\rm VRS}\) on a table at relative distance
+at least \(\delta'\) from its code rejects with probability at least
+\(\delta'/(2+K_f)\). Here \(K_f=16f^{\log c}\), with \(c\) the constant of~\cite[Theorem~11.3]{BCGT13} at the tuple fixed in~(a); this is a weakening of the bound printed in~\cite[Theorem~11.1]{BCGT13}, and the companion's source mapping explains the choice.
+
+In Case~4 none of these holds, so there are polynomials \(A\) and
+\(A'\) of degree less than \(2^{m_H}\), with \(A'\) vanishing on \(I\),
+and \(B'\) of degree at most \(d_H\), vanishing on \(H\), such that
+\(p_0\) and \(A\), and \(p_0-A_x\) and \(A'\), each differ on at most a
+\(\delta\) fraction of \(F\), and \(p_1\) and \(B'\) on at most a
+\(1/8\) fraction. The polynomials \(A-A_x\) and \(A'\) agree wherever
+both of the first two relations hold, so on at least
+\((1-2\delta)\abs F\ge\frac34\abs F>2^{m_H}\) points, because
+\(m_H+2\le f\). Hence \(A-A_x=A'\), and \(A\) agrees with \(\bar x\) on
+\(I\). Since \(\mathcal I_x\) does not accept \(\bar x\), \(B_A\) does not
+vanish on all of \(H\), so \(B_A\ne B'\), and these polynomials of degree
+at most \(d_H=\abs F/4\) agree on at most \(\abs F/4\) points. The
+consistency test of Step~4 draws \(\alpha\in F\) uniformly and accepts
+only if \(p_1(\alpha)=P(\alpha,p_0(N_1(\alpha)),\ldots,
+p_0(N_{c_N}(\alpha)))\). Every \(N_\nu\) is a bijection of \(F\), so with
+probability at least \(1-1/8-c_N\delta=3/4\) we have
+\(p_1(\alpha)=B'(\alpha)\) and \(p_0(N_\nu(\alpha))=A(N_\nu(\alpha))\) for
+every \(\nu\), and then the test accepts only if
+\(B'(\alpha)=B_A(\alpha)\). So it rejects with probability at least
+\(3/4-1/4=1/2\).
+
+Since \(V_0\) rejects whenever one of its steps rejects, and
+\(\delta/(2+K_f)\) is the smallest of the four bounds, it rejects \(\pi\)
+with probability at least
+\[
+ \sigma_0=\frac1{8c_N(2+K_f)}\ge\frac1{\poly(\log T)}.
+\]
+\end{enumerate}
+
+\emph{Step 3: amplification.} Choose fixed positive integers
+\(K_1,b_1\) such that \(1/(K_1f^{b_1})\le\sigma_0\).
+The consistency test uses \(f\ge1\) random bits, so \(r_0\ge1\).
+Choose the least nonnegative integer \(m\) such that
+\(2^{2m}\ge r_0^2nK_1f^{b_1}\), and use the powering construction
+in the proof of \cref{earlier:r:lem:small-bias} over \(\mathbb F_{2^m}\).
+Its bias is at most \(\varepsilon=r_0/2^m\), with
+\(\varepsilon^2\le1/(nK_1f^{b_1})\le\sigma_0/n\).
+Thus \cref{earlier:r:lem:patch-r} applies with \(s=1/n\). Since \(n\ge2\),
+minimality of \(m\) gives
+\[
+ \abs S=2^{2m}<4r_0^2nK_1f^{b_1}=\poly(n,\log T).
+\]
+Choosing \(m\) uses only integer comparisons; constructing the field
+and listing the multiset also take \(\poly(n,\log T)\) time.
+The resulting verifier \(V_1\) uses \(r_0\) random bits. It accepts the
+proof of~(c) with probability one when \(\mathcal I_x\) accepts
+\(\bar x\), and it accepts every proof with
+probability at most \(1/n\) otherwise. It runs in \(\poly(n,\log T)\)
+time.
+
+\emph{Step 4: the oracle circuit.} Let
+\[
+ \ell=\max\{r_0,\ceil{\log L_\pi}\},\qquad\text{so that}\qquad
+ \ell=\log T+O(\log\log T).
+\]
+For \(R\in\{0,1\}^\ell\), consider the computation of \(V_1\) on
+\(\bar x\) with the random string formed by the first \(r_0\) bits of
+\(R\). It runs in \(\poly(n,\log T)\) steps, and its proof bits are read
+at addresses below \(L_\pi\), written with \(\ell\) bits. Convert this
+computation into a circuit in the standard way, and replace each read of
+a proof bit by an oracle gate on the \(\ell\) address bits. This gives
+an oracle circuit of size \(\poly(n,\log T)\) that outputs the verdict
+of \(V_1\) on the proof \(\pi_O\) whose bit at address \(a<L_\pi\) is
+\(O(a)\). Let \(C^O_x\) be its negation. The algorithm \(A\) computes
+\(T\), \(\mathcal I_x\) (\cref{earlier:r:lem:generator}), \(S\) and \(C^O_x\) in
+\(\poly(n,\log T)\) time.
+
+\emph{The properties of \(C^O_x\).} If \(V(x,y)\) accepts for some \(y\)
+of length \(T\), Step~1 and property~(c) give a proof \(\pi\) that
+\(V_1\) accepts on every random string. The oracle \(O\) with
+\(O(a)=\pi_a\) for \(a<L_\pi\) and \(O(a)=0\) otherwise makes \(C^O_x\)
+unsatisfiable. If \(V(x,y)\) rejects for every \(y\) of length \(T\),
+\(\mathcal I_x\) does not accept \(\bar x\) (Step~1). So for every
+oracle \(O\), \(V_1\) accepts \(\pi_O\) on at most a \(1/n\) fraction of
+the strings in \(\{0,1\}^{r_0}\). Hence \(C^O_x\) has at least
+\[
+ 2^\ell(1-1/n)
+\]
+satisfying assignments. Each oracle gate has \(\ell\) inputs, and
+\(C^O_x\) has \(\ell\) inputs and size \(\poly(n,\log T)\).
+
+Finally, \(\mathcal V_G\) and \(T_G\) satisfy the hypotheses by
+\cref{earlier:r:lem:succinct-verifier}(i)--(ii).
+\end{proof}
+
+\begin{corollary}[Clock supplied as input]\label{earlier:r:cor:short-pcp-clock}
+Fix a deterministic multitape verifier \(V\). There is a uniform
+algorithm that, given \(x\in\{0,1\}^n\), \(n\ge2\), and a binary integer
+\(t\ge n\), constructs the oracle circuit of
+\cref{imp:transfer-short-pcp} with \(T(n)\) replaced by \(t\), provided \(t\)
+bounds the running time of \(V(x,y)\) for every witness \(y\).
+Its running time and circuit size are \(\poly(n,\log t)\), and its
+randomness and oracle-address lengths are
+\(\log_2t+O(\log\log t)\). Completeness and soundness have the same
+quantifiers as in \cref{imp:transfer-short-pcp}, with witnesses of length \(t\).
+In particular, for any bound \(T(n)\ge n\), the compiler may be given
+\((x,T(n))\); it need not compute the function \(T\).
+\end{corollary}
+\begin{proof}
+In the proof of \cref{earlier:r:thm:short-pcp-ours}, computing \(T(n)\) serves
+only to obtain the integer used to choose the word width, padded
+clock, reduction parameters, and verifier circuit. Supply that integer
+as \(t\) and perform the same construction, clocking the simulation
+after \(t\) steps. All these choices are effective in
+\(\poly(n,\log t)\) time, with constants depending on the fixed
+verifier. Under the stated promise, the clock changes no computation
+on \(x\). The completeness and soundness arguments of Steps~1--4
+are pointwise in \(x\) and this integer, so apply unchanged. The
+construction does not test the promise.
+\end{proof}
+
+\paragraph{The exact Lean interface.}
+The companion states \cref{imp:transfer-short-pcp} as
+\texttt{Ordinary\allowbreak{}Oracle\allowbreak{}Circuit\allowbreak{}PCP}, with an ordinary multitape
+machine as the constructor. We complete it as follows. Its verifier starts with
+\(\operatorname{fr}(x)\) and \(\operatorname{fr}(y)\) on its two input
+tapes, where
+\(\operatorname{fr}(b_1\cdots b_j)=1b_1\cdots1b_j0\), followed by blank
+zeros. The predicate \texttt{RunsInTime} bounds this actual computation
+by \(t=T(n)\) on every witness list; the correctness clauses quantify
+over witnesses of exactly \(t\) bits. For \(n\ge2\), use the construction
+of \cref{earlier:r:cor:short-pcp-clock} with these initial tapes. The machine
+\(M_n\) of \cref{earlier:r:lem:tm-ram} writes \(\operatorname{fr}(x)\) and
+\(\operatorname{fr}(y)\) onto the two simulated tapes, where \(y\)
+consists of the first \(t\) witness bits. This writes the frame
+terminators at their prescribed positions and leaves zeros beyond them;
+subsequent writes by the simulated verifier are preserved. Loading takes
+\(O(n+t+w_n)\) steps, so, since \(n\le t\), \(T_n=O(t+\log t)\), and
+\(M_n\) accepts exactly for the required \(t\)-bit witnesses. The
+remaining PCP construction is unchanged.
+
+For \(n=1\), output a zero-input, one-node constant-false circuit,
+with \(\ell=0\) and oracle arity zero. It is unsatisfiable for every
+oracle, so completeness holds; the soundness lower bound is
+\(2^0(1-1/1)=0\). Since \(T(1)\ge1\), both resource inequalities hold
+after enlarging the fixed constants. For \(n=0\), use the same fixed
+output: the two resource and two correctness clauses apply only for
+\(n\ge1\). Thus one constructor covers every input length.
+
+The constructor receives
+\(\operatorname{fr}(x)\operatorname{fr}(\operatorname{bits}(t))\), of
+length \(2n+2\abs{\operatorname{bits}(t)}+2\), and never computes the
+function \(T\). For \(n\ge2\), its bounds give, for fixed integers
+\(K,e\),
+\[
+ 2^\ell\le Kt\,\lceil\log_2(t+2)\rceil^e,
+ \qquad
+ \abs{C_x^O}\le K\bigl(n+\operatorname{natBitLength}(t)+1\bigr)^e.
+\]
+Here \(\operatorname{natBitLength}(t)=\lfloor\log_2t\rfloor+1\) for
+\(t\ge1\), and \(\lceil\log_2(t+2)\rceil\) is the companion's
+\texttt{logScale}. Inputs, constants and oracle gates count as nodes;
+each oracle gate has \(\ell\) arguments, and the circuit outputs true
+precisely on rejection, as above. A circuit with \(s\) nodes has a word
+in the companion's self-delimiting format of length
+\(O((s(\ell+1)+1)\log(s+\ell+2))\): write its arity, node count, node
+tags and addresses, and output address in order. Hence both computing
+and writing this word take \(\poly(n,\log(t+2))\) time on an ordinary
+multitape machine, which is the constructor the interface asks for.
+
+\begin{remark}[Non-adaptivity]\label{earlier:r:rem:short-pcp-nonadaptive}
+The circuit \(C^O_x\) of the proof is non-adaptive: the address bits of
+every oracle gate are computed from the inputs \(R\) alone
+(\cite[Lemmas~12.16--12.20]{BCGT13}, combined as
+in~\cite[Lemma~12.23]{BCGT13}, and \cref{earlier:r:lem:patch-r}(i)); the oracle
+answers enter only the decision.
+\end{remark}
+
+\subsection{Proof of \texorpdfstring{\cref{earlier:r:lem:tm-ram}}{the random-access simulation}}
+
+The construction has two parts. A random-access machine
+(\cref{earlier:r:def:ram}) simulates \(V\) step by step. An idle phase then makes
+the number of configurations exactly \(T_n\), as acceptance in time
+\(T_n\) requires.
+
+\emph{Idea of proof.} The machine \(M_n\) copies the input and the
+witness onto the simulated tapes of \(V\), which it keeps in its memory,
+interleaved. It then simulates \(V\) step by step. Each block of its
+code pads its own length to a multiple of \(8\) and adds that length to
+a step counter. Once \(V\) accepts, a counted idle loop pads the run, so
+that the \texttt{out} instruction comes at exactly step \(T_n-1\).
+
+\begin{proof}[Proof of \cref{earlier:r:lem:tm-ram}]
+\emph{Layout.} Let \(V\) have \(k_V\) tapes, counting its input and
+witness tapes. Memory cell \(2k_Vj+i\) of \(M_n\) holds cell \(j\) of
+tape \(i\) of \(V\); with this stride, a head at position \(0\) is
+recognized by one comparison. The tape symbols are coded as small
+integers, and the blank as zero. The \(K=9+2k_V\) registers hold a step
+counter, the verdict, the state of \(V\), the head positions, the
+scanned symbols, and scratch values.
+
+\emph{Loading the tapes.} First \(M_n\) reads from tape~A the words
+that contain the first \(n\) bits of \(\bar x\), which are \(x\), and
+writes \(x\) bit by bit onto the input tape of \(V\). It then reads from
+tape~B the words that contain the first \(T(n)\) witness bits, and writes
+these bits, \(y\), onto the witness tape of \(V\). (For the companion's
+verifiers the two tapes receive the framed words
+\(\operatorname{fr}(x)\) and \(\operatorname{fr}(y)\); see ``The exact
+Lean interface'' above.) The integers \(n\) and \(T(n)\) are written
+into the code. If a read returns \(\#\), \(M_n\) enters a one-instruction
+loop that never reaches \texttt{out}. Loading takes
+\(O(n+T(n)+w_n)\) steps.
+
+\emph{Simulating \(V\).} One step of \(V\) is then simulated by a block
+that loads the scanned symbols, forms the index of the pair (state,
+scanned symbols), and branches through a chain of comparisons to one
+leaf per pair. The leaf stores the written symbols, moves the heads and
+sets the new state. A halted rejecting state, or a pair without a
+transition, leads to the loop that never halts; the accepting state
+records the verdict and starts the idle phase. A step costs \(O(1)\)
+instructions for fixed \(V\), so the simulation ends within
+\(O(n+w_n+T(n))=O(T(n)+w_n)\) steps.
+
+\emph{Counting.} The code of \(M_n\) consists of blocks: the start, the
+two loading loops, the simulation of one step of \(V\) with its leaves,
+and the recording of the verdict. Every path through a block is padded
+with \texttt{nop} instructions so that the number of steps it takes is
+a multiple of~\(8\). On that path the block adds this number to a
+counter register, which is zero in the initial configuration. Hence,
+whenever a block ends, the counter equals the number of steps made so
+far, and this number is a multiple of~\(8\). This at most multiplies
+the running time by a constant.
+
+\emph{Idling.} Once the verdict is recorded in a register, \(M_n\)
+idles. A fixed code cannot hold a number of \texttt{nop}s that depends
+on the run, so the padding is a counted loop: an idle block of exactly
+\(8\) instructions. In order, they are:
+\begin{itemize}
+\item \texttt{add} \(8\) to the counter;
+\item \texttt{cmp} the counter with the constant \(T_n-8\);
+\item five \texttt{nop}s;
+\item \texttt{jne} back to the start of the idle block if the comparison
+found the counter different from \(T_n-8\); as the counter never exceeds
+\(T_n-8\), this means smaller.
+\end{itemize}
+The counter takes only multiples of \(8\). Since \(T_n\) is a power of
+two and at least \(16\), \(T_n-8\) is also a multiple of \(8\). So if the
+counter is at most \(T_n-16\) on entry, the loop ends after the pass at
+whose end exactly \(T_n-8\) steps have been made.
+
+\emph{The verdict.} Then \(M_n\) executes six \texttt{nop}s and one
+\texttt{je} on the verdict register. The \texttt{je} jumps to an
+instruction \((\texttt{out},\textit{reject})\) if the verdict is
+rejection, and otherwise falls through to an instruction
+\((\texttt{out},\textit{accept})\). The instruction \texttt{out} takes a
+constant argument, so this branch is needed. After these seven steps
+exactly \(T_n-1\) steps have been made, and the \texttt{out} instruction
+with the verdict is executed at step \(T_n-1\).
+
+\emph{Constants.} A suitable constant \(c_V\ge16\) ensures three things.
+\begin{itemize}
+\item The simulation and the recording of the verdict end within
+\(T_n-16\) steps.
+\item \(\abs{\bar x}\le2(n+1)+2w_n\le T_n\).
+\item \(2^{w_n}\ge2^{c_V}T(n)\) is larger than \(T_n\) and every
+address.
+\end{itemize}
+The code of \(M_n\) is a fixed code with the integers \(n\), \(T(n)\)
+and \(T_n-8\) written into it; its length \(L\) and the number \(K\) of
+registers depend only on \(V\).
+
+\emph{Runs.} If \(V(x,y)\) accepts for some \(y\in\{0,1\}^{T(n)}\), let
+tape~B hold \(y\) padded with zeros to a multiple of \(w_n\), of length
+at most \(T(n)+w_n\le T_n\). The computation of \(M_n\) on \(\bar x\) and
+this tape, in which every read returns the next word, is an accepting
+run of length \(T_n\). Conversely, no read of an accepting run returns
+\(\#\), since that leads to the loop that never halts. So the run reads
+the first words of \(\bar x\) and of a witness string, simulates \(V\) on
+\(x\) and the first \(T(n)\) bits \(y\) of that string, and reaches the
+accepting state; hence \(V(x,y)\) accepts.
+\end{proof}
+
+
+\subsection{Amplification and uniform proximity interfaces}\label{earlier:release-interfaces}
+These are the arguments of \cite[Appendix~B]{NagCG}; they are
+reproduced with notation adapted. Their published premises are the
+STV reconstruction theorem and the two Chen--Williams results in
+\cref{par:five-inputs}.
+
+\paragraph{Full-range amplification interface.}
+We justify the formulation of \cite[Lemma~3.9]{CLW20} used by the
+companion, for every time-constructible \(S:\mathbb N\to\mathbb N\).
+Here circuit size counts all DAG nodes, including input and constant
+nodes. Following the construction of \cite[Lemmas~25 and~28]{STV01}
+and the circuit argument of its Theorem~24, the polynomial
+reconstruction theorem \cite[Theorem~29]{STV01} gives absolute constants
+\(A\ge1\) and an integer \(a\ge1\) with the following consequence. An
+\(s'\)-node circuit agreeing with the encoded function on more than
+a \(1/2+\delta\) fraction yields an exact circuit for the original
+\(n\)-input function with at most
+\(A(n/\delta)^a s'+n+2\) nodes. The polynomial reconstruction
+overhead includes fixing the decoder's randomness and conversion
+to our fan-in-two basis; the last term allows input and constant
+nodes. Choose an integer \(c>2a+2\), once and before \(S\).
+
+Every \(n\)-input function has a circuit with fewer than
+\(U(n)=2^{n+3}\) nodes. Indeed Shannon expansion combines two
+\((n-1)\)-input circuits as
+\((x\wedge f_1)\vee(\neg x\wedge f_0)\), adding at most five nodes.
+Thus \(B(0)=1\) and \(B(n)\le2B(n-1)+5\) give
+\(B(n)\le6\cdot2^n-5<U(n)\).
+For all sufficiently large \(n\), construct the output as follows.
+If \(S(n)=0\), use a constant function: the target size is zero and
+no circuit has zero nodes. If \(1\le S(n)\le n^c\), use parity on
+\(n+1\) bits. A circuit with at most \(S(n)^{1/c}\le n\) nodes
+omits an input, so pairing assignments that differ only in that
+input gives agreement exactly \(1/2<1/2+S(n)^{-1/c}\).
+If \(S(n)\ge U(n)\), use a constant function, since no input
+function satisfies the hardness premise.
+
+In the remaining regime \(n^c<S=S(n)<U(n)\), put
+\(\epsilon=S^{-1/c}\). Compute the least integer \(k\) such that
+\(2^{ck}\ge S\), and use the dyadic accuracy
+\(\delta=2^{-k-2}\); then
+\(\epsilon/8<\delta\le\epsilon/4\).
+All parameter choices use integer arithmetic. Apply the binary
+encoder of \cite[Lemma~28]{STV01} to the truth table.
+A circuit of size at most \(S^{1/c}\) with agreement at least
+\(1/2+\epsilon\) would have agreement strictly greater than
+\(1/2+\delta\). After increasing the absolute constant \(A\) to
+absorb \(8^a\), reconstruction gives size at most
+\[
+ A n^a S^{(a+1)/c}+n+2<S.
+\]
+The strict inequality holds uniformly in this regime from a fixed
+onset: dividing by \(S>n^c\) bounds the left side by
+\[
+ \frac{A}{n^{\,c-2a-1}}+\frac{n+2}{n^c}<1.
+\]
+This contradicts the premise and proves the required strict
+agreement bound.
+
+On the truth-table layout: in the construction of
+\cite[Lemmas~25 and~28]{STV01} choose a binary extension field,
+rounding its size up to the required scale, and round the number
+of polynomial variables up. The evaluation domain is then
+\(\mathbb F^m\); concatenation with a Hadamard block indexes the
+binary codeword by a product of binary cubes. Its length is a
+power of two, with no padding of the codeword, and remains
+\(\poly(2^n,1/\delta)\). These roundings preserve the polynomial
+reconstruction bound above. Since \(S<U(n)\), we have
+\(1/\delta=2^{O(n)}\), so the output has \(O(n)\) input bits and
+its entire truth table is computable in \(2^{O(n)}\) time.
+
+Choose one onset \(n_0\ge2\) for these estimates, also large enough
+that \(n^c<U(n)\) for \(n\ge n_0\). At each of the finitely many
+lengths \(n<n_0\) with \(S(n)>0\), output parity on \(S(n)+1\)
+bits instead. Since \(S(n)^{1/c}\le S(n)\), the same missing-input
+argument gives hardness at every such length, for every supplied
+function. The case \(S(n)=0\) is as above. These finitely many
+choices can be hardcoded after \(S\) is fixed; the arity and
+runtime bounds in the companion have onsets, while its hardness
+clause holds at every length.
+
+Finally the eventual runtime must hold even on easy input
+functions and for very large \(S(n)\). Fix a time constructor
+computing \(S(n)\) from unary \(n\) within \(C(S(n)+1)\) steps.
+For \(n\ge n_0\), run it for only \(C(U(n)+1)\) simulated steps.
+A timeout implies \(S(n)>U(n)\); a returned value at least \(U(n)\)
+also selects the constant output. Otherwise the returned value
+determines the cases above. Initialization, the capped simulation,
+integer operations, and reading and writing the framed arities
+and truth tables all take \(2^{O(n)}\) time. The usual
+polynomial-overhead simulation into \texttt{TM2}, the multi-stack
+machine model of the Lean mathematical library in which the companion
+states this input, preserves this bound.
+After increasing its exponent and onset, the bound is
+\(2^{en}\) as required by the companion. The machine never tests
+whether the input function is hard. Its constants and onsets may
+depend on \(S\); the exponent \(c\) in the hardness conclusion
+does not.
+
+\paragraph{Uniform three-query PCPP and code interfaces.}
+We spell out the uniformity and boundary conventions of the
+companion's two inputs underlying \cref{imp:transfer-pcpp}.
+For a fixed real \(0<\delta<1\), choose a positive rational
+\(\eta<\delta\) and apply \cite[Lemma~22]{CW19} at proximity
+\(\eta\) and soundness \(1/2\), followed by the constant-size clause
+conversion of \cite[Appendix~A]{CW19} that proves
+\cite[Lemma~24]{CW19}. Distance at least \(\delta\) from every
+accepting word implies the source's strict distance condition at
+\(\eta\). In that clause conversion,
+round the common clause count up to a power of two and pad each
+block with tautological three-literal clauses; use a dummy proof
+coordinate if necessary and repeat literals in shorter clauses.
+Uniform binary coins then select exactly three literals, and
+padding decreases the rejection probability by at most a fixed
+factor. The verifier is nonadaptive
+(\cite[Definition~20]{CW19}):
+for a fixed circuit \(C\) and coin string, its three queried
+addresses and their signs are determined without oracle answers.
+Enumerate all \(2^r=\poly(|C|)\) coin strings, list the proof
+addresses they use, and sort and relabel the distinct addresses.
+There are at most \(3\cdot2^r\) of them. Restricting an original
+proof to these addresses preserves every verifier outcome;
+conversely every trimmed proof extends arbitrarily at unused
+addresses and has the same outcomes. Thus trimming preserves
+both perfect completeness and soundness.
+
+The verifier's uniform algorithms compute each address in
+polynomial time, so the addresses have polynomial bit length.
+Enumeration, comparison, relabeling, and emission of the
+three-literal clauses are polynomial-time operations. Apply the
+same restriction to the honest proof: the proof produced
+by~\cite[Lemma~22]{CW19}, extended to the auxiliary bits of the
+clause conversion by evaluating its constant-size circuits
+(\cite[Appendix~A]{CW19}). Its uniform polynomial construction is
+preserved. If \(m\) is the companion's circuit
+node count, then \(n\le m\), and a topological node list has
+ordinary description length \(O((m+1)\log(m+2))\).
+The companion's balanced binary encodings also have polynomial
+length in \(m+1\): each pairing multiplies bit length by a
+constant and the list tree has logarithmic depth. Encoding and
+decoding these descriptions take polynomial time. Consequently
+the proof length and number of coin strings are bounded by
+\(K(m+1)^e\), and the constructor and honest-proof algorithm
+have polynomial-time TM2 realizations on the stated encodings.
+
+For the code, the cited statement is \cite[Lemma~26]{CW19}: a
+constant-rate binary linear code with positive minimum relative
+distance, an efficient encoder, and an efficient decoder that corrects
+a constant fraction of errors. The main result uses only the encoder
+facts: linearity, so that each output coordinate is a parity of a
+fixed support of message coordinates; constant rate; positive minimum
+relative distance; and a polynomial-time encoder. These are what the
+checked circuit and the distance argument after \cref{imp:transfer-pcpp}
+use. The finitely many short lengths can use identity codes, with the
+common distance constant decreased if needed. At \(n=0,1\) choose
+arbitrary fixed interfaces, since the companion's code clauses
+concern \(n\ge2\). The encoder has a polynomial-time TM2 realization.
+
+The companion's code input is exactly these encoder facts, for
+\(n\ge2\), derived from~\cite[Lemma~26]{CW19} as just described. The
+companion also proves the stronger full code statement
+of~\cite[Lemma~27]{CW19}, which is not needed here. Its three-block
+construction
+\(\operatorname{Enc}(x)=\operatorname{Enc}_0(x_1)\circ
+\operatorname{Enc}_0(x_2)\circ\operatorname{Enc}_0(x_3)\), on the
+thirds \(x_1,x_2,x_3\) of the message and with the code
+\(\operatorname{Enc}_0\) of~\cite[Lemma~26]{CW19}, bounds every support
+by \(\ceil{n/3}\le\floor{n/2}\) for \(n\ge2\); the stronger statement
+also supplies a decoder. For it, the decoding constant is decreased together with the
+distance at short lengths, and \(0<\rho<d<1\) are chosen below,
+respectively, the guaranteed decoding radius and minimum relative
+distance. Choosing \(\rho\) strictly inside the decoding guarantee
+includes the closed ball of radius \(\rho\). Make the decoder total,
+returning a fixed \(n\)-bit word on failure; this does not change its
+value on a promised input. The total decoder also has a
+polynomial-time TM2 realization. The support bound and the decoder are
+retained as proved results; neither is required by the main encoder
+interface or by the proof of \cref{imp:transfer-pcpp}.
+

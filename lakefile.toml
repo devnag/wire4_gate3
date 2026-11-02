@@ -1,0 +1,25 @@
+name = "wire4_gate3"
+version = "1.0.0"
+defaultTargets = ["NearQuarticWires"]
+
+[leanOptions]
+maxHeartbeats = 800000
+maxRecDepth = 120000
+warningAsError = true
+
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
+rev = "v4.32.0"
+
+[[lean_lib]]
+name = "NearQuarticWires"
+roots = ["Proof.Quartic.Release.Main", "Proof.Quartic.Statement.Release"]
+globs = ["Proof.Quartic.Release.Main", "Proof.Quartic.Statement.Release", "Statement", "NineInputs", "StatementSupport", "StatementChecks.+", "Proof.+", "Bindings.+", "SourceAdapters.+"]
+
+# For comparator only (`make comparator`; README); `make` does not build them.
+[[lean_lib]]
+name = "Challenge"
+
+[[lean_lib]]
+name = "Solution"

@@ -1,0 +1,121 @@
+\section{Attribution in detail}\label[appendix]{sec:attribution}
+
+Throughout the paper four levels of ownership are distinguished.
+\emph{Classical} tools are used as published. \emph{Imported}
+statements are restated, credited to their origins and proved in
+\cref{app:earlier}. \emph{Adapted} statements are restated because
+a hypothesis changes, and the change is proved here. \emph{New}
+components are the constructions and applications introduced in this
+paper, rather than the standard identities used to prove them.
+\Cref{tab:attribution} assigns each
+component of the proof to one of these levels.
+
+Joint Lean companion: \leanrepo.
+
+The companion's source mapping documents how each printed algorithm of~\cite{BCGT13} is transcribed.
+
+\paragraph{The algorithmic method and the transfer.}
+The algorithm-to-lower-bound program is Williams'~\cite{Wil13}. The
+almost-everywhere transfer used here follows
+Chen--Lyu--Williams~\cite{CLW20}, including the constructive
+refuter, which adapts the almost-everywhere hierarchy of
+Fortnow and Santhanam~\cite{FS16}, and the general-circuit hardness
+amplification of Sudan, Trevisan, and Vadhan~\cite{STV01}, in the form
+of~\cite[Lemma~3.9]{CLW20}. The transfer also uses the PCP
+refinements of Chen and Williams~\cite{CW19} and of Bathie and
+Williams~\cite{BW24},
+the proximity construction of Ben-Sasson, Goldreich, Harsha, Sudan, and
+Vadhan~\cite{BGHSV06}, and the short PCP in the form stated by Murray
+and Williams~\cite[Section~5]{MW20}, credited there to Ben-Sasson and
+Viola~\cite{BV14}. The author's preprint~\cite{NagCG} assembles
+these into a transfer from certified pair counting to
+almost-everywhere constant-error hardness, through a weighted
+analysis of the MAX-2SAT gadget of
+Garey--Johnson--Stockmeyer~\cite{GJS76}; its Appendix~D proves the
+short PCP in the form it uses, from the construction of Ben-Sasson,
+Chiesa, Genkin, and Tromer~\cite{BCGT13}. The full transfer is given here with the wire measure; its
+supporting constructions are reproduced in \cref{app:earlier}. We claim no new PCP, amplification or
+hierarchy theorem.
+
+\paragraph{Relation to~\cite{Nag72}.}
+The author's preprint~\cite{Nag72} introduced the partition into
+products of Hamming-code stars~\cite{Hamming}, the mixed-residual
+population bound, and the universal fixed-moment sampler with exact
+short-seed conditional expectations, whose concentration step is
+Tropp's matrix Bernstein inequality~\cite[Theorem~1.6]{Tropp}. Its
+counter applies the sampler to Boolean state matrices built from
+pointwise count lists and \(\F_2\) filters, and it pays roughly the
+square root of the population. We keep its cells and its sampler and
+replace everything in between: the sampled matrices are Fourier
+characters of the residual, the potential is computed by walk-sum
+tomography instead of count lists, and the masks are exact integer
+polynomials instead of \(\F_2\) filters. No count list, radix state,
+polarization or Boolean lift of~\cite{Nag72} is used. We also import
+its separated exact printer and the lemmas that feed it.
+
+\paragraph{Relation to~\cite{NagCG}.}
+The author's preprint~\cite{NagCG} reconstructs exact score
+distributions of restricted circuits by nested subsampling, moment
+certificates and modular tomography, building on Hajdu and
+Tijdeman's factorization method for discrete tomography~\cite{HT01}.
+We apply the same machinery to a different integer, the signed
+residual sum of a closed walk; the localization lemma is re-proved
+for walk sums, whose summands are bounded by \(2m\) rather than one.
+We also use its transfer, as described above.
+
+\paragraph{Classical tools.}
+Integer normalization of real threshold functions is classical,
+due to Muroga, Toda, and Takasu~\cite{MTT61}, in the form
+of~\cite[Lemma~3.2]{CTW26}. The decomposition of a threshold function
+into disjoint exact thresholds goes back to Hansen and
+Podolskii~\cite{HP10}; the first-crossing construction used is that
+of Chen and Williams~\cite[Proposition~18(2) and Appendix~B]{CW19}.
+Batch evaluation uses Williams' rectangular matrix
+multiplication~\cite[Corollary~4.4]{WilACC14}, based on Coppersmith's
+algorithm~\cite{Cop82}, with Matou\v{s}ek's bucketing~\cite{Mat91}.
+The modulus-amplifying polynomial is that of Beigel and
+Tarui~\cite{BT94}. Exact rational linear systems are solved by
+fraction-free elimination~\cite{Bareiss68}. Newton's forward-difference
+formula, the Chernoff and Bernstein bounds, and finite Fourier
+analysis are standard.
+
+
+
+\begin{table}[!htbp]
+\centering\footnotesize
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{.30\textwidth}>{\raggedright\arraybackslash}p{.10\textwidth}>{\raggedright\arraybackslash}X@{}}
+\toprule
+Component (where used) & Level & Source and change\\
+\midrule
+Signed-top gate corollary (\cref{thm:gates}) & Classical & Replication and finite-cube threshold complementation; wire cost at most \((n+1)\topwt(C)\)\\
+Product-star partition (\cref{imp:partition}) & Imported & \cite[Lemma~A.1]{Nag72}; Hamming codes~\cite{Hamming}\\
+Range of the mixed residual (\cref{imp:range}) & Imported & \cite[Lemma~A.2]{Nag72}; we use only the integer form of \(\Delta\), never its \(\F_2\) form\\
+Mixed-residual population (\cref{imp:population}, \cref{lem:meanpop}) & Imported & \cite[Theorem~A.4]{Nag72}; the constant \(6\) is computed here\\
+Score identity, mixed dependence (\cref{lem:identity,lem:mixed}) & Adapted & \cite[Lemma~A.2 and the proof of Theorem~A.4]{Nag72}, restated for two circuits with an explicit pointwise bound\\
+Fourier decomposition with selectors (\cref{lem:fourier}) & Adapted & Standard finite Fourier expansion; \cite[Equation~(29)]{Nag72}; here also for parity calls\\
+Trace bound for \([-1,1]\) entries (\cref{lem:tracebound}) & Adapted & The computation of~\cite[Lemma~F.1]{Nag72} for \(0/1\) entries, redone; concentration by~\cite[Theorem~1.6]{Tropp}\\
+Uniform selector error, potential to error (\cref{lem:selector,lem:root}) & Adapted & \cite[Lemma~F.1 and its proof]{Nag72}, for matrices with entries in \([-1,1]\) and a subset of columns\\
+Short seed and exact conditional expectations (\cref{imp:seed}) & Imported & \cite[Lemma~F.2 and its proof]{Nag72}\\
+Cycle-sum identity, conditional potentials (\cref{lem:cycle,cor:conditional}) & New & \\
+Exact integer mask (\cref{def:mask,lem:maskpoly}) & New & Newton forward differences; replaces the \(\F_2\) filters of~\cite[Appendix~D]{Nag72}\\
+Mask guarantees (\cref{lem:smaskpop,lem:filter,lem:smaskmass}) & New & Chernoff bounds\\
+Nested rates and telescoping (\cref{imp:chain}) & Imported & \cite[Lemma~5.1 and Equation~(1)]{NagCG}\\
+Walk-sum localization (\cref{lem:localize}) & Adapted & \cite[Lemma~5.2]{NagCG} for walk sums: summands bounded by \(2m\)\\
+Moment certificates (\cref{lem:moments}) & Imported & \cite[Lemma~5.3]{NagCG}, any index set\\
+Certified boxes (\cref{lem:certify}) & Adapted & \cite[Sections~7.3 and~8]{NagCG}, for walk sums and the exact mask\\
+One- and two-score reconstruction (\cref{imp:window}) & Imported & \cite[Lemmas~4.1--4.4]{NagCG}; Hajdu--Tijdeman~\cite{HT01}\\
+Bernstein inequality (\cref{imp:bernstein}) & Classical & \cite[Lemma~3.4]{NagCG}, from~\cite[Theorem~2.8.4]{Vershynin18}\\
+Fermat tests and lifting (\cref{imp:amp}, \cref{lem:residue}) & Imported / adapted & \cite[Lemmas~6.6 and~6.7]{NagCG}; Beigel--Tarui~\cite{BT94}; here with signed walk weights and the exact mask\\
+Integer normalization (\cref{imp:integer}) & Classical & \cite[Lemma~3.2]{NagCG} \(=\) \cite[Lemma~3.2]{CTW26}; \cite{MTT61}; applied on each gate's own inputs\\
+Disjoint exact children, pullback, stacking (\cref{imp:disjoint,imp:pullback,imp:stack}) & Imported & \cite[Lemmas~C.2, C.3, C.6]{Nag72}; \cite{HP10,CW19}\\
+Separated printer (\cref{imp:printer}) & Imported & \cite[Theorem~C.5]{Nag72}; Williams~\cite{WilACC14}, Coppersmith~\cite{Cop82}, Matou\v{s}ek~\cite{Mat91}\\
+Printing walk polynomials (\cref{lem:print}) & New & Per-walk atom pools; load \(mk+D\cdot O(\lambda)\)\\
+Algorithm, soundness, completeness, time, cap (\cref{sec:algorithm,sec:analysis,sec:asymptotics}) & New & Structure follows \cite[Sections~7--9]{NagCG}\\
+Almost-everywhere transfer (\cref{sec:transfer}, \cref{app:transfer}) & Imported / adapted & \cite[Section~11 and Appendices~C--D]{NagCG}, from \cite{CLW20,CW19,BW24,MW20,GJS76}; wire measure in place of top weight, every class-dependent step re-derived in \cref{app:transfer}\\
+\bottomrule
+\end{tabularx}
+\caption{Attribution of the components of the proof.}
+\label{tab:attribution}
+\end{table}
+
+\input{app-lean-map.tex}

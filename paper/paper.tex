@@ -1,0 +1,3029 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern,microtype}
+\usepackage{listings}
+\usepackage[margin=1in]{geometry}
+\setcounter{tocdepth}{1}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs,tabularx,array,xcolor,longtable}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,fit,calc,backgrounds,decorations.pathreplacing}
+\input{published-inputs.tex}
+\usepackage[shortlabels]{enumitem}
+\usepackage[colorlinks=true,linkcolor=blue!45!black,
+ citecolor=blue!45!black,urlcolor=blue!45!black]{hyperref}
+\usepackage[nameinlink,noabbrev,capitalise]{cleveref}
+\newif\ifanonymous
+\anonymousfalse %
+\hypersetup{pdftitle={Near-Cubic Gate and Near-Quartic Wire Lower Bounds for SYM∘THR Circuits}}
+\ifanonymous
+\hypersetup{pdfauthor={}}
+\else
+\hypersetup{pdfauthor={Dev Nag}}
+\fi
+\urlstyle{same}
+\newcommand{\leanrepo}{%
+  \href{https://github.com/devnag/wire4_gate3}{\nolinkurl{github.com/devnag/wire4_gate3}}}
+\allowdisplaybreaks[2]
+\setlength{\emergencystretch}{1em}
+\renewcommand{\topfraction}{0.85}
+\renewcommand{\textfraction}{0.1}
+\setlist{itemsep=3pt,topsep=5pt}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{imported}[theorem]{Supporting statement}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\crefname{imported}{supporting statement}{supporting statements}
+\Crefname{imported}{Supporting statement}{Supporting statements}
+\makeatletter
+\@ifpackageloaded{cleveref}{%
+  \AddToHook{env/lemma/begin}{\crefalias{theorem}{lemma}}%
+  \AddToHook{env/proposition/begin}{\crefalias{theorem}{proposition}}%
+  \AddToHook{env/corollary/begin}{\crefalias{theorem}{corollary}}%
+  \AddToHook{env/definition/begin}{\crefalias{theorem}{definition}}%
+  \AddToHook{env/imported/begin}{\crefalias{theorem}{imported}}%
+  \AddToHook{env/remark/begin}{\crefalias{theorem}{remark}}%
+}{}
+\makeatother
+\newcommand{\E}{\mathbb E}
+\newcommand{\F}{\mathbb F}
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\R}{\mathbb R}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\N}{\mathbb N}
+\newcommand{\C}{\mathbb C}
+\newcommand{\THR}{\mathrm{THR}}
+\newcommand{\SYM}{\mathrm{SYM}}
+\newcommand{\ENP}{\mathrm{E}^{\mathrm{NP}}}
+\newcommand{\PAR}{\mathrm{PAR}}
+\newcommand{\Amp}{\mathrm{Amp}}
+\newcommand{\poly}{\operatorname{poly}}
+\newcommand{\polylog}{\operatorname{polylog}}
+\newcommand{\agr}{\operatorname{agr}}
+\newcommand{\tr}{\operatorname{tr}}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\pop}{\operatorname{pop}}
+\newcommand{\smask}{\mathrm{smask}}
+\newcommand{\mask}{\mathrm{mask}}
+\newcommand{\Mpoly}{\mathrm{Mpoly}}
+\newcommand{\Fer}{\mathrm{Fer}}
+\newcommand{\pred}{\mathrm{pred}}
+\newcommand{\Bx}{\mathrm{Box}}
+\newcommand{\ind}{\mathbf 1}
+\newcommand{\cH}{\mathcal H}
+\newcommand{\cP}{\mathcal P}
+\newcommand{\cS}{\mathcal S}
+\newcommand{\cJ}{\mathcal J}
+\newcommand{\topwt}{\operatorname{wt}}
+\newcommand{\Ws}{\mathsf W_{\mathrm s}}
+\newcommand{\lgx}{\log_2}
+\newcommand{\Xmax}{X_{\max}}
+\newcommand{\phat}{\widehat p}
+\newcommand{\khat}{\widehat\kappa}
+\newcommand{\Tclk}{\mathcal T}
+\newcommand{\Id}{\mathrm{Id}}
+\newcommand{\iu}{\mathrm i}
+\providecommand{\abs}[1]{\left|#1\right|}
+\providecommand{\ceil}[1]{\left\lceil#1\right\rceil}
+\providecommand{\floor}[1]{\left\lfloor#1\right\rfloor}
+\providecommand{\Inf}{\operatorname{Inf}}
+\providecommand{\supp}{\operatorname{supp}}
+\providecommand{\NTIME}{\mathrm{NTIME}}
+
+\title{Near-Cubic Gate and Near-Quartic Wire\\
+Lower Bounds for \texorpdfstring{$\SYM\circ\THR$}{SYM∘THR} Circuits}
+\ifanonymous
+\author{Anonymous author}
+\else
+\author{Dev Nag\\
+CtrlStack, Inc.\\
+\texttt{devnag@gmail.com}\\
+\href{https://orcid.org/0009-0006-7304-8082}{\nolinkurl{https://orcid.org/0009-0006-7304-8082}}}
+\fi
+\date{November 2, 2026}
+
+\renewcommand{\abstractname}{\fontsize{11}{13.2}\selectfont Abstract}
+\begin{document}
+\maketitle
+\begin{abstract}\fontsize{11}{13.2}\selectfont
+We prove that a language in \(\ENP\) requires
+\(n^3/\polylog n\) gates, and more strongly
+\(n^4/\polylog n\) wires, for \(\SYM\circ\THR\) circuits,
+even with a sufficiently small constant fraction of errors at every
+sufficiently large input length. These are standard \(\SYM\circ\THR\) circuits: arbitrary real-weight
+threshold gates feed an arbitrary symmetric output gate. More generally,
+the gate bound allows the top gate to read an integer-weighted sum
+of the bottom gates, with each gate charged by the magnitude of its
+weight. For \(\SYM\circ\THR\) circuits the best previous published bounds were \(n^{5/2-\varepsilon}\), for gates and hence for wires (Chen--Tal--Wang). A single technique raises both exponents: the gate exponent to \(3-o(1)\) and the wire exponent to \(4-o(1)\).
+
+Following Williams' algorithmic method, we give an algorithm that,
+given a witness, returns a certified estimate of the acceptance
+probability of the exclusive-or of two such circuits below this wire
+cap in \(2^n/n^{\Omega(\log\log n)}\) time, and apply the
+almost-everywhere transfer of Chen--Lyu--Williams.
+The algorithm works on products of Hamming-code stars, on which a
+circuit's score splits into a left part, a right part, and a mixed
+part to which, on average, only \(\widetilde O(W/n^{3/2})\) of the
+bottom gates contribute, for \(W\) wires. A cycle-sum identity shows
+that, summed over Fourier frequencies, the error potential of a
+derandomized sampler is a weighted count of closed walks whose signed
+sums of mixed parts vanish.
+Our main new tool is discrete tomography: by a quantitative form of a
+theorem of Hajdu and Tijdeman, counts of residues modulo many primes
+determine the exact joint distribution of these sums. To our knowledge,
+this is the first use of discrete tomography in circuit complexity.
+The exponent \(4=3/2+1+3/2\) comes from the cells, from localizing
+the sums by nested subsampling, and from tomography on windows of side
+\(n^{3/2}/\polylog n\). The tomography theorem may be of independent
+interest.
+Both lower bounds are formalized in Lean~4, assuming only
+\publishedinputcount\ published results that the paper states (\leanrepo).
+\end{abstract}
+
+\medskip
+\noindent\textbf{Keywords.} Circuit lower bounds; threshold
+circuits; symmetric functions; gate and wire complexity; certified counting;
+matrix concentration; discrete tomography; exact polynomial representations;
+formal verification; Lean.
+
+\clearpage
+\tableofcontents
+\clearpage
+
+\section{Introduction}\label{sec:intro}
+
+How many threshold tests are needed to compute a Boolean function
+when their outputs may be combined by any symmetric rule? We prove
+a near-cubic gate lower bound and a stronger near-quartic wire lower
+bound for a language in \(\ENP\), with constant error at every large
+input length. Both results improve the \(n^{5/2-\varepsilon}\) bound of Chen, Tal, and Wang~\cite{CTW26} for \(\SYM\circ\THR\), which bounds gates and hence wires. One technique gives both: the gate theorem is a corollary of the wire theorem.
+The gate theorem first appeared in the author's unrefereed preprint~\cite{NagCG}; this paper supersedes that preprint and contains complete proofs of both theorems, which are also checked in Lean~4 from \publishedinputcount\ published results (\cref{sec:formal}).
+
+A \(\SYM\circ\THR\) circuit first computes threshold gates
+\[
+ T_i(x)=\ind\Bigl[\sum_{l=1}^n w_{i,l}x_l\ge\theta_i\Bigr],
+ \qquad w_{i,l},\theta_i\in\R,
+\]
+and applies an arbitrary Boolean lookup to the number
+\(\sum_iT_i(x)\) of gates that output one. The lookup may test a
+majority, a parity, an exact count, or any set of counts. The ordinary gate count is the number of bottom gates, with
+repeated gates counted with multiplicity. The wire count additionally
+charges each input read by a bottom gate. Integer top weights give a
+useful generalization, defined below; they are unnecessary for the
+standard gate theorem.
+
+\paragraph{Main results, informally.}
+\emph{There are a language \(F\in\ENP\) and a constant
+\(\varepsilon>0\) such that, at every sufficiently large length
+\(n\), every \(\SYM\circ\THR\) circuit with at most
+\(n^3/\polylog n\) bottom gates disagrees with \(F\) on more than
+an \(\varepsilon\) fraction of inputs. The same language requires
+\(n^4/\polylog n\) wires.}
+The precise wire theorem is \cref{thm:main}; \cref{thm:gates}
+derives the gate theorem. ``Almost everywhere'' means every
+sufficiently large input length, rather than infinitely many lengths.
+A constant error bound forces disagreement on a fixed positive
+fraction of the uniform inputs, a stronger guarantee than a
+worst-case lower bound, which only forces one error.
+
+The language is fixed before the length or circuit is chosen.
+The standard class \(\ENP\), a usual target of the algorithmic
+method, consists of languages decided in \(2^{O(n)}\) time with a
+satisfiability oracle; the hard language is not claimed to be in \(\mathrm P\).
+
+\subsection{The precise theorem}\label{sec:main}
+
+\begin{definition}[Circuits and wires]\label{def:class}
+A \(\SYM\circ\THR\) circuit on \(n\) inputs has the form
+\[
+ C(x)=g\Bigl(\sum_{i=1}^{G}T_i(x)\Bigr),
+\]
+where \(T_1,\dots,T_G\) are threshold gates with real parameters,
+called the \emph{bottom gates} of the circuit (repetitions are allowed
+and counted), and \(g:\{0,\dots,G\}\to\{0,1\}\) is arbitrary, called
+the \emph{lookup}. Let \(f_i\) be the number of inputs \(l\) with
+\(w_{i,l}\ne0\), the \emph{fan-in} of \(T_i\). The \emph{wire count}
+is
+\[
+ W(C)=G+\sum_{i=1}^Gf_i,
+\]
+the top fan-in plus the total bottom fan-in.
+
+\emph{Integer-weighted extension.} \Cref{thm:gates} also covers circuits
+\[
+ C(x)=g\Bigl(\sum_{i=1}^{G}c_iT_i(x)\Bigr),\qquad
+ c_i\in\Z\setminus\{0\},\quad g:\Z\to\{0,1\},
+\]
+charged by their \emph{total top weight} \(\topwt(C)=\sum_i|c_i|\),
+which equals \(G\) when all \(c_i=1\). Bottom fan-in and real bottom
+weights are unrestricted in both models.
+\end{definition}
+
+The number of bottom gates and the total bottom fan-in are each at most
+\(W(C)\). Fixing some inputs to constants does not increase \(W\),
+and neither does complementing the output (replace \(g\) by \(1-g\)).
+For \(n\ge4\) write
+\[
+ \lambda_n=\lceil\lgx n\rceil,\qquad
+ \mu_n=\lceil\lgx\lambda_n\rceil,\qquad
+ \mathcal A_4(n)=\frac{n^4}{\lambda_n^{17/4}\mu_n^{15/2}},
+\]
+and for an \(n\)-input circuit \(C\) and a language \(F\) write
+\(\agr(C,F)=\Pr_{x\in\{0,1\}^n}[C(x)=F(x)]\).
+
+\begin{theorem}[Almost-everywhere near-quartic wire lower bound]
+\label{thm:main}
+Let \(0<\gamma<1\) be a fixed absolute constant: the rational rejection gap of the three-query PCP of proximity of Chen and Williams~\cite[Lemma~24]{CW19} (\cref{imp:transfer-pcpp}). For every fixed \(0<d<\gamma/5\) there are
+a positive integer \(K_d\), a language \(F_d\in\ENP\), and an
+integer \(n_0\ge4\) such that, for every \(n\ge n_0\) and every
+\(\SYM\circ\THR\) circuit \(C\) on \(n\) inputs,
+\[
+ \boxed{\quad
+ W(C)\le\Bigl\lfloor\frac{n^4}{K_d\,\lambda_n^{17/4}\mu_n^{15/2}}\Bigr\rfloor
+ \quad\Longrightarrow\quad \agr(C,F_d)<1-d .\quad}
+\]
+\end{theorem}
+
+\begin{corollary}[Almost-everywhere near-cubic gate lower bound]
+\label{thm:gates}\label{cor:gates}
+With \(\gamma\), \(d\), \(K_d\), \(F_d\), and \(n_0\) as in
+\cref{thm:main}, for every \(n\ge n_0\), every \(\SYM\circ\THR\)
+circuit \(C\) on \(n\) inputs satisfies
+\[
+ \boxed{\quad
+ G\le\Bigl\lfloor\frac{n^3}{2K_d\,\lambda_n^{17/4}\mu_n^{15/2}}\Bigr\rfloor
+ \quad\Longrightarrow\quad \agr(C,F_d)<1-d .\quad}
+\]
+More generally, the same conclusion holds for
+\(C(x)=g(\sum_i c_iT_i(x))\), with integers \(c_i\ne0\), when
+\(\sum_i|c_i|\) is at most the same cap.
+\end{corollary}
+\begin{proof}
+Write \(a_i=|c_i|\) and \(h=\sum_{c_i<0}a_i\). For \(c_i>0\),
+take \(a_i\) copies of \(T_i\); for \(c_i<0\), take \(a_i\)
+copies of \(1-T_i\). A complement is again a threshold gate with
+the same support, including when the original threshold is attained.
+Indeed, for \(T_i=\ind[s_i\ge\theta_i]\), choose \(\eta_i>0\)
+no larger than every positive gap \(\theta_i-s_i(x)\) on the finite
+Boolean cube (choose \(\eta_i=1\) if there is no such gap). Then
+\[
+ 1-T_i(x)=\ind[-s_i(x)\ge-\theta_i+\eta_i].
+\]
+The unweighted count of the resulting bottom gates is
+\[
+ t(x)=\sum_{c_i>0}a_iT_i(x)+\sum_{c_i<0}a_i(1-T_i(x))
+     =\sum_i c_iT_i(x)+h.
+\]
+Thus the finite lookup \(g'(t)=g(t-h)\), for
+\(0\le t\le\topwt(C)\), computes the same function. The new
+circuit \(C'\) has exactly \(\topwt(C)\) bottom gates and
+\[
+ W(C')=\sum_i a_i(f_i+1)\le(n+1)\topwt(C)
+ \le\frac{n+1}{2n}\,
+       \frac{n^4}{K_d\lambda_n^{17/4}\mu_n^{15/2}}
+ \le\frac{n^4}{K_d\lambda_n^{17/4}\mu_n^{15/2}}.
+\]
+Since \(W(C')\) is an integer, \cref{thm:main} applies.
+\end{proof}
+
+Here \(\gamma\) is a fixed verifier rejection gap; the factor five
+is the error weight of the local proof gadget. These constants and
+the logarithmic losses are not optimized.
+Consequently, by \cref{thm:main,thm:gates}, the same \(F_d\) works eventually against every fixed
+total top weight \(An^{3-\delta}\), and against every fixed wire
+count \(An^{4-\delta}\), for \(A,\delta>0\). 
+
+\paragraph{Why wires.}
+A gate of fan-in \(f\) costs \(f\) input wires and one connection
+into the output. Kane and Williams proved superquadratic wire lower
+bounds for depth-two threshold circuits~\cite{KW16}.
+The wire theorem also gives stronger bounds for sparse bottom gates.
+For example, if every bottom gate reads at most \(\sqrt n\) inputs,
+a circuit with \(G\) bottom gates has
+\(W\le(1+\sqrt n)G\) wires. The wire theorem therefore excludes
+up to \(n^{7/2}/\polylog n\) such gates, beyond the general
+near-cubic gate cap.
+
+\subsection{Prior work and significance}\label{sec:prior}
+A symmetric output includes majority, parity, exact count, and any
+set of counts. Thus \(\SYM\circ\THR\) contains
+\(\mathrm{MAJ}\circ\THR\), but differs from
+\(\THR\circ\THR\), whose output may have arbitrary unequal real
+weights. These depth-two models are central test cases for lower
+bounds against constant-depth threshold circuits. Proving
+superpolynomial lower bounds for either remains open.
+
+Kane and Williams~\cite[Theorem~1.1]{KW16} obtained average-case
+bounds of \(\widetilde\Omega(n^{3/2})\) gates and
+\(\widetilde\Omega(n^{5/2})\) wires against
+\(\THR\circ\THR\), for an explicit function in \(\mathrm P\).
+Tamaki~\cite{Tam16} and Alman, Chan, and Williams~\cite{ACW16}
+obtained subquadratic gate bounds for \(\ENP\).
+Chen, Tal, and Wang~\cite[Theorem~1.1]{CTW26} crossed the quadratic
+gate barrier with \(n^{5/2-\varepsilon}\) gates, for every fixed
+\(\varepsilon>0\), for both \(\SYM\circ\THR\) and
+\(\THR\circ\THR\). We raise the symmetric-top gate exponent
+to \(3-o(1)\) and prove the stronger \(4-o(1)\) wire exponent,
+with constant error at every large length.
+
+\begin{center}\small
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{.23\textwidth}
+ >{\raggedright\arraybackslash}p{.17\textwidth}XX@{}}
+\toprule
+Class and resource & Published benchmark & This paper & Guarantee here\\
+\midrule
+\(\SYM\circ\THR\), gates & \(n^{5/2-\varepsilon}\)~\cite{CTW26} & \(n^3/\polylog n\) & constant error, every large length\\
+\(\SYM\circ\THR\), wires & \(n^{5/2-\varepsilon}\) from the gate bound~\cite{CTW26} & \(n^4/\polylog n\) & constant error, every large length\\
+\(\THR\circ\THR\), wires & \(\widetilde\Omega(n^{5/2})\)~\cite{KW16} & no claim & average-case benchmark in \(\mathrm P\)\\
+\bottomrule
+\end{tabularx}
+\end{center}
+The CTW benchmark is worst-case hardness in \(\ENP\); our guarantee
+is constant error at every sufficiently large length. The wire
+benchmark in the second row follows because gate count never exceeds wire count; it is not a claim about a sharper
+standalone wire theorem. The Kane--Williams row concerns a different
+top class and a different hard-function class. We do not claim a
+near-cubic gate theorem for unrestricted \(\THR\circ\THR\).
+For wires, the best previous published bound for \(\SYM\circ\THR\) is the \(n^{5/2-\varepsilon}\) that follows from the gate bound of~\cite{CTW26}; \cref{thm:main} raises it to \(n^{4-o(1)}\).
+The author's unrefereed preprints give wire bounds of
+\(n^{3-o(1)}\)~\cite{NagCubic} and \(n^{7/2-o(1)}\)~\cite{Nag72} for
+both \(\SYM\circ\THR\) and \(\THR\circ\THR\), with agreement at most
+\(1/2+o(1)\); both are formalized in Lean against their input theorems from the literature, in public repositories. For \(\SYM\circ\THR\), \cref{thm:main} has a larger cap
+and the weaker constant-error guarantee; it does not extend to
+\(\THR\circ\THR\) (\cref{sec:scope}).
+
+\subsection{The algorithmic method}\label{sec:method}
+
+Williams' algorithmic method~\cite{Wil13} converts a fast algorithm
+that analyzes circuits into a lower bound for them. A nondeterministic
+machine for a hard computation guesses small circuits that describe
+the bits of a probabilistically checkable proof (PCP), and uses a
+counting algorithm to estimate how often the verifier's local tests
+fail. Soundness must hold for every guess. If the proofs of every true
+statement had small circuits, some guess would verify each statement
+faster than the nondeterministic time hierarchy permits. The resulting
+contradiction produces hard proof data; the constructive refuter of
+Chen, Lyu, and Williams~\cite{CLW20} makes the hardness hold at every
+large length.
+
+For \(\SYM\circ\THR\) at constant error, the transfer below uses
+the weighted analysis~\cite[Section~11]{NagCG} of the MAX-2SAT gadget of
+Garey, Johnson, and Stockmeyer~\cite{GJS76}.
+It expresses the failure rate of the local tests through the acceptance probabilities
+of one circuit, of the exclusive-or of two circuits, or of a circuit
+exclusive-or an input parity. What the transfer needs is therefore a
+\emph{certified counter}: an algorithm that reads such a query, called a \emph{call}, and an
+auxiliary string, called a \emph{witness}, returns an interval that
+contains the acceptance probability for \emph{every} witness, returns
+an interval of radius at most a requested \(\beta\) for \emph{some}
+witness, and runs in time \(2^n/n^{\omega(1)}\). Our counter
+(\cref{thm:counter}) does this below a wire cap proportional to
+\(\beta n^4/\polylog n\). \Cref{sec:transfer} summarizes how the transfer, which was written for
+top weight, applies to the wire measure, and \cref{app:transfer}
+carries it out step by step.
+
+\subsection{The idea: where \texorpdfstring{\(3/2+5/2=4\)}{3/2+5/2=4} comes from}
+\label{sec:idea}
+
+\input{proof-dag.tex}
+
+We describe the counter for a single circuit with lookup \(g\);
+logarithmic factors are suppressed throughout this subsection.
+
+\label{sec:new}
+Two earlier analyses by the author stop short of \(n^4\).
+In~\cite{NagCG}, nested subsampling and tomography reconstruct the
+score distribution of a restricted circuit with up to about
+\(P^{5/2}\) live gates, where \(P\approx n\) is a prime scale; a
+restriction leaves about an \(n^{-1/2}\) fraction of the gates live,
+which gives \(n^{1/2}P^{5/2}\approx n^3\) gates. In~\cite{Nag72},
+product-star cells reduce the expected mixed population to about
+\(W/n^{3/2}\), but the circuit's value on a cell also depends on
+one-sided parts that a bilinear sampler must absorb; the analysis
+there applies the sampler to pointwise count lists and pays roughly
+the square root of the population, which gives \(n^{7/2}\) wires.
+The new step is the cycle-sum identity (\cref{lem:cycle}): summed
+over Fourier frequencies, the sampler's potential is a weighted count
+of closed walks whose signed residual sums vanish, and a walk sum,
+like a score, is an integer sum of per-gate contributions. The
+reconstruction of~\cite{NagCG} then applies to walk sums, with masks
+that are exact integer polynomials valid modulo every prime
+(\cref{sec:masks}), and gives \(n^{3/2}\cdot P\cdot P^{3/2}\approx n^4\)
+wires. \Cref{sec:attribution} gives full attribution; supporting
+statements and proofs appear in \cref{app:statements,app:earlier}.
+
+
+\paragraph{Cells that charge only joint dependence ($3/2$).}
+The algorithm partitions \(\{0,1\}^n\) into \(2^{n-k}\) cells of
+\(2^k\) inputs, where \(k=\Theta(\log n\log\log n)\). Each cell is a
+product: its points are \(c\oplus u\oplus v\), where \(c\) is a center,
+\(u\) ranges over \(N=2^{k/2}\) ``left'' error patterns and \(v\) over
+\(N\) ``right'' error patterns, supported on disjoint sets of
+coordinates. These cells come from the author's \(n^{7/2}\)-wire
+preprint~\cite[Appendix~A]{Nag72}. A \emph{star} in a block of \(b=2^s-1\)
+coordinates is a point together with its \(b\) neighbors at Hamming
+distance one; the perfect Hamming code~\cite{Hamming} partitions each block into
+stars, and a cell is a product of stars in \(r\) blocks, \(r/2\) of
+them on each side, so that \(N=(b+1)^{r/2}\). On a cell the score
+\(s(u,v)=\sum_iT_i(c\oplus u\oplus v)\) splits exactly as
+\[
+ s(u,v)=s^{\rm L}(u)+s^{\rm R}(v)+R(u,v),\qquad
+ R=\sum_i\Delta_i,\quad
+ \Delta_i=T_i(c\oplus u\oplus v)-T_i(c\oplus u)-T_i(c\oplus v)+T_i(c),
+\]
+where \(s^{\rm L}\) depends only on \(u\) and \(s^{\rm R}\) only on
+\(v\). The \emph{mixed residual} \(\Delta_i\) is \(0\) unless the gate
+\(T_i\) reads both a coordinate flipped by \(u\) and one flipped by
+\(v\), and it always lies in \(\{-1,0,1\}\). For a gate of fan-in
+\(f\), on a random cell and random point, \(\Delta_i\ne0\) with
+probability \(O(f/n^{3/2})\), up to logarithmic factors (the
+\(3/2\) comes from a total-influence bound on one side and a support
+bound on the other). The \emph{population} is
+\[
+ \pop(u,v)=\#\{i:\Delta_i(u,v)\ne0\},\qquad
+ \E\pop\le\widetilde O(W/n^{3/2}).
+\]
+The expectation averages over partitions, cells and points; some
+partition therefore satisfies the same mean bound. Masks handle
+points with unusually large population.
+
+\input{fig-cell.tex}
+
+\paragraph{A sampler that never sees one-sided behavior.}
+The value of the circuit on the cell is
+\(g(s^{\rm L}(u)+s^{\rm R}(v)+R(u,v))\), and we must estimate its
+average over the \(N^2\) points. Expand the lookup in characters of a
+cyclic group \(\Z/\Omega\), taking \(\Omega=4mG+1\) for \(G\)
+bottom gates, where \(m=4\) is the moment order of the trace bound below. This exceeds the score range
+and the absolute value of every signed sum of \(2m\) residuals:
+\(g(s)=\sum_\theta\widehat g(\theta)\omega^{\theta s}\) with
+\(\omega=e^{2\pi\iu/\Omega}\). Then
+\[
+ \omega^{\theta s(u,v)}
+ =\underbrace{\omega^{\theta s^{\rm L}(u)}}_{\text{\fontsize{9}{10.8}\selectfont depends on }u}\;
+  \underbrace{\omega^{\theta s^{\rm R}(v)}}_{\text{\fontsize{9}{10.8}\selectfont depends on }v}\;
+  \underbrace{\omega^{\theta R(u,v)}}_{=:M_\theta(u,v)} .
+\]
+The first two factors are arbitrary unimodular \emph{selectors}, one
+on each side; this separation is the standard finite Fourier
+expansion, as in~\cite[Equation~(29)]{Nag72}.
+That preprint introduced a universal sampler:
+one list of \(Q\) sample pairs \((U_j,V_j)\) that estimates
+\(a^{\mathsf T}Mb/N^2\) for all selectors \(a,b\) at once, provided the
+sampling error matrix of \(M\) has small operator norm. We apply the
+sampler separately to the real matrices
+\(D_{\theta,0}=\operatorname{Re}M_\theta\) and
+\(D_{\theta,1}=\operatorname{Im}M_\theta\).
+For each real error matrix \(E\), its norm is controlled by
+\(\tr\bigl((EE^{\mathsf T})^m\bigr)\). The sample list can be chosen
+deterministically, bit by bit, if the algorithm can compute
+conditional expectations of this potential exactly~\cite[Appendix~F]{Nag72}.
+So the one-sided parts of the circuit, however complicated, never
+enter the object that must be computed; only the matrices
+\(M_\theta\) do.
+
+\paragraph{The cycle-sum identity.}
+Expanding \(\tr\bigl((EE^{\mathsf T})^m\bigr)\) gives a sum over closed walks
+\(w\) of length \(2m\) that alternate between left and right
+patterns. Expanding the cosine and sine entries of the real
+matrices gives characters of \emph{signed sums} of residuals along
+the \(2m\) edges, and summing over all frequencies \(\theta\) turns
+the character into an indicator:
+\(\sum_\theta\omega^{\theta Y}=\Omega\cdot\ind[Y=0]\) when
+\(|Y|<\Omega\). The result (\cref{lem:cycle}) is that the potential,
+summed over frequencies, is a weighted count of closed walks whose
+signed residual sums
+\[
+ Y_\sigma(w)=\sum_{l=1}^{2m}\sigma_lR(e_l)
+\]
+vanish, over sign patterns \(\sigma\in\{\pm1\}^{2m}\). The lookup has
+disappeared. What remains is one integer per circuit and walk, a sum of
+local contributions of the bottom gates. If each edge has population
+at most \(U\), the total absolute contribution is at most \(2mU\).
+
+For example, a four-edge walk visits a rectangle of left and right
+choices. One sign pattern tests the alternating sum of its four
+residual values. Summing the characters turns this into the exact
+condition that this signed sum is zero. \Cref{lem:cycle} gives the
+full identity, including all sign patterns, masks, and pair calls.
+For a pair call there are two walk sums, and the potential is a
+weighted sum of joint zero tests \(\ind[Y_1=0]\ind[Y_2=0]\); after
+localization, \cref{thm:modular-tomography} reconstructs their joint
+distribution.
+
+\paragraph{Localize and reconstruct ($5/2$).}
+Counting walks with \(Y_\sigma(w)=0\) is the problem that the
+author's near-cubic gate preprint~\cite[Sections~4--6]{NagCG} solves
+for the scores of restricted circuits. Subsampling the bottom gates at
+nested rates writes the integer \(Y\) through a few short integer
+\emph{digits}; once the digits are fixed, \(Y\) is confined to an
+interval about \(P\) times shorter than its population. Here \(P\)
+is a prime scale of order \(n/\polylog n\): the algorithm evaluates
+polynomials of degree about \(P\) over all \(2^{n-k}\) cells at once
+by Williams' rectangular matrix multiplication, so it can count
+residues modulo every prime in \((P/2,P]\); the Beigel--Tarui lifting polynomial~\cite{BT94} lifts the corresponding residue indicators to powers of \(p\), letting the printer recover the counts exactly. Pair calls have two circuits and hence two scores; their localized
+joint distribution must be reconstructed. The printing procedure of
+\cref{sec:printing} computes the modular count tables in batches, reducing each table to rectangular matrix multiplication.
+
+Under the quantitative size condition of \cref{earlier:g:lem:two-window},
+prime residue counts determine all short line projections, and hence
+the joint distribution on a box of side about \(P^{3/2}\).
+To our knowledge, this is the first use of discrete tomography in circuit complexity; the method was introduced for this purpose in~\cite{NagCG}.
+Within the algorithmic method, modular counting (e.g.~\cite{Wil13,ACW16}) computes residues of a single count; here many residue counts jointly determine a whole two-score distribution.
+Reconstructing a \(0/1\) lattice set from its line sums is NP-hard already for three directions~\cite{GGP99}.
+Here the unknown is an integer-valued function on a box of side about \(P^{3/2}\), and Hajdu and Tijdeman's algebraic theory~\cite{HT01} shows that enough directions determine it uniquely. Recovery is therefore an exact linear system, with at most \(P^4\) unknowns and \(0/1\) coefficients, solved in polynomial time by fraction-free elimination~\cite{Bareiss68}.
+Thus walk sums with population up to \(U\approx P^{5/2}\) can be handled exactly.
+
+\par\noindent\begin{minipage}{\linewidth}
+\begin{theorem}[Modular discrete tomography]\label{thm:modular-tomography}
+Let \(\mathcal P\) be a finite nonempty set of primes, \(D'=1+\sum_{p\in\mathcal P}(p-1)\), and \(S(q)=\sum_{m=1}^{q}m\varphi(m)\), where \(\varphi\) is Euler's totient.
+For \(a,b\in\Z\) and \(L\in\N\) with \(2\le L\le S(\lfloor(D'-1)/(L-1)\rfloor)\), every \(f:B\to\Q\) on the known box \(B=([a,a+L)\times[b,b+L))\cap\Z^2\) is determined by its exact rational sums
+\(F_p(r,s)=\sum_{(x,y)\in B,\;(x,y)\equiv(r,s)\bmod p}f(x,y)\), for \(p\in\mathcal P\), \(r,s\in\Z/p\Z\).
+Exact elimination recovers \(f\) in time polynomial in \(L\), \(\sum_{p\in\mathcal P}p^2\), and the total binary input length, including the box endpoints and rational sums.
+\end{theorem}
+\end{minipage}\par\smallskip
+The uniqueness and exact-inverse assertions are formalized as
+\path{NearCubicGates.Reconstruction.pairMatrix_injective} and
+\path{pair_reconstruction_complete} in the Lean companion.
+\begin{proof}
+\Cref{earlier:g:lem:two-window} proves uniqueness; fraction-free elimination~\cite{Bareiss68} on the \(0/1\) residue matrix gives recovery with polynomial bit cost, as in \cref{prop:time}.
+\end{proof}
+
+\begin{corollary}[Prime-window tomography]\label{cor:prime-window-tomography}
+There are absolute constants \(c>0\) and \(P_0\) such that, for every integer \(P\ge P_0\), taking \(\mathcal P\) to be all primes in \((P/2,P]\), \cref{thm:modular-tomography} applies to every known integer box of side \(2\le L\le cP^{3/2}/(\log P)^{3/4}\).
+\end{corollary}
+\begin{proof}
+\Cref{earlier:g:lem:window-size,earlier:g:lem:primes} give an admissible side of order \(D'^{3/4}=\Theta(P^{3/2}/(\log P)^{3/4})\). The size condition is preserved when \(L\ge2\) decreases.
+\end{proof}
+For one score, exact residue sums for the same prime set determine a rational function on a known interval of at most \(D'\) consecutive integers (\cref{earlier:g:lem:one-window}; Lean: \path{NearCubicGates.ScalarWindow.frameResidueData_injective}).
+
+\paragraph{The exponent.}
+Combining the two estimates,
+\[
+ \frac{W}{n^{3/2}}\lesssim U\lesssim P^{5/2}
+ \qquad\Longrightarrow\qquad
+ W\lesssim
+ \underbrace{n^{3/2}}_{\text{\fontsize{9}{10.8}\selectfont star cells}}\;
+ \underbrace{P}_{\text{\fontsize{9}{10.8}\selectfont localization}}\;
+ \underbrace{P^{3/2}}_{\text{\fontsize{9}{10.8}\selectfont reconstruction}}
+ \approx n^4 .
+\]
+The gain is charged per wire, so sparse gates are handled according
+to the inputs they read.
+
+
+
+\paragraph{One mask for every prime.}
+Points of abnormally large population must be discarded by a
+\emph{mask}, and the mask enters the polynomials whose residues are
+counted modulo many odd primes. The masks of~\cite{Nag72}
+are polynomials over \(\F_2\) whose integer lifts are exact only modulo
+powers of two, so they cannot be used there. Our mask (\cref{sec:masks}) is an exact
+integer polynomial: if \(X\) counts the subsampled bottom gates with
+nonzero residual at a point, then
+\[
+ \ind[X\le\tau]=\sum_{a=0}^{\Xmax}c_a\binom Xa
+ \qquad(0\le X\le\Xmax)
+\]
+with integers \(c_a\) given by Newton forward differences, and
+\(\binom Xa\) is the elementary symmetric polynomial of degree \(a\)
+in the Boolean residual indicators. A single moment test certifies
+\(X\le\Xmax\) on a whole cell. The identity holds over \(\Z\), so the
+mask is correct modulo every integer at once.
+
+\paragraph{Main components.}
+Lean names below have prefix \path{NearQuarticWires.}; the full hypotheses are in the indicated statements.
+\begin{center}\footnotesize
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{.16\textwidth}X>{\raggedright\arraybackslash}p{.09\textwidth}>{\raggedright\arraybackslash}p{.31\textwidth}@{}}
+\toprule
+Tool & Statement & Where & Lean name\\\midrule
+Modular tomography & Joint residue tables determine a rational box function under an explicit window criterion. & Thm.~\ref{thm:modular-tomography} & {\footnotesize\texttt{\mbox{Tomography.}\allowbreak\mbox{residueCounts\_determine}}}\\[2pt]
+Integer threshold masks & Exact bounded-population cutoff, with integer coefficients, valid modulo every integer. & Lem.~\ref{lem:maskpoly} & {\footnotesize\texttt{\mbox{Mask.}\allowbreak\mbox{cutoff\_eq\_newton\_sum\_of\_le}}}\\[2pt]
+Cycle-sum identity & A Fourier trace sum counts zero signed walk sums; Lean checks \(m=4\). & Lem.~\ref{lem:cycle} & {\footnotesize\texttt{\mbox{Cycle.}\allowbreak\mbox{cycle\_sum\_identity}}}\\[2pt]
+Product-star population & Some partition has mean mixed population at most \(6r^{3/2}W/n^{3/2}\). & Lem.~\ref{lem:meanpop} & {\footnotesize\texttt{\mbox{Cells.}\allowbreak\mbox{mean\_population}}}\\[2pt]
+Certified counting & Every witness is sound; a short witness is precise below \(a\beta\mathcal A_4(n)\). & Thm.~\ref{thm:counter} & {\footnotesize\texttt{\mbox{Program.}\allowbreak\mbox{counterExists4}}}\\[2pt]
+Wire transfer & The full quartic counter contract yields a.e. constant-error \(\ENP\) hardness. & Thm.~\ref{thm:wire-transfer} & {\footnotesize\texttt{\mbox{Transfer.}\allowbreak\mbox{transfer4\_official}}}\\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\paragraph{Where the method stops.}
+\begin{itemize}[leftmargin=*,nosep]
+
+\item Two-score reconstruction handles walk sums of population up to about \(P^{5/2}\) (the window condition \eqref{eq:window}), and the degree of the printed polynomials keeps \(P\) below about \(n\) (by \eqref{eq:prime-budget}). The \(P^{3/2}\) window is sharp up to logarithmic factors for recovering arbitrary box distributions from residue data (\cref{earlier:g:rem:rank}).
+\item Arbitrary real top weights lack this bounded integer-score guarantee; the fixed-error transfer gives no vanishing correlation. Extensions remain open; these are limits of this method (\cref{sec:scope}).
+\end{itemize}
+
+\paragraph{Published foundations.}\label{par:five-inputs}
+The formal proof assumes exactly \publishedinputcount\ published results from
+ four\ papers, listed with exact locators in \cref{sec:formal}.
+The BCGT13 verifier input is Theorem~11.1, at the parameter tuple \((2,4,0,1)\) used in this paper~\cite{BCGT13}.
+Everything else the formal proof uses is proved in Lean, including the short PCP of Murray--Williams~\cite{MW20}, the refuter and amplification interfaces of Chen--Lyu--Williams~\cite{CLW20}, integer normalization of threshold gates, concentration, and the prime counts from Chebyshev-type bounds.
+\Cref{app:earlier} restates and proves the PCP, refuter and amplification components, with their origins credited; the classical normalization, concentration and prime-count facts are cited to their published sources in \cref{app:statements} and \cref{earlier:g:lem:primes}.
+
+\subsection{The formal statement}\label{sec:formal}
+The formalization is available at \leanrepo\ (release tag \texttt{v1.0}).
+The following verbatim definitions in \texttt{Proof/Quartic/Statement/Joint.lean}
+state \cref{thm:main,thm:gates} with shared constants and the rejection gap \(\gamma\) quantified existentially (some rational \(0<\gamma<1\)); \texttt{wireCap} and \texttt{gateCap} are the two boxed caps, and \texttt{InENP} defines \(\ENP\) by an explicit oracle machine:
+\begingroup
+\lstset{basicstyle=\small\ttfamily,columns=fullflexible,keepspaces=true,
+ breaklines=true,breakatwhitespace=true,breakindent=6em,showstringspaces=false,
+ frame=single,aboveskip=4pt,belowskip=4pt,
+ literate={∀}{{$\forall$}}1 {∃}{{$\exists$}}1 {ℝ}{{$\mathbb R$}}1
+ {ℚ}{{$\mathbb Q$}}1 {ℕ}{{$\mathbb N$}}1 {→}{{$\to$}}1
+ {∧}{{$\land$}}1 {≤}{{$\le$}}1 {₀}{{\textsubscript{0}}}1}
+\lstinputlisting{joint-statement-verbatim.txt}
+\endgroup
+The release type is \texttt{ReleaseStatement := PublishedInputs}
+\(\to\) \texttt{JointStatement4}. Its
+\publishedinputcount\ inputs are transcribed in their source models:
+\begin{center}\footnotesize
+\begin{tabularx}{\textwidth}{@{}lX@{}}\toprule
+Source & Exact published locator\\\midrule
+Williams~\cite{WilACC14} & Cor.~4.4, p.~2:17 (also Cor.~C.2, p.~2:29).\\
+BCGT~\cite{BCGT13} & Theorem~11.1, at the parameter tuple \((2,4,0,1)\) used in this paper; p.~51 (ECCC rev.~3).\\
+BCGT~\cite{BCGT13} & Alg.~17, p.~124 (ECCC rev.~3).\\
+Sudan--Trevisan--Vadhan~\cite{STV01} & Thm.~29, p.~17 (ECCC rev.~2).\\
+Chen--Williams~\cite{CW19} & Lem.~22, p.~19:15, soundness \(1/2\).\\
+Chen--Williams~\cite{CW19} & Lem.~26, p.~19:16.\\
+
+\bottomrule\end{tabularx}
+\end{center}
+Running \texttt{lake env lean Check.lean} prints the axiom list:
+\begin{center}\small\texttt{[propext, Classical.choice, Quot.sound]}\end{center}
+The companion's source mapping quotes each published statement beside
+its transcription and records the modeling conventions; this
+faithfulness comparison is separate from kernel checking.
+The trusted files are \texttt{Statement.lean} and \texttt{Final.lean},
+\texttt{Joint.lean}, and \texttt{Release.lean} in
+\texttt{Proof/Quartic/Statement/}. They define the machine and circuit
+models, measures, published premises and conclusion; everything else
+is checked by the kernel. A full build is a large computation; the
+companion's README lists its requirements.
+
+Generative AI tools were used substantively throughout this work, including proof search, parameter selection, drafting, and the construction of the Lean formalization; see the AI methodology statement at the end of the paper. The correctness of both theorems, as formally stated, rests on the kernel-checked proof described above.
+
+\subsection{Organization}\label{sec:roadmap}
+
+\Cref{fig:proof-dag} gives the architecture.
+\begin{description}[nosep,leftmargin=3.1em,labelwidth=2.6em,font=\normalfont]
+\item[\S2] The counting theorem (matrix concentration is in Appendix~\ref{app:statements}).
+\item[\S3] Product-star cells and their mixed residuals.
+\item[\S4] Sampling bounded real matrices.
+\item[\S5] The cycle-sum identity and its computation.
+\item[\S6] Exact integer polynomial masks.
+\item[\S7] Localization and certification of walk sums.
+\item[\S8] Exact printing of the modular tables.
+\item[\S9] The counting algorithm.
+\item[\S10] Soundness, completeness and running time.
+\item[\S11] The parameter choices and quartic wire cap.
+\item[\S12] The almost-everywhere lower-bound transfer.
+\item[\S13] Scope.
+\end{description}
+The appendices give the wire-measure transfer, notation, attribution,
+and the statements and proofs from earlier work.
+
+\section{The counting theorem}\label{sec:prelim}
+
+This section states the counting guarantee. Supporting statements
+and their complete proofs are in \cref{app:statements,app:earlier}.
+The published foundations are identified
+in \cref{par:five-inputs}.
+
+\subsection{Normalized calls and the counting theorem}\label{sec:counting}
+
+A \emph{call} asks for the acceptance
+probability of one of three predicates on \(\{0,1\}^n\): one circuit
+\(C^1\); the exclusive-or \(C^1\oplus C^2\) of two circuits; or
+\(C^1\oplus\PAR_\Sigma\), where \(\PAR_\Sigma(x)=\bigoplus_{i\in\Sigma}x_i\)
+is an explicit input parity. We call these \emph{single},
+\emph{pair} and \emph{parity} calls and write \(\pred\) for the
+predicate. Let \(n\ge4\) and
+\[
+ B_0=4n\lceil\lgx(n+1)\rceil .
+\]
+A call is \emph{normalized} if its circuits are \(\SYM\circ\THR\)
+circuits on \(n\) inputs whose bottom weights and thresholds are
+integers of magnitude below \(2^{B_0}\), with explicit lookup tables,
+and whose total wire count satisfies \(W=W(C^1)+W(C^2)\le2n^4\)
+(with \(W(C^2)=0\) for single and parity calls). The call also
+contains a rational radius \(\beta\) with
+\(n^{-B_1}\le\beta\le1/16\), encoded in at most \(n^{B_2}\) bits, for
+fixed positive integers \(B_1,B_2\).
+
+Every single, pair or parity call made from \(\SYM\circ\THR\) circuits with total wire count at most \(2n^4\) can be put into the integer-parameter form above, with the same bottom gates and no more wires. Indeed, apply \cref{imp:integer} to each
+bottom gate as a function of the \(f\ge1\) inputs it reads (a gate of
+fan-in zero is a constant and is written \(\ind[0\ge\theta]\) with
+\(\theta\in\{0,1\}\)): its new weights and threshold are integers in
+\(\pm f^f\), and \(f^f\le n^n<2^{B_0}\). No new input is read, so the
+wire count does not increase. Running times are counted in steps of a deterministic multitape Turing machine.
+
+\begin{theorem}[Certified counting below the quartic wire cap]
+\label{thm:counter}
+Fix positive integers \(B_1,B_2\). There are a constant
+\(a=a_{B_1,B_2}>0\) and one deterministic algorithm whose input is a
+call on \(n\) inputs and a binary string, the
+\emph{witness}, with the following properties.
+\begin{enumerate}[(i)]
+\item (Soundness) For every witness, it returns dyadic rationals
+\((\phat,\khat)\) with \(|\phat-\Pr_x[\pred(x)=1]|\le\khat\).
+\item (Completeness) For all sufficiently large \(n\), on every normalized call, if
+\(W\le a\,\beta\,\mathcal A_4(n)\), some witness of polynomial length
+gives \(\khat\le\beta\).
+\item (Time) For all sufficiently large \(n\), on every normalized
+call and every witness it halts within \(2^n/n^{\mu_n}\) steps, reads
+a prefix of polynomial length of the witness, and uses no oracle.
+Hence any prescribed fixed polynomial number of calls has total
+workload \(2^nn^{O(1)-\mu_n}\).
+\item (Interface) Its outputs are dyadic with denominators dividing
+\(2^{n+1}\) and encoded length polynomial in \(n\). On an input that is
+not a normalized call it returns \((1/2,1/2)\) in time polynomial in
+the encoded length of the call, independently of the witness.
+\end{enumerate}
+\end{theorem}
+Lean: \path{NearQuarticWires.Program.counterExists4}, from Williams' rectangular-product input.
+
+
+The same cap handles all three call types; this is sufficient for
+the transfer. \Crefrange{sec:cells}{sec:asymptotics} prove
+\cref{thm:counter}.
+
+The standard matrix concentration inequality used below is
+\cref{imp:tropp} in \cref{app:statements}; throughout,
+\(\|\cdot\|\) is the operator norm.
+
+\section{The call on product-star cells}\label{sec:cells}
+
+This section rewrites a call on one cell. Each score splits into a
+part that depends only on the left pattern, a part that depends only
+on the right pattern, and a mixed residual (\cref{lem:identity}). The
+mixed residual is rare (\cref{lem:mixed,lem:meanpop}), and a Fourier
+expansion moves everything except the residual into one-sided
+selectors (\cref{lem:fourier}).
+
+Fix a normalized call and one of the \(2^k\) partitions of
+\cref{imp:partition}; its index is part of the witness. Recall from
+there that a cell has an address \(z\in\{0,1\}^{n-k}\), its
+\emph{column}, a center \(c(z)\), and points \(c(z)\oplus u\oplus v\);
+the left pattern \(u\in[N]\) flips at most one coordinate in each of
+\(r/2\) blocks of \(b=2^s-1\) coordinates, the right pattern \(v\)
+likewise in the other \(r/2\) blocks, and \(F(u)\) is the set of
+coordinates flipped by \(u\). Let
+\(\cJ\subseteq\{1,2\}\) be the set of circuits of the call
+(\(\cJ=\{1,2\}\) for pair calls and \(\cJ=\{1\}\) otherwise). Circuit
+\(j\in\cJ\) has bottom gates \(T_{j,1},\dots,T_{j,G_j}\) and lookup
+\(g_j\); put \(G_2=0\) if \(2\notin\cJ\). For a column \(z\), write
+\(c=c(z)\) and define, for \(u,v\in[N]\),
+\begin{align*}
+ \Delta_{j,i}(z,u,v)&=T_{j,i}(c\oplus u\oplus v)-T_{j,i}(c\oplus u)-T_{j,i}(c\oplus v)+T_{j,i}(c),
+ \qquad R_j=\sum_{i}\Delta_{j,i},\\
+ s^{\rm L}_j(z,u)&=\sum_i\bigl(T_{j,i}(c\oplus u)-T_{j,i}(c)\bigr),
+ \qquad s^{\rm R}_j(z,v)=\sum_iT_{j,i}(c\oplus v),\\
+ s_j(z,u,v)&=\sum_iT_{j,i}(c\oplus u\oplus v),
+ \qquad \pop(z,u,v)=\sum_{j\in\cJ}\sum_i|\Delta_{j,i}(z,u,v)|.
+\end{align*}
+We call \(s_j\) the \emph{score} of circuit \(j\), \(\Delta_{j,i}\) the
+\emph{mixed residual} of the bottom gate \((j,i)\), and \(\pop\) the
+\emph{population} of the point. The values \(T_{j,i}(c\oplus x)\) for
+\(x\in\{0,u,v,u\oplus v\}\) are the \emph{atoms} of the bottom gate at
+the point.
+
+Throughout, \(\Delta_{j,i}\) is used only as the integer linear form
+displayed above in four atoms, and \(|\Delta_{j,i}|=\Delta_{j,i}^2\)
+(by \cref{imp:range}) only as an integer quadratic form. No
+representation of a residual over \(\F_2\) is used.
+
+\begin{lemma}[Exact score identity]\label{lem:identity}
+\(s_j=s^{\rm L}_j+s^{\rm R}_j+R_j\) at every point,
+\(s_j\in[0,G_j]\), and \(|R_j|\le G_j\).
+\end{lemma}
+\begin{proof}
+Summing the definitions gives
+\(s^{\rm L}_j+s^{\rm R}_j+R_j=\sum_iT_{j,i}(c\oplus u\oplus v)\). The
+range claims follow from \(T\in\{0,1\}\) and \(\Delta\in\{-1,0,1\}\).
+\end{proof}
+
+\begin{lemma}[Mixed dependence]\label{lem:mixed}
+If \(\Delta_{j,i}(z,u,v)\ne0\), then \(T_{j,i}\) has a nonzero weight on
+some coordinate of \(F(u)\) and on some coordinate of \(F(v)\).
+Consequently, if \(d_l\) is the number of bottom gates, of all circuits
+of the call, with nonzero weight on coordinate \(l\), then for every
+column \(z\)
+\[
+ \pop(z,u,v)\le\min\Bigl\{\sum_{l\in F(u)}d_l,\ \sum_{l\in F(v)}d_l\Bigr\}.
+\]
+\end{lemma}
+\begin{proof}
+If \(T=T_{j,i}\) has zero weight on all of \(F(u)\), then
+\(T(c\oplus u\oplus v)=T(c\oplus v)\) and \(T(c\oplus u)=T(c)\), so
+\(\Delta=0\); symmetrically for \(F(v)\). Each bottom gate with nonzero
+residual is therefore incident to \(F(u)\), and also to \(F(v)\).
+\end{proof}
+
+\begin{lemma}[Product-star mean population]\label{lem:meanpop}
+Let \(r\) be even with \(2\le r\le n/4\), set \(s=\lfloor\log_2(n/r+1)\rfloor\), \(b=2^s-1\), and \(k=rs\).
+Use \(r\) disjoint blocks of \(b\) coordinates, split equally between left and right, and a binary Hamming code whose parity-check columns are the nonzero vectors of \(\F_2^s\).
+Choosing a code coset in each block gives \(2^k\) partitions into products of stars, each with \(2^{n-k}\) cells and \(2^k\) points per cell; other coordinates belong to the center.
+Let \(T_1,\ldots,T_G\) be integer-parameter Boolean threshold gates with fan-ins \(f_i\), counted with repetition, and \(\sum_i f_i\le W\). Define
+\[
+ \Delta_i(c,u,v)=T_i(c\oplus u\oplus v)-T_i(c\oplus u)-T_i(c\oplus v)+T_i(c),
+ \qquad \pop(z,u,v)=\sum_i|\Delta_i(c(z),u,v)|.
+\]
+For a uniform partition index \(\sigma\), uniform cell \(z\), and independent uniform left and right star patterns \(u,v\),
+\[
+ \E_{\sigma,z,u,v}\pop(z,u,v)\le6r^{3/2}W/n^{3/2}.
+\]
+Consequently some fixed partition has the same bound on \(\E_{z,u,v}\pop(z,u,v)\).
+\end{lemma}
+Lean: \path{NearQuarticWires.Cells.average_population_le} and \path{Cells.mean_population}. This is the product-star estimate from~\cite[Appendix~A]{Nag72}, used here by the collective cycle analysis.
+
+\begin{proof}
+Averaged over the partition index and the column, which together give
+a uniform center independent of the patterns (\cref{imp:partition}),
+\cref{imp:population} gives
+\(\Pr[\Delta_i\ne0]\le2f_i/(b+1)^{3/2}\le2f_i(2r/n)^{3/2}\le6r^{3/2}f_i/n^{3/2}\),
+using \(b+1>n/(2r)\). Sum over bottom gates and choose a partition index
+whose mean is at most the average.
+\end{proof}
+
+\subsection{Fourier decomposition with the mask inside the matrix}\label{sec:fourier}
+
+Fix the trace order \(m=4\). Put \(\Omega_j=4mG_j+1\) for
+\(j\in\cJ\) and \(\Omega_2=1\) if \(2\notin\cJ\), let
+\(\Theta=\Z/\Omega_1\times\Z/\Omega_2\),
+\(\omega_j=e^{2\pi\iu/\Omega_j}\), and let \(M_F=\lceil\sqrt{|\Theta|}\,\rceil\), the least integer with \(M_F^2\ge|\Theta|\). The
+modulus \(\Omega_j>2mG_j\) exceeds every score, which lies in
+\([0,G_j]\), and the absolute value of every walk sum used later,
+which is at most \(2mG_j\) (\cref{lem:cycle}).
+
+\begin{lemma}[Fourier decomposition]\label{lem:fourier}
+For each call there are complex numbers \(\widehat F(\theta,\nu)\),
+\((\theta,\nu)\in\Theta\times\{0,1\}\), with
+\(\sum_{\theta,\nu}|\widehat F(\theta,\nu)|\le M_F\), and for every
+column \(z\) functions
+\(a_{z,\theta,\nu},b_{z,\theta,\nu}:[N]\to\C\) of modulus at
+most one, such that for every \((u,v)\) and every
+\(\mu_0\in\{0,1\}\)
+\[
+ \pred\bigl(c(z)\oplus u\oplus v\bigr)\,\mu_0
+ =\sum_{\theta,\nu}\widehat F(\theta,\nu)\,a_{z,\theta,\nu}(u)\,b_{z,\theta,\nu}(v)\,
+ \omega_1^{\theta_1R_1(z,u,v)}\omega_2^{\theta_2R_2(z,u,v)}\,\mu_0 .
+\]
+\end{lemma}
+\begin{proof}
+\emph{Single and pair calls.} Define \(F\) on \(\Theta\) by
+\(F(t_1,t_2)=g_1(t_1)\) (single) or \(g_1(t_1)\oplus g_2(t_2)\) (pair)
+for \((t_1,t_2)\in[0,G_1]\times[0,G_2]\), and \(F=0\) elsewhere; this
+is well defined because \(\Omega_j>G_j\). Put
+\(\widehat F(\theta,0)=|\Theta|^{-1}\sum_tF(t)\omega_1^{-\theta_1t_1}\omega_2^{-\theta_2t_2}\)
+and \(\widehat F(\theta,1)=0\). Character orthogonality on the finite
+group \(\Theta\) gives
+\(F(t)=\sum_\theta\widehat F(\theta,0)\omega_1^{\theta_1t_1}\omega_2^{\theta_2t_2}\),
+Parseval gives
+\(\sum_\theta|\widehat F(\theta,0)|^2=|\Theta|^{-1}\sum_tF(t)^2\le1\),
+and the Cauchy--Schwarz inequality gives \(\sum_\theta|\widehat F|\le\sqrt{|\Theta|}\le M_F\).
+By \cref{lem:identity}, \(\pred=F(s_1,s_2)\) and
+\(\omega_j^{\theta_js_j}=\omega_j^{\theta_js^{\rm L}_j}\omega_j^{\theta_js^{\rm R}_j}\omega_j^{\theta_jR_j}\).
+Take \(a_{z,\theta,0}(u)=\prod_j\omega_j^{\theta_js^{\rm L}_j(z,u)}\)
+and \(b_{z,\theta,0}(v)=\prod_j\omega_j^{\theta_js^{\rm R}_j(z,v)}\).
+
+\emph{Parity calls.} By linearity,
+\(\PAR_\Sigma(c\oplus u\oplus v)=\PAR_\Sigma(c)\oplus\PAR_\Sigma(u)\oplus\PAR_\Sigma(v)\).
+Let \(\chi_0=(-1)^{\PAR_\Sigma(c(z))}\), \(\chi_{\rm L}(u)=(-1)^{\PAR_\Sigma(u)}\),
+\(\chi_{\rm R}(v)=(-1)^{\PAR_\Sigma(v)}\), and let
+\(\Gamma_g(t)=(-1)^{g_1(t)}\) on \([0,G_1]\) and \(\Gamma_g=0\)
+elsewhere on \(\Z/\Omega_1\). Then
+\[
+ \pred=\tfrac12-\tfrac12\,\chi_0\chi_{\rm L}(u)\chi_{\rm R}(v)\,\Gamma_g(s_1).
+\]
+Let \(\widehat F(0,0)=\tfrac12\) with \(a_{z,0,0}=b_{z,0,0}=1\),
+\(\widehat F(\theta,0)=0\) for \(\theta\ne0\), and
+\(\widehat F(\theta,1)=-\tfrac12\widehat\Gamma_g(\theta)\) with
+\(a_{z,\theta,1}=\chi_0\chi_{\rm L}\,\omega_1^{\theta_1s^{\rm L}_1}\) and
+\(b_{z,\theta,1}=\chi_{\rm R}\,\omega_1^{\theta_1s^{\rm R}_1}\). As above
+\(\sum_\theta|\widehat\Gamma_g(\theta)|\le\sqrt{\Omega_1}\), so the total
+mass is at most \(\tfrac12+\tfrac12\sqrt{\Omega_1}\le\sqrt{\Omega_1}\le M_F\).
+\end{proof}
+
+For a \(0/1\) matrix \(\mask(z)\) on \([N]^2\), defined in
+\cref{sec:masks}, put
+\[
+ M_\theta(z)[u,v]=\omega_1^{\theta_1R_1(z,u,v)}\omega_2^{\theta_2R_2(z,u,v)}\mask(z,u,v),\qquad
+ D_{\theta,0}(z)=\operatorname{Re}M_\theta(z),\quad D_{\theta,1}(z)=\operatorname{Im}M_\theta(z).
+\]
+These \(I=2|\Theta|\) real matrices have entries in \([-1,1]\). They
+depend on the circuits, the partition and the mask, but not on the
+lookups or the parity set: the lookups and the parity enter only
+through the coefficients \(\widehat F\) and the selectors.
+The second index of \(D\) specifies the real or imaginary part,
+independently of the selector index in \cref{lem:fourier}.
+
+\section{Sampling bounded real matrices}\label{sec:sampler}
+
+A list of \(Q\) sample pairs estimates the average of a matrix
+\(D\) against selectors \(a,b\) with an error governed by the operator
+norm of one error matrix, uniformly in the selectors. This section
+shows that the fixed-moment analysis of~\cite[Lemma~F.1]{Nag72},
+written there for \(0/1\) matrices, holds for real matrices with
+entries in \([-1,1]\), and records the two consequences we use. In
+this section \(m\) is any positive integer; the algorithm uses
+\(m=4\).
+
+For a list of \(Q\) pairs \((U_j,V_j)\in[N]^2\) let
+\[
+ \Gamma(x)=Q-N^2\,\#\{j:(U_j,V_j)=x\}\qquad(x\in[N]^2).
+\]
+For a real \(N\times N\) matrix \(D\), the error matrix
+\(E_D=QD-N^2\sum_jD(U_j,V_j)e_{U_j}e_{V_j}^{\mathsf T}\) satisfies
+\begin{equation}\label{eq:ED}
+ E_D[x]=D[x]\,\Gamma(x)\qquad(x\in[N]^2),
+\end{equation}
+since the \(x\) entry of the sum counts the samples at \(x\). Let
+\(\cH(E)=\bigl(\begin{smallmatrix}0&E\\E^{\mathsf T}&0\end{smallmatrix}\bigr)\);
+for real \(E\) with singular values \(s_i\),
+\(\tr\cH(E)^{2m}=2\sum_is_i^{2m}\).
+
+\begin{lemma}[Trace bound for entries in {$[-1,1]$}]\label{lem:tracebound}
+If \(D\) is real with entries in \([-1,1]\) and the pairs are
+independent and uniform, then
+\(\E\tr\cH(E_D)^{2m}\le4N^2((4QN^3)^mm!+(8N^2/3)^{2m}(2m)!)\).
+\end{lemma}
+\begin{proof}
+\(E_D=\sum_{j=1}^QX_j\) with independent
+\(X_j=D-N^2D(U_j,V_j)e_{U_j}e_{V_j}^{\mathsf T}\). We check the
+hypotheses of \cref{imp:tropp}.
+(1) \(\E[N^2D(U,V)e_Ue_V^{\mathsf T}]=\sum_{u,v}D(u,v)e_ue_v^{\mathsf T}=D\),
+so \(\E X_j=0\).
+(2) \(\|D\|\le\|D\|_F\le N\), so \(\|X_j\|\le N+N^2\le2N^2\).
+(3) \(\E X_jX_j^{\mathsf T}=N^2\diag_u(\sum_vD(u,v)^2)-DD^{\mathsf T}\preceq N^3\Id\),
+because \(\sum_vD(u,v)^2\le N\) and \(DD^{\mathsf T}\succeq0\); likewise
+\(\E X_j^{\mathsf T}X_j\preceq N^3\Id\).
+With \(L=2N^2\) and \(\sigma^2\le QN^3\), \cref{imp:tropp} gives
+\[
+ \Pr[\|E_D\|\ge x]\le2N\exp\Bigl(-\frac{x^2}{2(QN^3+2N^2x/3)}\Bigr)
+ \le2N\bigl(e^{-x^2/(4QN^3)}+e^{-3x/(8N^2)}\bigr),
+\]
+since \(2(a+b)\le4\max\{a,b\}\). As
+\(\tr\cH(E)^{2m}\le2N\|E\|^{2m}\),
+\begin{align*}
+ \E\tr\cH(E_D)^{2m}&\le2N\int_0^\infty2mx^{2m-1}\Pr[\|E_D\|>x]\,dx\\
+ &\le4N^2\cdot2m\Bigl(\int_0^\infty x^{2m-1}e^{-x^2/(4QN^3)}dx\\
+ &\hphantom{{}\le4N^2\cdot2m\Bigl(}+\int_0^\infty x^{2m-1}e^{-3x/(8N^2)}dx\Bigr)\\
+ &=4N^2\cdot2m\Bigl(\tfrac12(4QN^3)^m(m-1)!+(8N^2/3)^{2m}(2m-1)!\Bigr)\\
+ &=4N^2\bigl((4QN^3)^mm!+(8N^2/3)^{2m}(2m)!\bigr).
+\end{align*}
+Only (1)--(3) were used about the summands.
+\end{proof}
+The Lean companion proves the \(m=4\) bound it uses by a direct moment computation, without Tropp's inequality (\path{NearQuarticWires.Sampler.mean_traceMoment_le}).
+
+\begin{lemma}[Uniform error over selectors]\label{lem:selector}
+For every column \(z\), sample list and mask, put
+\(\varepsilon_z=\max_{\theta,\nu}\|E_{D_{\theta,\nu}(z)}\|/(QN)\). Then
+\begin{align*}
+ \Bigl|\frac1{N^2}\sum_{u,v}(\pred\cdot\mask)(u,v)-\frac1Q\sum_{j}(\pred\cdot\mask)(U_j,V_j)\Bigr|
+ &\le2M_F\,\varepsilon_z,\\
+ \Bigl|\frac1{N^2}\sum_{u,v}\mask(u,v)-\frac1Q\sum_{j}\mask(U_j,V_j)\Bigr|&\le\varepsilon_z ,
+\end{align*}
+where \((\pred\cdot\mask)(u,v)=\pred(c(z)\oplus u\oplus v)\mask(z,u,v)\).
+\end{lemma}
+\begin{proof}
+For \(a,b\in\C^N\) with coordinates of modulus at most one and a real
+matrix \(E\), \(|a^{\mathsf T}Eb|\le\|E\|\,\|a\|_2\|b\|_2\le N\|E\|\);
+the operator norm of a real matrix is the same over \(\R\) and over
+\(\C\). For each \((\theta,\nu)\), take \(a=a_{z,\theta,\nu}\) and
+\(b=b_{z,\theta,\nu}\),
+\[
+ \frac{a^{\mathsf T}M_\theta b}{N^2}-\frac1Q\sum_ja_{U_j}b_{V_j}M_\theta(U_j,V_j)
+ =\frac{a^{\mathsf T}(E_{D_{\theta,0}}+\iu E_{D_{\theta,1}})b}{QN^2},
+\]
+of modulus at most \(2N\cdot QN\varepsilon_z/(QN^2)=2\varepsilon_z\).
+Multiply by \(\widehat F(\theta,\nu)\), sum, and apply
+\cref{lem:fourier} with \(\mu_0=\mask(z,u,v)\) at each point. For the
+second line use \(\theta=0\), \(M_0=\mask=D_{0,0}\) and
+\(a=b=\mathbf 1\).
+\end{proof}
+
+\begin{lemma}[From a potential bound to an average error]\label{lem:root}
+Let \(Z\) be a nonempty finite set of columns, let \(m\ge1\), let
+\(0<\eta\le1\), and let \(Q\ge1024Nm\eta^{-2}(4N^2I)^{1/m}\). If real
+matrices \(E_t(z)\), \(z\in Z\), \(t\le I\), satisfy
+\[
+ \sum_{z\in Z}\sum_{t\le I}\tr\cH(E_t(z))^{2m}
+ \le|Z|\,I\,4N^2\bigl((4QN^3)^mm!+(8N^2/3)^{2m}(2m)!\bigr),
+\]
+then \(|Z|^{-1}\sum_{z\in Z}\max_t\|E_t(z)\|/(QN)\le\eta\).
+\end{lemma}
+\begin{proof}
+Since \(\tr\cH(E)^{2m}=2\sum_is_i^{2m}\ge2\|E\|^{2m}\),
+\(\max_t\|E_t(z)\|^{2m}\le\frac12\sum_t\tr\cH(E_t(z))^{2m}\). By Jensen's
+inequality for \(x\mapsto x^{1/(2m)}\),
+\begin{align*}
+ \frac1{|Z|}\sum_z\max_t\|E_t(z)\|
+ &\le\Bigl(2N^2I\bigl((4QN^3)^mm!+(8N^2/3)^{2m}(2m)!\bigr)\Bigr)^{1/(2m)}\\
+ &\le(4N^2I)^{1/(2m)}\Bigl(\sqrt{4QN^3m}+\tfrac{16N^2m}{3}\Bigr),
+\end{align*}
+using \((x+y)^{1/(2m)}\le x^{1/(2m)}+y^{1/(2m)}\), \(m!\le m^m\) and
+\((2m)!\le(2m)^{2m}\). Dividing by \(QN\), the bound is
+\((4N^2I)^{1/(2m)}(2\sqrt{Nm/Q}+16Nm/(3Q))\). Under the hypothesis on
+\(Q\) the first term is at most \(\eta/16\) and the second at most
+\(\eta/192\).
+\end{proof}
+
+This is the argument of~\cite[Lemma~F.1]{Nag72}, with an arbitrary
+set \(Z\) of columns in place of all columns.
+
+\section{The cycle-sum identity}\label{sec:cycle}
+
+The sampler of \cref{sec:sampler} needs a sample list with a small
+potential \(\sum_{\theta,\nu}\tr\cH(E_{D_{\theta,\nu}(z)})^{2m}\). We
+will choose it bit by bit, and for that we must compute the potential's
+conditional expectations. This section shows that the potential is a
+weighted count of closed walks with vanishing signed residual sums.
+
+A \emph{closed walk} is \(w=(u_1,\dots,u_m,v_1,\dots,v_m)\in[N]^{2m}\);
+its \emph{edges} are \(e_{2i-1}=(u_i,v_i)\) and
+\(e_{2i}=(u_{i+1},v_i)\) for \(1\le i\le m\), with \(u_{m+1}=u_1\).
+There are \(N^{2m}=2^{mk}\) closed walks. For a sign pattern
+\(\sigma\in\{\pm1\}^{2m}\) put
+\[
+ Y_{j,\sigma}(z,w)=\sum_{l=1}^{2m}\sigma_lR_j(z,e_l),\qquad
+ \kappa_\sigma=1+(-1)^m\prod_l\sigma_l\in\{0,2\},
+\]
+and let \(\Gamma_w=\prod_l\Gamma(e_l)\) and
+\(\mask_w(z)=\prod_l\mask(z,e_l)\). If \(2\notin\cJ\), then
+\(Y_{2,\sigma}\equiv0\). We call \(Y_{j,\sigma}\) a \emph{walk sum}.
+
+\begin{lemma}[Cycle-sum identity]\label{lem:cycle}
+Let \(m,N\ge1\) and \(Q,G_1,G_2\ge0\) be integers, let \(R_j:[N]^2\to\Z\) satisfy \(|R_j(e)|\le G_j\), and let \(M:[N]^2\to\R\) be any common real weight.
+For any sample list \(S=(S_1,\ldots,S_Q)\), allowing repetitions, put
+\[
+ \Omega_j=4mG_j+1,\quad \Theta=\Z/\Omega_1\times\Z/\Omega_2,
+ \quad \Gamma(e)=Q-N^2|\{t:S_t=e\}|,
+\]
+\[
+ \psi_\theta(e)=2\pi\bigl(\theta_1R_1(e)/\Omega_1+\theta_2R_2(e)/\Omega_2\bigr),
+\]
+\[
+ E_{\theta,0}(e)=\Gamma(e)M(e)\cos\psi_\theta(e),
+ \quad E_{\theta,1}(e)=\Gamma(e)M(e)\sin\psi_\theta(e).
+\]
+Let \(\cH(E)=\begin{psmallmatrix}0&E\\E^{\mathsf T}&0\end{psmallmatrix}\).
+A closed alternating walk \(w\in[N]^{2m}\) has edges \(e_{2i-1}=(u_i,v_i)\), \(e_{2i}=(u_{i+1},v_i)\), where \(u_{m+1}=u_1\).
+For \(\sigma\in\{\pm1\}^{2m}\), set
+\[
+ Y_{j,\sigma}(w)=\sum_{l=1}^{2m}\sigma_lR_j(e_l),\quad
+ \kappa_\sigma=1+(-1)^m\prod_l\sigma_l,\quad
+ \Gamma_w=\prod_l\Gamma(e_l),\quad M_w=\prod_lM(e_l).
+\]
+Then the frequency-summed real/imaginary trace potential is the signed weighted walk count
+\[
+ \sum_{\theta\in\Theta}\sum_{\nu=0}^1\tr\cH(E_{\theta,\nu})^{2m}
+ =\frac{2|\Theta|}{4^m}\sum_w\Gamma_w M_w
+ \sum_{\sigma\in\{\pm1\}^{2m}}\kappa_\sigma
+ \ind[Y_{1,\sigma}(w)=0]\ind[Y_{2,\sigma}(w)=0].
+\]
+\end{lemma}
+Lean: \path{NearQuarticWires.Cycle.cycle_sum_identity} checks the \(m=4\) specialization (eight edges); the displayed algebraic proof holds for every \(m\ge1\). For circuit applications take \(M=\mask\). The sample and common weight must be the same at every frequency.
+
+\begin{proof}
+For real \(E\), \(\cH(E)^2=\diag(EE^{\mathsf T},E^{\mathsf T}E)\), so
+\(\tr\cH(E)^{2m}=2\tr\bigl((EE^{\mathsf T})^m\bigr)\), and expanding the matrix
+product,
+\(\tr\bigl((EE^{\mathsf T})^m\bigr)=\sum_w\prod_{i=1}^mE(u_i,v_i)E(u_{i+1},v_i)=\sum_w\prod_{l=1}^{2m}E(e_l)\).
+By definition,
+\(E_{\theta,\nu}(e)=\Gamma(e)M(e)\,\mathrm{cs}_\nu(\psi_\theta(e))\)
+with \(\mathrm{cs}_0=\cos\), \(\mathrm{cs}_1=\sin\) and
+\(\psi_\theta(e)=2\pi(\theta_1R_1(e)/\Omega_1+\theta_2R_2(e)/\Omega_2)\).
+For reals \(x_1,\dots,x_{2m}\), expanding
+\(\cos x=(e^{\iu x}+e^{-\iu x})/2\) and
+\(\sin x=(e^{\iu x}-e^{-\iu x})/(2\iu)\) gives
+\[
+ \prod_l\cos x_l=4^{-m}\sum_\sigma e^{\iu\sum_l\sigma_lx_l},\qquad
+ \prod_l\sin x_l=(2\iu)^{-2m}\sum_\sigma\Bigl(\prod_l\sigma_l\Bigr)e^{\iu\sum_l\sigma_lx_l},
+\]
+and \((2\iu)^{-2m}=(-1)^m4^{-m}\). Adding,
+\(\prod_l\cos x_l+\prod_l\sin x_l=4^{-m}\sum_\sigma\kappa_\sigma e^{\iu\sum_l\sigma_lx_l}\).
+With \(x_l=\psi_\theta(e_l)\) we have
+\(\sum_l\sigma_lx_l=2\pi(\theta_1Y_{1,\sigma}/\Omega_1+\theta_2Y_{2,\sigma}/\Omega_2)\),
+and
+\[
+ \sum_{\theta\in\Theta}e^{2\pi\iu(\theta_1Y_1/\Omega_1+\theta_2Y_2/\Omega_2)}
+ =|\Theta|\,\ind[Y_1\equiv0\ (\mathrm{mod}\ \Omega_1)]\,\ind[Y_2\equiv0\ (\mathrm{mod}\ \Omega_2)].
+\]
+Finally \(|Y_{j,\sigma}|\le\sum_l|R_j(e_l)|\le2mG_j<\Omega_j\) by the assumed bound, so \(Y_{j,\sigma}\equiv0\pmod{\Omega_j}\) if and
+only if \(Y_{j,\sigma}=0\). Collect the factor \(2\) from the trace and
+the factor \(\Gamma_wM_w\).
+\end{proof}
+
+For a circuit column \(z\), take \(M(e)=\mask(z,e)\) and \(R_j(e)=R_j(z,e)\). By \eqref{eq:ED} this gives the original column potential
+\[
+ \Phi_z:=\sum_{\theta\in\Theta}\sum_{\nu\in\{0,1\}}\tr\cH\bigl(E_{D_{\theta,\nu}(z)}\bigr)^{2m}
+ =\frac{2|\Theta|}{4^m}\sum_{w}\Gamma_w\,\mask_w(z)\sum_{\sigma}\kappa_\sigma\,
+ \ind[Y_{1,\sigma}(z,w)=0]\,\ind[Y_{2,\sigma}(z,w)=0].
+\]
+The identity holds for every column, sample list and mask, with no
+assumption on populations. The one-sided scores never enter the
+matrices; they sit in the selectors of \cref{lem:fourier}. Both sides
+are finite sums of real numbers, and the left side is nonnegative,
+although individual walk weights \(\Gamma_w\) may be negative.
+
+The same identity gives exact conditional expectations under the
+short seed: \cref{cor:conditional} records the formula and its
+computation, with proof in \cref{earlier:conditional-potentials}.
+
+
+\section{Masks that are exact integer polynomials}\label{sec:masks}
+
+The mask must discard the points where the population is too large to
+localize, and it must enter the residue counts of
+\cref{sec:printing}, which are computed modulo \(p^e\) for every odd
+prime \(p\in(P/2,P]\); reconstruction needs the \emph{same} \(0/1\)
+mask for every prime. The masks of~\cite[Appendix~D]{Nag72} are
+polynomials over \(\F_2\), converted to integers by a binomial lift
+that is exact only modulo powers of two~\cite[Lemma~C.7]{Nag72}, so
+they cannot be multiplied into these counts. The mask below is an
+exact integer polynomial wherever it is used, so no modulus and no
+lift is involved.
+
+\paragraph{Parameters.} Integers \(\tau\ge1\), \(U\ge\tau\) and
+\(\Xmax\ge3r\tau\) are fixed in \cref{sec:params}; put
+\(\pi_0=\tau/(4U)\le1/4\) and \(d^*=\lfloor2\Xmax U/(3r\tau)\rfloor\ge1\).
+The witness contains a set \(\cS\) of bottom gate labels \((j,i)\).
+
+\begin{definition}[Mask]\label{def:mask}
+Let \(H_c=\{l:d_l\ge d^*\}\), with \(d_l\) as in \cref{lem:mixed}. Let
+\(\smask(u,v)=0\) if both \(F(u)\cap H_c\ne\emptyset\) and
+\(F(v)\cap H_c\ne\emptyset\), and \(\smask(u,v)=1\) otherwise. Let
+\(X(z,u,v)=\sum_{(j,i)\in\cS}|\Delta_{j,i}(z,u,v)|\) and
+\[
+ \mask(z,u,v)=\smask(u,v)\cdot\ind[X(z,u,v)\le\tau].
+\]
+\end{definition}
+
+The \emph{structural mask} \(\smask\) is a fixed \(0/1\) matrix on
+\([N]^2\), the same in every column; it depends only on the circuits'
+incidences and the partition.
+
+\begin{lemma}[Integer threshold masks]\label{lem:maskpoly}
+For nonnegative integers \(\tau,D\), put
+\[
+ c_a=\sum_{i=0}^{\min(a,\tau)}(-1)^{a-i}\binom ai\in\Z
+ \quad(0\le a\le D).
+\]
+Then \(|c_a|\le2^a\), and for every integer \(0\le X\le D\),
+\[
+ \ind[X\le\tau]=\sum_{a=0}^{D}c_a\binom Xa.
+\]
+Equivalently, for Boolean variables \(y_1,\ldots,y_G\),
+\(P_{\tau,D}(y)=\sum_{a=0}^{D}c_a e_a(y)\) is a multilinear integer polynomial of degree at most \(D\), each coefficient has magnitude at most \(2^D\), and
+\[
+ P_{\tau,D}(y)=\ind\Bigl[\sum_i y_i\le\tau\Bigr]
+ \quad\text{whenever }\sum_i y_i\le D.
+\]
+The same identity holds modulo every integer. Writing \(X=\sum_i y_i\), if \(s\in\{0,1\}\), then \(sP_{\tau,D}(y)=s\ind[X\le\tau]\) whenever \(X\le D\) or \(s=0\).
+
+For the circuit mask, take \(D=\Xmax\), set
+\(b_{j,i}=\Delta_{j,i}^2\), an integer polynomial of degree at most two
+in the four atoms of \(T_{j,i}\). Define the integer polynomial
+\[
+ \Mpoly(z,u,v)=\smask(u,v)\sum_{a=0}^{\Xmax}c_a\,e_a\bigl((b_{j,i}(z,u,v))_{(j,i)\in\cS}\bigr),
+\]
+where \(e_a\) is the elementary symmetric polynomial of degree \(a\).
+Then \(\Mpoly(z,u,v)=\mask(z,u,v)\) whenever \(X(z,u,v)\le\Xmax\) or
+\(\smask(u,v)=0\). Its degree in the atoms is at most \(2\Xmax\), and
+with separate atom variables for each bottom gate, after multilinearization its coefficients have \(O(\Xmax+\lambda_n)\)
+bits.
+\end{lemma}
+The scalar and Boolean identities and the bound \(|c_a|\le2^a\) are formalized by \path{NearQuarticWires.Mask.cutoff_eq_newton_sum_of_le}, \path{Mask.newtonCoeff_eq_sum_min}, \path{Mask.newtonCoeff_abs_le}, and \path{Mask.indicatorPolynomial_eq_mask}.
+
+\begin{proof}
+The \(b_{j,i}\) take values in \(\{0,1\}\) and sum to \(X\), so
+\(e_a(b)=\binom Xa\). For \(f:\{0,\dots,\Xmax\}\to\Z\) and an integer
+\(0\le x\le\Xmax\), Newton's forward-difference formula
+\(f(x)=\sum_{a=0}^{x}\binom xa(\Delta^af)(0)\) holds (write the shift
+operator as \(1+\Delta\) and expand \((1+\Delta)^x\) by the binomial
+theorem); since \(\binom xa=0\) for \(a>x\), the sum may run to
+\(\Xmax\). For \(f=\ind[\cdot\le\tau]\),
+\((\Delta^af)(0)=\sum_{i\le a}(-1)^{a-i}\binom aif(i)=c_a\). Hence
+\(\sum_{a\le\Xmax}c_a\binom Xa=\ind[X\le\tau]\) for \(0\le X\le\Xmax\). The
+degree bound holds because \(e_a\) has degree \(a\) in the \(b\)'s, and
+\(|c_a|\le2^a\).
+For Boolean \(y\) with \(X=\sum_i y_i\), \(e_a(y)=\binom Xa\), giving the generic identity; reducing this integer equality gives every modulus. In the independent indicator variables, a squarefree monomial indexed by \(I\) has coefficient \(c_{|I|}\), proving the degree and coefficient claims. With separate atom variables for each bottom gate, a monomial identifies its selected gates; each substituted quadratic has bounded coefficient mass, giving the stated bit bound.
+\end{proof}
+
+Unlike a probabilistic or sign representation~\cite{ACW16}, the bounded-range identity here is deterministic over \(\Z\), so the same mask can be used in every residue computation. Hence \(\Mpoly\) represents the mask
+modulo every integer simultaneously, in particular modulo \(p^e\) for
+every prime \(p\), as soon as \(X\le\Xmax\) is certified
+(\cref{lem:certify}).
+
+\begin{lemma}[Population under the structural mask]\label{lem:smaskpop}
+If \(\smask(u,v)=1\), then \(\pop(z,u,v)<(r/2)d^*\) for every column \(z\).
+\end{lemma}
+\begin{proof}
+One of \(F(u),F(v)\) avoids \(H_c\); it has at most \(r/2\)
+coordinates, each with \(d_l<d^*\). Apply \cref{lem:mixed}.
+\end{proof}
+
+\begin{lemma}[Filter guarantees]\label{lem:filter}
+Let \(\cS\) contain each bottom gate label independently with
+probability \(\pi_0\). For every fixed \((z,u,v)\):
+\begin{enumerate}[(a)]
+\item if \(\pop(z,u,v)\le U\), then \(\Pr[X>\tau]\le(e/4)^{\tau+1}\);
+\item if \(\pop(z,u,v)\ge16U\), then \(\Pr[X\le\tau]\le e^{-9\tau/8}\);
+\item if \(\smask(u,v)=1\), then \(\Pr[X\ge\Xmax/2]\le2^{-\Xmax/2}\).
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+\(X\) counts the \(\pop(z,u,v)\) labels with \(|\Delta|=1\) that lie in
+\(\cS\), so \(X\) is binomial with parameters \((\pop,\pi_0)\) and mean
+\(\bar X=\pi_0\pop\). We use the Chernoff bounds
+\(\Pr[X\ge t]\le(e\bar X/t)^t\) for \(t>\bar X\) and
+\(\Pr[X\le(1-\delta)\bar X]\le e^{-\delta^2\bar X/2}\) for
+\(0<\delta<1\).
+(a) \(\bar X\le\tau/4\); take \(t=\tau+1\).
+(b) \(\bar X\ge4\tau\); with \((1-\delta)\bar X=\tau\),
+\(\delta^2\bar X=(\bar X-\tau)^2/\bar X\), which is increasing in
+\(\bar X\ge\tau\), hence at least \((3\tau)^2/(4\tau)=9\tau/4\).
+(c) By \cref{lem:smaskpop},
+\(\bar X<\pi_0(r/2)d^*\le\frac{\tau}{4U}\cdot\frac r2\cdot\frac{2\Xmax U}{3r\tau}=\Xmax/12\);
+take \(t=\lceil\Xmax/2\rceil\), giving \((e/6)^{\Xmax/2}\le2^{-\Xmax/2}\).
+\end{proof}
+
+\begin{lemma}[Structural masked mass]\label{lem:smaskmass}
+If \(W\ge\sum_ld_l\), then
+\(\Pr_{u,v}[\smask(u,v)=0]\le\bigl(W/(d^*(b+1))\bigr)^2\).
+\end{lemma}
+\begin{proof}
+\(|H_c|\le\sum_ld_l/d^*\le W/d^*\). In each block, \(u\) chooses one of
+the \(b+1\) options \(\{0,e_1,\dots,e_b\}\) uniformly, so a fixed
+coordinate lies in \(F(u)\) with probability at most \(1/(b+1)\); a
+union bound gives \(\Pr_u[F(u)\cap H_c\ne\emptyset]\le|H_c|/(b+1)\),
+and likewise for \(v\). The patterns \(u\) and \(v\) are independent.
+\end{proof}
+
+\section{Walk sums: localization and certification}\label{sec:walks}
+
+The walk sum \(Y_{j,\sigma}\) is too wide to be identified by its
+residues modulo primes of size \(P\). Following~\cite[Section~5]{NagCG},
+nested subsampling writes it through short integer digits, which
+residues do identify, and a final error, which confines \(Y\) to a short
+box once the digits are known. Moment tests certify all of this on a
+whole column for an arbitrary guessed subsample, so soundness never
+depends on the subsample being honest.
+
+\subsection{Sampled sums and digits}
+For circuit \(j\), bottom gate \(t\in[G_j]\), walk \(w\), pattern
+\(\sigma\) and column \(z\) let
+\[
+ c_{j,t}(z,w,\sigma)=\sum_{l=1}^{2m}\sigma_l\Delta_{j,t}(z,e_l)\in[-2m,2m],
+ \qquad\text{so that}\qquad Y_{j,\sigma}(z,w)=\sum_tc_{j,t}(z,w,\sigma).
+\]
+The witness contains vectors \(\xi^{(j)}_r\in\{0,1\}^{G_j}\) for
+\(1\le r\le J\) (soundness would hold for any integer vectors).
+Define
+\[
+ K^{(j)}_{r,\sigma}(z,w)=\sum_t\xi^{(j)}_{r,t}\,c_{j,t}(z,w,\sigma),\quad
+ E^{(j)}_{0,\sigma}=K^{(j)}_{1,\sigma},\quad
+ E^{(j)}_{r,\sigma}=K^{(j)}_{r+1,\sigma}-a_rK^{(j)}_{r,\sigma}\ (1\le r<J),
+\]
+\[
+ \varphi^{(j)}_\sigma=M_1K^{(j)}_{J,\sigma}-A\,Y_{j,\sigma},
+\]
+with \(a_r\), \(A\) and \(M_1\) from the chain of \cref{imp:chain},
+run with the parameters \((T,h,\ell_0)\) of \cref{sec:params}. We call
+\(E^{(j)}_{r,\sigma}\) the \emph{digits} and \(\varphi^{(j)}_\sigma\) the
+\emph{final error}. All of these are integer linear forms in the atoms
+at the corners of the walk's edges. The same witness vectors serve
+every column, walk and pattern; the two circuits have separate
+vectors.
+
+\begin{lemma}[Localization of one walk sum]\label{lem:localize}
+Fix \(z\), \(w\), \(\sigma\) and \(j\), and suppose
+\(\pop(z,e_l)\le16U\) for all \(l\). Put \(\ell_0=32mU\), and let
+\(\bar\ell\) and \(s(\cdot)\) be as in \cref{imp:chain}. Let
+\(\xi^{(j)}_{r,t}=\ind[\upsilon_t\le\pi_r]\) with independent uniform
+\(\upsilon_t\in[0,1]\). With probability at least \(1-2Je^{-T}\),
+\[
+ |E^{(j)}_{r,\sigma}(z,w)|\le mh\ \ (0\le r<J),\qquad
+ |\varphi^{(j)}_\sigma(z,w)|\le172\,m\,A\,T\bar\ell/h .
+\]
+\end{lemma}
+\begin{proof}
+Write \(c_t=c_{j,t}(z,w,\sigma)\) and \(Y=Y_{j,\sigma}(z,w)\). Then
+\(|c_t|\le2m\) and
+\(\sum_t|c_t|\le\sum_l\sum_t|\Delta_{j,t}(e_l)|\le\sum_l\pop(e_l)\le\ell_0\);
+in particular \(|Y|\le\ell_0\le\bar\ell\) and
+\(\sum_tc_t^2\le2m\ell_0\). For a stage \(r\),
+\(K_r-\pi_rY=\sum_t(\ind[\upsilon_t\le\pi_r]-\pi_r)c_t\). The variables
+\(Y_t=(\ind[\upsilon_t\le\pi_r]-\pi_r)c_t/(2m)\) are independent,
+centered and bounded by one, with
+\(\sum_t\E Y_t^2\le\pi_r\sum_tc_t^2/(4m^2)\le\pi_r\ell_0/(2m)\le\pi_r\bar\ell\).
+\Cref{imp:bernstein} gives \(|K_r-\pi_rY|\le2m\,s(\pi_r)\) with
+probability at least \(1-2e^{-T}\); take a union bound over the \(J\)
+stages. On this event, by \cref{imp:chain}(ii),
+\(|E_0|=|K_1|\le\pi_1|Y|+2ms(\pi_1)\le2m(\pi_1\bar\ell+s(\pi_1))\le mh\).
+For \(r\ge1\), since \(\pi_{r+1}=a_r\pi_r\),
+\(E_r=(K_{r+1}-\pi_{r+1}Y)-a_r(K_r-\pi_rY)\), so
+\(|E_r|\le2m(s(\pi_{r+1})+a_rs(\pi_r))\le mh\). Since \(M_1\pi_J=A\),
+\(\varphi=M_1(K_J-\pi_JY)\), and by \cref{imp:chain}(iv)
+\(|\varphi|\le2mM_1s(\pi_J)=2mA\,s(\pi_J)/\pi_J\le172mAT\bar\ell/h\).
+\end{proof}
+
+This is the argument of~\cite[Lemma~5.2]{NagCG}, with summands bounded
+by \(2m\) instead of one; every stage error scales by \(2m\).
+
+\subsection{Certification}
+
+\begin{lemma}[Moment certificates]\label{lem:moments}
+Let \(K\ge1\) be an integer, let \(\mathcal V\) be a finite set with
+\(|\mathcal V|\le2^K\), let
+\(v:\mathcal V\to\Z\), and let \(R_0\ge1\) be an integer. If
+\(\sum_{x\in\mathcal V}v(x)^{2K}<R_0^{2K}\), then \(|v(x)|<R_0\) for all
+\(x\in\mathcal V\). Conversely, if \(|v|\le R'\) on \(\mathcal V\) and
+\(\sqrt2R'<R_0\), then \(\sum_{x\in\mathcal V}v(x)^{2K}<R_0^{2K}\).
+\end{lemma}
+\begin{proof}
+One value of modulus at least \(R_0\) contributes \(R_0^{2K}\) alone.
+Conversely, the sum is at most \(2^KR'^{2K}=(\sqrt2R')^{2K}<R_0^{2K}\).
+\end{proof}
+
+This is~\cite[Lemma~5.3]{NagCG}, stated for an arbitrary index set.
+Let \(\Ws=\{w:\prod_l\smask(e_l)=1\}\), let \(h_E\) and \(\Lambda\) be
+as in \cref{sec:params}, and write
+\(\Mpoly_w(z)=\prod_l\Mpoly(z,e_l)\). Call a column \(z\)
+\emph{certified} if the following strict tests pass:
+\begin{align}
+ &\textstyle\sum_{(u,v):\,\smask(u,v)=1}X(z,u,v)^{2k}<(\Xmax+1)^{2k};\label{eq:testX}\\
+ &\textstyle\sum_{w\in\Ws}\Mpoly_w(z)\,E^{(j)}_{r,\sigma}(z,w)^{2mk}<h_E^{2mk}
+   \quad\text{for all }j\in\cJ,\ r<J,\ \sigma\text{ with }\kappa_\sigma\ne0;\label{eq:testE}\\
+ &\textstyle\sum_{w\in\Ws}\Mpoly_w(z)\,\varphi^{(j)}_\sigma(z,w)^{2mk}<\Lambda^{2mk}
+   \quad\text{for all }j\in\cJ,\ \sigma\text{ with }\kappa_\sigma\ne0.\label{eq:testPhi}
+\end{align}
+Test \eqref{eq:testX} is evaluated first; if it fails, the column is
+not certified and \eqref{eq:testE}, \eqref{eq:testPhi} are not
+consulted. Certification depends on the call, the partition, \(\cS\)
+and the vectors \(\xi\), but not on the sampler seed.
+
+\begin{lemma}[Consequences of certification]\label{lem:certify}
+On a certified column \(z\), for every sign pattern \(\sigma\) with
+\(\kappa_\sigma\ne0\):
+\begin{enumerate}[(a)]
+\item \(X\le\Xmax\) at every point with \(\smask=1\), so
+\(\Mpoly_w(z)=\mask_w(z)\) for every walk \(w\);
+\item for every walk with \(\mask_w(z)=1\), all digits satisfy
+\(|E^{(j)}_{r,\sigma}|<h_E\) and \(|\varphi^{(j)}_\sigma|<\Lambda\);
+\item for every prime \(p\in(P/2,P]\) and every integer vector
+\(\delta\) with entries in \((-h_E,h_E)\), on such walks
+\(E^{(j)}_{\cdot,\sigma}\equiv\delta\pmod p\) holds if and only if
+\(E^{(j)}_{\cdot,\sigma}=\delta\);
+\item on the walks with \(\mask_w(z)=1\) and digit vector
+\(E^{(j)}_{\cdot,\sigma}=\delta^{(j)}\), the walk sum \(Y_{j,\sigma}\)
+lies in
+\[
+ \Bx_j(\delta^{(j)})=\Bigl[\Bigl\lceil\tfrac{M_1K(\delta^{(j)})-\Lambda+1}{A}\Bigr\rceil,
+ \Bigl\lfloor\tfrac{M_1K(\delta^{(j)})+\Lambda-1}{A}\Bigr\rfloor\Bigr]\cap[-2mG_j,2mG_j],
+\]
+where \(K(\delta)=\sum_{r<J}A_r\delta_r\), and
+\(\#\Bx_j(\delta)\le L_w\).
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+(a) Apply \cref{lem:moments} with \(\mathcal V\) the points where
+\(\smask=1\) (\(|\mathcal V|\le N^2=2^k\), \(K=k\)) to get \(X\le\Xmax\);
+then apply \cref{lem:maskpoly}. (b) By (a), the sums in
+\eqref{eq:testE} and \eqref{eq:testPhi} run over the walks with
+\(\mask_w=1\), since the other walks have weight \(0\); there are at most
+\(2^{mk}\) of them. Apply \cref{lem:moments} with \(K=mk\). (c) Two
+distinct integers in \((-h_E,h_E)\) differ by at most
+\(2h_E-2<P/2<p\). (d) The telescoping identity of \cref{imp:chain}
+gives \(K^{(j)}_{J,\sigma}=K(\delta^{(j)})\) on these walks, so
+\(AY=M_1K(\delta^{(j)})-\varphi\in(M_1K(\delta^{(j)})-\Lambda,\,M_1K(\delta^{(j)})+\Lambda)\);
+\(AY\) is an integer, which gives the interval, and \(|Y|\le2mG_j\) by
+\cref{lem:identity}. Finally \(\#\Bx_j\le(2\Lambda-2)/A+1\le L_w\),
+because \(\Lambda-1\le(L_w-1)A/2\).
+\end{proof}
+
+\section{Printing the tables}\label{sec:printing}
+
+The algorithm needs, for every column, the three certification sums
+of \cref{sec:walks} and, for each seed decision, weighted counts of
+walks by the residues of their digits and walk sums. This section
+writes each of these as an integer polynomial in threshold atoms and
+prints its value at all \(2^{n-k}\) columns at once.
+
+Fix \(\sigma\) with \(\kappa_\sigma\ne0\), a prime \(p\in\cP\), residue
+vectors \(\rho_E\in(\Z/p)^{J|\cJ|}\) and \(\rho_Y\in(\Z/p)^{|\cJ|}\), and
+rational walk weights \(c(w)\) with \(2^Sc(w)\in\Z\). Define, for
+each column \(z\),
+\begin{align*}
+ \Fer(z,w)&=\prod_{j\in\cJ,\,r<J}\Bigl(1-\bigl(E^{(j)}_{r,\sigma}(z,w)-\rho_{E,j,r}\bigr)^{p-1}\Bigr)
+ \prod_{j\in\cJ}\Bigl(1-\bigl(Y_{j,\sigma}(z,w)-\rho_{Y,j}\bigr)^{p-1}\Bigr),\\
+ \Pi(z)&=\sum_{w\in\Ws}2^Sc(w)\,\Mpoly_w(z)\,\Amp_e\bigl(\Fer(z,w)\bigr),\\
+ \mathcal N(z)&=\sum_{w\in\Ws}2^Sc(w)\,\mask_w(z)\,
+ \ind\bigl[E_{\cdot,\sigma}(z,w)\equiv\rho_E,\ Y_{\cdot,\sigma}(z,w)\equiv\rho_Y\ (\mathrm{mod}\ p)\bigr].
+\end{align*}
+
+\begin{lemma}[Residue counts]\label{lem:residue}
+If \(X\le\Xmax\) at every point of column \(z\) with \(\smask=1\), then
+\(\Pi(z)\equiv\mathcal N(z)\pmod{p^e}\). If moreover
+\(p^e>2\cdot2^S\sum_w|c(w)|\), then \(\mathcal N(z)\) is the unique
+integer in \((-p^e/2,p^e/2]\) congruent to \(\Pi(z)\) modulo \(p^e\).
+\end{lemma}
+\begin{proof}
+By \cref{lem:maskpoly}, \(\Mpoly_w(z)=\mask_w(z)\) exactly. By
+Fermat's theorem each factor of \(\Fer\) is congruent modulo \(p\) to
+the indicator of the corresponding congruence, so \(\Fer\) is
+congruent to the joint indicator, which is \(0\) or \(1\); by
+\cref{imp:amp}, \(\Amp_e(\Fer)\) is congruent modulo \(p^e\) to that
+same \(0/1\) value. Multiply by the integers \(2^Sc(w)\mask_w(z)\) and
+sum. Finally \(|\mathcal N(z)|\le2^S\sum_w|c(w)|<p^e/2\).
+\end{proof}
+
+This is~\cite[Lemma~6.7]{NagCG} with signed walk weights and the exact
+mask. No object over \(\F_2\) occurs in \(\Pi\): the residual forms are
+integer linear forms, the mask is an exact integer polynomial, and the
+only modular step is the reduction of the exact integer \(\Pi(z)\)
+modulo \(p^e\).
+
+\begin{lemma}[Printing]\label{lem:print}
+Let \(N_w=(4m+1)(G_1+G_2)\), \(m_c=n(B_0+\lambda_n+3)\), and let
+\(U_{\rm occ}\ge1+N_wm_c\) be an integer. In part~(a), assume
+\(2^S c(w)\) are integers with bit length polynomial in \(n\), as for
+the conditional weights of \cref{cor:conditional}. Each of the following tables
+over all columns \(z\in\{0,1\}^{n-k}\) can be printed in
+\(2^{n-k}\poly(n)\) bit operations, plus
+\(2^{mk}(1+N_w)^{2D}\poly(n)\) for constructing its list of equations,
+provided \(mk+2+D\lgx U_{\rm occ}\le(n-k)/100\), where \(D\) is the
+stated degree:
+\begin{enumerate}[(a)]
+\item \(\Pi(z)\) of \cref{lem:residue}, with \(D=4m\Xmax+(2e-1)(|\cJ|J+|\cJ|)(p-1)\);
+\item the moment sums in \eqref{eq:testE} and \eqref{eq:testPhi}, with \(D=4m\Xmax+2mk\);
+\item the moment sum in \eqref{eq:testX}, with \(D=4k\).
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+Fix a walk \(w\). Its edges have corners \(c(z)\oplus x\) with \(x\) in
+\(\{0\}\cup\{u_i,v_i,u_i\oplus v_i,u_{i+1}\oplus v_i:i\le m\}\), at most
+\(4m+1\) offsets, so every quantity attached to \(w\) is an integer
+polynomial in the \(N_w\) atoms \(T_{j,i}(c(z)\oplus x)\). Expand and
+multilinearize, which is valid because the atoms are Boolean. The
+degree is at most \(D\): \(\Mpoly\) has degree \(2\Xmax\) per edge and
+there are \(2m\) edges (\cref{lem:maskpoly}); \(E\), \(Y\) and \(\varphi\)
+are linear in the atoms; \(\Amp_e(\Fer)\) has degree
+\((2e-1)\deg\Fer\); and \(X\) is quadratic. There are at most
+\(\sum_{d\le D}\binom{N_w}{d}\) monomials, with integer coefficients of
+polynomially many bits.
+
+Because the call is normalized, every atom is a threshold gate on at
+most \(n\) inputs with integer parameters of magnitude below
+\(2^{B_0}\). Writing \(\sum_lw_lx_l\ge\theta\) as
+\(\sum_lw_lx_l>\theta-1\), \cref{imp:disjoint} applies with
+\(\ell\le B_0+\lambda_n+2\), so the atom is a disjoint sum of at most
+\(m_c\) exact children. By \cref{imp:pullback}, each child at the
+offset \(x\) is a separated equation in \((z_{\rm L},z_{\rm R})\). A
+monomial of degree \(d\) is therefore a sum of at most \(m_c^d\)
+products of child indicators, each of which is a single stacked
+separated equation by \cref{imp:stack}. Hence the list of equations
+for \(w\) has at most
+\(\sum_{d\le D}\binom{N_w}dm_c^d\le(1+N_wm_c)^D\le U_{\rm occ}^D\)
+entries. Summing over at most \(2^{mk}\) walks (for (c), over at most
+\(2^k\) points) gives at most \(2^{mk}U_{\rm occ}^D\le2^{(n-k)/100}\)
+entries. \Cref{imp:printer} with \(n_{\rm out}=n-k\) prints the table.
+Dense expansion of each walk's polynomial costs at most
+\((1+N_w)^{2D}\poly(n)\).
+\end{proof}
+
+\section{The counting algorithm}\label{sec:algorithm}
+
+\subsection{Parameters, with exact finite rules}\label{sec:params}
+All choices depend only on the normalized call, through
+\((n,\beta,W,G_1,G_2)\), and never on the witness. Floors and ceilings
+of expressions with square roots or \(m\)th roots are computed exactly
+by comparing integer powers; all other comparisons are exact rational
+comparisons. If the input is not a normalized call (a polynomial-time check) or \(n<4\), the algorithm returns the sound default
+\((1/2,1/2)\). If \(W=0\), the circuits are constant and the call is
+evaluated exactly (a nonempty parity has probability \(1/2\)).
+Otherwise:
+\begin{enumerate}[1.]
+\item \(\lambda=\lceil\lgx n\rceil\ge2\), \(\mu=\lceil\lgx\lambda\rceil\ge1\),
+\(m=4\), \(r=16\mu\). Require \(r\le n/4\); then
+\(s=\lfloor\lgx(n/r+1)\rfloor\), \(b=2^s-1\), \(k=rs\) and
+\(N=2^{k/2}\).
+\item \(J_{\max}=\mu+1\); \(T\) is the least positive integer with
+\(2^T\beta\ge2^{mk+2m+5}J_{\max}\).
+\item \(\tau=k+\lceil\lgx(16/\beta)\rceil\);
+\(U=\max\{\tau,\lceil96r^{3/2}W/(\beta n^{3/2})\rceil\}\);
+\(\pi_0=\tau/(4U)\); \(\Xmax\) is the least integer with
+\(\Xmax^2\ge9\tau^2nr\); \(d^*=\lfloor2\Xmax U/(3r\tau)\rfloor\).
+\item \(\Omega_j=4mG_j+1\) for \(j\in\cJ\) (\(\Omega_2=1\) if \(2\notin\cJ\)),
+\(\Theta\), \(I=2|\Theta|\); \(M_F\) is the least integer with
+\(M_F^2\ge|\Theta|\), and \(\eta=\beta/(16M_F)\). \(Q\) is the least power
+of two with \(Q\ge1024Nm\eta^{-2}(4N^2I)^{1/m}\).
+\(\ell_f=\max\{k,\lgx Q+1\}\) and \(S=2m\ell_f\).
+\item \(N_{\rm at}=(4m+1)\cdot2n^4\), \(m_c=n(B_0+\lambda+3)\),
+\(U_{\rm occ}=1+N_{\rm at}m_c\); \(D_{\max}\) is the largest nonnegative integer with
+\(100(mk+2+D_{\max}\lceil\lgx U_{\rm occ}\rceil)\le n-k\).
+If none exists, return the sound default.
+\item \(B_N=S+mk+2m\lceil\lgx(N^2Q)\rceil+1\). For an integer \(P\in[100,n]\) let
+\(e_P\) be the least \(e\ge1\) with \((P/2)^e\ge2^{B_N}\). Let \(P\) be
+the largest integer in \([100,n]\) with
+\begin{equation}\label{eq:prime-budget}
+ (2e_P-1)(2J_{\max}+2)(P-1)+4m\Xmax\le D_{\max},
+\end{equation}
+returning the sound default if no such \(P\) exists; then set
+\(e=e_P\). Require \(4m\Xmax+2mk\le D_{\max}\). Let \(\cP\) be
+the set of primes in \((P/2,P]\) (require \(\cP\ne\emptyset\)), compute
+\(D'\) and \(L_2\) as in \cref{imp:window}, and let \(L_w=L_2\) for a
+pair call and \(L_w=D'\) otherwise.
+\item \(h_E=\lfloor P/4\rfloor\) and \(h=\lfloor h_E/(2m)\rfloor\); require
+\(h\ge64T\). Put \(\ell_0=32mU\). Build the chain of \cref{imp:chain}
+with \((T,h,\ell_0)\) in exact rational arithmetic (\(a_r\) is the largest
+integer with \(16a_r^2x_r\le1\)); require \(J\le J_{\max}\). Put
+\(\Lambda=\lfloor(L_w-1)A/2\rfloor+1\).
+\end{enumerate}
+If a requirement fails, the algorithm returns the sound default
+\((1/2,1/2)\).
+
+Two consequences of these rules are used below. First,
+\(N_{\rm at}\ge N_w\) because \(G_1+G_2\le W\le2n^4\), so
+\(U_{\rm occ}\ge1+N_wm_c\), and every table printed below has degree at
+most \(D_{\max}\); hence \cref{lem:print} applies to all of them.
+Second, since \(N^2\) and \(Q\) are powers of two,
+\(2^{B_N}=2\cdot2^S\cdot2^{mk}(N^2Q)^{2m}\) exactly, and since
+\(p>P/2\) for every \(p\in\cP\),
+\[
+ p^e>(P/2)^e\ge2^{B_N}=2\cdot2^S\cdot2^{mk}(N^2Q)^{2m}\ge2\cdot2^S\sum_{w}|c_\pi(w)|
+\]
+for every seed prefix \(\pi\), by \cref{cor:conditional} and because
+there are at most \(2^{mk}\) walks. This is the hypothesis of
+\cref{lem:residue}.
+
+\subsection{Witness}
+A witness consists of (W1) a partition index in \([2^k]\); (W2) the set
+\(\cS\), one bit per bottom gate label; and (W3) vectors
+\(\xi^{(j)}_r\in\{0,1\}^{G_j}\) for \(j\in\cJ\) and \(1\le r\le J\). Its
+length is \(k+(J+1)(G_1+G_2)\), which is polynomial. Missing or
+malformed bits are read as zeros.
+
+\subsection{Steps}
+\begin{enumerate}[label=\textbf{Step~\arabic*.},leftmargin=*]
+\item Compute the incidences \(d_l\), the set \(H_c\), the matrix
+\(\smask\) and the walk list \(\Ws\).
+\item Print the tables of \cref{lem:print}(c), then those of
+\cref{lem:print}(b). Let \(Z_c\) be the set of certified columns.
+\item (Seed fixing.) Let \(\pi\) be the empty prefix. For
+\(i=1,\dots,S\), and for each bit \(\iota\in\{0,1\}\): compute
+\(c_{\pi\iota}(w)\) for \(w\in\Ws\) (\cref{cor:conditional}); for every
+\(\sigma\) with \(\kappa_\sigma\ne0\), every \(p\in\cP\) and all residue
+vectors, print \(\Pi\) with \(c=c_{\pi\iota}\) (\cref{lem:print}(a)) and,
+at each \(z\in Z_c\), recover \(\mathcal N(z)\) (\cref{lem:residue}).
+For each \(z\in Z_c\), each such \(\sigma\), and each digit vector
+\(\delta=(\delta^{(j)})_{j\in\cJ}\) with entries in \((-h_E,h_E)\), let
+\(\Bx(\delta)=\prod_{j\in\cJ}\Bx_j(\delta^{(j)})\) and solve exactly over
+\(\Q\) for a function \(\widetilde H\) supported on \(\Bx(\delta)\) with
+\(\widetilde H_p(\rho_Y)=\mathcal N(z)\) evaluated at
+\((\rho_E,\rho_Y)=(\delta\bmod p,\rho_Y)\), for all \(p\in\cP\) and all
+\(\rho_Y\). Put \(v_{z,\sigma,\delta}=\widetilde H(0)\) if \(0\in\Bx(\delta)\),
+and \(v_{z,\sigma,\delta}=0\) otherwise. Let
+\[
+ \widetilde\Psi(\pi\iota)=\sum_{z\in Z_c}\sum_\sigma\kappa_\sigma\sum_\delta v_{z,\sigma,\delta}.
+\]
+Replace \(\pi\) by \(\pi\iota\) for the bit \(\iota\) with the smaller
+\(\widetilde\Psi\) (on ties, \(\iota=0\)). If some system is
+inconsistent, return the default; by \cref{prop:sound} this never
+happens.
+\item (Main pass.) With the final seed, list the samples
+\((U_j,V_j)\). For each \(z\in Z_c\) compute by direct evaluation
+\(\widehat V(z)=Q^{-1}\sum_j(\pred\cdot\mask)(z,U_j,V_j)\) and
+\(\widehat\mu(z)=Q^{-1}\sum_j\mask(z,U_j,V_j)\); each term evaluates at
+most \(4(G_1+G_2)\) threshold gates.
+\item (Output.) With \(n_{\rm col}=2^{n-k}\) and \(n_c=|Z_c|\), let
+\begin{align*}
+ \mathrm{Lo}&=n_{\rm col}^{-1}\Bigl[\textstyle\sum_{z\in Z_c}\widehat V(z)-2M_Fn_c\eta\Bigr],\\
+ \mathrm{Hi}&=n_{\rm col}^{-1}\Bigl[\textstyle\sum_{z\in Z_c}\bigl(\widehat V(z)+1-\widehat\mu(z)\bigr)
+ +(2M_F+1)n_c\eta+(n_{\rm col}-n_c)\Bigr].
+\end{align*}
+These are rational, since \(M_F\eta=\beta/16\). Round \(\mathrm{Lo}\) down
+and \(\mathrm{Hi}\) up to multiples of \(2^{-n}\), and return
+\(\phat=(\mathrm{Lo}+\mathrm{Hi})/2\) and
+\(\khat=(\mathrm{Hi}-\mathrm{Lo})/2\), computed from the rounded values.
+\end{enumerate}
+
+\section{Soundness, completeness and running time}\label{sec:analysis}
+
+\begin{proposition}[Soundness for every witness]\label{prop:sound}
+For every normalized call and every witness, the returned interval
+contains \(p_{\rm true}=\Pr_x[\pred(x)=1]\).
+\end{proposition}
+\begin{proof}
+Fix the witness, and with it the partition, \(\cS\), the vectors
+\(\xi\) and the set \(Z_c\) of certified columns; none of these depends
+on the sampler seed.
+
+\emph{(1) Exact conditional potentials.} Let \(z\in Z_c\), let \(\pi'\)
+be a prefix and let \(\sigma\) be a pattern. By
+\cref{lem:certify}(a) and \cref{lem:residue}, the recovered
+\(\mathcal N(z)\) equals
+\(\sum_w2^Sc_{\pi'}(w)\mask_w(z)\ind[E\equiv\rho_E,\,Y\equiv\rho_Y]\). By
+\cref{lem:certify}(b,c), at \(\rho_E=\delta\bmod p\) with the entries of
+\(\delta\) in \((-h_E,h_E)\), this is the push-forward modulo \(p\) of
+\[
+ H_{z,\sigma,\delta}(y)=\sum_{w:\ \mask_w(z)=1,\ E(w)=\delta}2^Sc_{\pi'}(w)\,\ind[Y_{\cdot,\sigma}(z,w)=y],
+\]
+which by \cref{lem:certify}(d) is supported in \(\Bx(\delta)\), a box
+with sides at most \(L_w\). By \cref{imp:window} (part (a) for one
+score, where \(L_w=D'\); part (b) for two scores, where \(L_w=L_2\)),
+the system has the unique solution \(\widetilde H=H_{z,\sigma,\delta}\);
+in particular it is consistent. Every walk with \(\mask_w(z)=1\) has
+its digit vector in the enumerated range, so summing
+\(H_{z,\sigma,\delta}(0)\) over \(\delta\) gives
+\(\sum_w2^Sc_{\pi'}(w)\mask_w(z)\ind[Y_{1,\sigma}=0]\ind[Y_{2,\sigma}=0]\).
+By \cref{cor:conditional},
+\(\widetilde\Psi(\pi')=2^S\frac{4^m}{2|\Theta|}\Psi(\pi')\) with
+\(\Psi(\pi')=\sum_{z\in Z_c}\E[\Phi_z\mid\pi']\).
+
+\emph{(2) Greedy choice.} By \cref{imp:seed} the two children of a
+prefix average to the parent, so \(\Psi\) of the chosen child is at most
+\(\Psi\) of the parent. After \(S\) steps the seed is complete and
+\(\Psi(\text{final})=\sum_{z\in Z_c}\Phi_z\) for the final sample list,
+while
+\(\Psi(\emptyset)=\sum_{z\in Z_c}\E\Phi_z\le n_c\cdot I\cdot4N^2((4QN^3)^mm!+(8N^2/3)^{2m}(2m)!)\)
+by \cref{cor:conditional} (independent expectation) and
+\cref{lem:tracebound} applied to each of the \(I\) matrices
+\(D_{\theta,\nu}(z)\).
+
+\emph{(3) Sampler error.} If \(Z_c=\emptyset\) there is nothing to prove.
+Otherwise, by (2) and \cref{lem:root} with \(Z=Z_c\), the choice of \(Q\)
+gives \(n_c^{-1}\sum_{z\in Z_c}\varepsilon_z\le\eta\), with
+\(\varepsilon_z\) as in \cref{lem:selector}.
+
+\emph{(4) Per-column intervals.} Let \(V(z)=N^{-2}\sum_{u,v}\pred\),
+\(V_{\rm m}(z)=N^{-2}\sum_{u,v}\pred\cdot\mask\) and
+\(\mu(z)=N^{-2}\sum_{u,v}\mask\). Then
+\(V_{\rm m}\le V\le V_{\rm m}+1-\mu\). By \cref{lem:selector},
+\(|\widehat V-V_{\rm m}|\le2M_F\varepsilon_z\) and
+\(|\widehat\mu-\mu|\le\varepsilon_z\) for \(z\in Z_c\). Hence
+\(\widehat V-2M_F\varepsilon_z\le V(z)\le\widehat V+1-\widehat\mu+(2M_F+1)\varepsilon_z\).
+For \(z\notin Z_c\), \(0\le V(z)\le1\). Since a uniform column and a
+uniform point give a uniform input (\cref{imp:partition}),
+\(p_{\rm true}=n_{\rm col}^{-1}\sum_zV(z)\). Summing and using (3)
+gives \(\mathrm{Lo}\le p_{\rm true}\le\mathrm{Hi}\), and outward rounding
+preserves this.
+\end{proof}
+
+\begin{proposition}[Existence of a useful witness]\label{prop:complete}
+Suppose that all parameter requirements hold, that
+\(k\ge\lgx(16/\beta)\) and \(\Xmax\ge2k+2\lgx(64/\beta)\), and that the
+window condition
+\begin{equation}\label{eq:window}
+ 487\,m\,T\,\bar\ell/h<L_w-1
+\end{equation}
+holds, with \(\bar\ell=\max\{\ell_0,h^2/(256T)\}\). Then some witness
+gives \(\khat\le7\beta/16+2^{-n}\).
+\end{proposition}
+\begin{proof}
+Choose the partition index of \cref{lem:meanpop}. Draw \(\cS\) with
+rate \(\pi_0\) and the vectors \(\xi^{(j)}_{r,t}=\ind[\upsilon_t\le\pi_r]\)
+with independent uniform \(\upsilon\)'s, independently of \(\cS\) and
+between circuits.
+
+\emph{Masked mass.} \(\Pr_{z,u,v}[\mask=0]\) is at most
+\(\Pr[\smask=0]+\Pr[\pop>U]+\Pr[\pop\le U,\ X>\tau]\). By
+\cref{lem:smaskmass}, using \(d^*\ge\Xmax U/(3r\tau)\) (as
+\(2\Xmax U/(3r\tau)\ge2\)), \(W/U\le\beta n^{3/2}/(96r^{3/2})\) and
+\(b+1>n/(2r)\),
+\[
+ \frac{W}{d^*(b+1)}\le\frac{3r\tau W}{\Xmax U(b+1)}\le\frac{3r\tau\beta n^{3/2}\cdot2r}{96r^{3/2}\Xmax n}
+ =\frac{\tau\beta\sqrt{nr}}{16\Xmax}\le\frac\beta{48}.
+\]
+By \cref{lem:meanpop} and Markov's inequality,
+\(\Pr[\pop>U]\le6r^{3/2}W/(n^{3/2}U)\le\beta/16\). By
+\cref{lem:filter}(a), the last term has expectation at most
+\((e/4)^{\tau+1}\), and \((e/4)^{\tau}\le2^{-0.55\tau}\le\beta/16\)
+because \(\tau\ge2\lgx(16/\beta)\). So the expected masked mass is at
+most \(\beta/7\).
+
+\emph{Uncertified columns.} Fix a column and consider three events.
+(i) Some point with \(\smask=1\) has \(X\ge\Xmax/2\): by
+\cref{lem:filter}(c) its probability is at most
+\(2^k2^{-\Xmax/2}\le\beta/64\).
+(ii) Some point with \(\mask=1\) has \(\pop>16U\): by
+\cref{lem:filter}(b), at most \(2^ke^{-9\tau/8}\le2^{k-\tau}\le\beta/16\).
+(iii) Conditioned on \(\cS\) and on (ii) failing, some walk \(w\) with
+\(\mask_w=1\), some \(\sigma\) and some \(j\) violate the conclusion of
+\cref{lem:localize}: at most
+\(2^{mk}\cdot4^m\cdot2\cdot2Je^{-T}\le2^{mk+2m+2}J_{\max}2^{-T}\le\beta/8\).
+If none of the three occurs, the column is certified. Test
+\eqref{eq:testX} passes by \cref{lem:moments}, since
+\(\sqrt2\,\Xmax/2<\Xmax+1\). The digit tests pass since
+\(|E|\le mh\le h_E/2\) and \(\sqrt2h_E/2<h_E\). The final tests pass since
+\(\sqrt2\cdot172\,mAT\bar\ell/h<\tfrac{487}{2}mAT\bar\ell/h<(L_w-1)A/2<\Lambda\)
+by \eqref{eq:window}. So the expected uncertified fraction is at most
+\(\beta/4\).
+
+Hence some witness has masked mass plus uncertified fraction at most
+\(\beta/2\). For it, using
+\(\sum_{z\in Z_c}(1-\widehat\mu(z))\le\sum_z(1-\mu(z))+n_c\eta\)
+(\cref{lem:selector} and step (3) of the proof of \cref{prop:sound}),
+the unrounded radius satisfies
+\[
+ \frac{\mathrm{Hi}-\mathrm{Lo}}2\le\tfrac12\Pr[\mask=0]+\tfrac12\cdot\tfrac{n_{\rm col}-n_c}{n_{\rm col}}
+ +(2M_F+1)\eta
+ \le\tfrac\beta4+\tfrac{(2M_F+1)\beta}{16M_F}\le\tfrac\beta4+\tfrac{3\beta}{16}=\tfrac{7\beta}{16}.
+\]
+Rounding to multiples of \(2^{-n}\) adds at most \(2^{-n}\) to the
+radius.
+\end{proof}
+
+\begin{proposition}[Running time]\label{prop:time}
+For all sufficiently large \(n\), on every normalized call and every
+witness, the algorithm halts within \(2^n/n^{\mu}\) steps, reads a
+witness prefix of polynomial length, and returns dyadic outputs of
+\(O(n)\) bits.
+\end{proposition}
+\begin{proof}
+Parameter preparation is polynomial: the search over \(P\le n\), the
+primes, \(L_2\) by a totient sieve, and the chain. Step~1 costs
+\((N^2+2^{mk})\poly(n)\). By \cref{lem:print}, each printed table costs
+\(2^{n-k}\poly(n)\) plus
+\(2^{mk}U_{\rm occ}^{2D_{\max}}\poly(n)\le2^{(n-k)/50}\poly(n)\) for its
+construction. Step~2 prints \(1+2\cdot4^m(J+1)\) tables. Step~3 has
+\(2S\) child evaluations. Each computes \(|\Ws|\le2^{mk}\) coefficients in
+\((Q+1)^{2m}\poly(n)\) time each, prints at most
+\(4^m|\cP|P^{2J+2}\le4^mP^{2J+3}\) tables, and solves at most
+\(n_c4^m(2h_E)^{2J}\le2^{n-k}4^mP^{2J}\) exact systems. Each system has
+at most \(L_w^2\le D'^2\le P^4\) unknowns, at most \(P^3\) equations,
+\(0/1\) matrix entries and right sides of \(O(B_N)\) bits, so
+fraction-free elimination~\cite{Bareiss68} solves it in polynomial
+time, as in the proof of~\cite[Proposition~8.3]{NagCG}. Step~4 costs
+\(2^{n-k}Q\poly(n)\). Since \(P\le n\), \(J\le J_{\max}=\mu+1\) and
+\(S=O(k+\lambda)\), the total is at most
+\[
+ 2^{n-k}n^{2J_{\max}+c_3}+2^{n-k}Q\,n^{c_3}+2^{10k+c_3\lambda}
+\]
+for a constant \(c_3\) depending only on \(B_1,B_2\) and the fixed
+polynomial envelopes. Here every integer that is stored or operated on
+has bit length bounded by a fixed polynomial in \(n\), and each
+equation record, reconstruction system and witness has polynomial
+description size. The bottom gate-list construction costs are included
+above; the
+superpolynomial counts (the \(Q\le2^{3k/4}n^{c_Q}\) samples, with
+\(c_Q=O(B_1)\) by \cref{lem:asymptotics}, the at most \(2^{mk}\) walks,
+and the \(2^{n-k}\) columns) appear explicitly in the display. Now
+\(k=rs\ge16\mu\cdot\lambda/2=8\mu\lambda\) for large \(n\), since
+\(s\ge\lambda-\lgx r-2\ge\lambda/2\); so \(2^{-k}\le n^{-8\mu}\) and
+\(2^{-k/4}\le n^{-2\mu}\). Hence the first term is at most
+\(2^nn^{2\mu+2+c_3-8\mu}\), the second at most \(2^nn^{c_Q+c_3-2\mu}\),
+and the third is \(2^{O(\mu\lambda)}\); for large \(n\) the sum is below
+\(2^n/n^{\mu}\). Sorting and gathering records on a multitape machine
+add polynomial factors only, as in~\cite[Proposition~8.3]{NagCG}.
+\end{proof}
+
+\section{Parameters and the quartic cap}\label{sec:asymptotics}
+
+\begin{lemma}[Asymptotics]\label{lem:asymptotics}
+Fix \(B_1,B_2\). Uniformly over normalized calls with \(W>0\), as \(n\to\infty\):
+\(r=\Theta(\mu)\); \(k,T,\tau=\Theta(\lambda\mu)\);
+\(\Xmax=\Theta(\lambda\mu^{3/2}\sqrt n)\); \(\lgx Q\le3k/4+c_Q\lambda\);
+\(B_N=\Theta(k)\); \(D_{\max}=\Theta(n/\lambda)\); \(e=\Theta(\mu)\);
+\(P=\Theta(n/(\lambda\mu^2))\); \(h=\Theta(P)\); \(D'=\Theta(P^2/\lambda)\);
+and \(L_2=\Theta(P^{3/2}/\lambda^{3/4})\). All parameter requirements
+and the side conditions \(k\ge\lgx(16/\beta)\) and
+\(\Xmax\ge2k+2\lgx(64/\beta)\) of \cref{prop:complete} hold for large
+\(n\).
+\end{lemma}
+\begin{proof}
+\(r=16\mu\) and \(s=\lgx n-O(\lgx\mu)\) give \(k=rs=\Theta(\lambda\mu)\).
+Since \(\lgx(1/\beta)\le B_1\lambda\), \(T=mk+O(B_1\lambda)\) and
+\(\tau=k+O(B_1\lambda)\). With \(W\le2n^4\),
+\(|\Theta|\le(16\cdot2n^4+1)^2\), so \(\eta^{-2}\) and \(I\) are
+\(n^{O(B_1)}\) and \(Q\le2\cdot1024Nm\eta^{-2}(4N^2I)^{1/4}\le2^{3k/4}n^{c_Q}\).
+Then \(\ell_f=k\) eventually, \(S=8k\), and
+\(20k\le B_N\le8k+4k+8(k+3k/4+c_Q\lambda)+1\), so \(B_N=\Theta(k)\). Next,
+\(\lgx U_{\rm occ}=6\lambda+O(\lgx\lambda)\) gives
+\(D_{\max}=\Theta(n/\lambda)\). For \(P\in[n^{1/2},n]\),
+\(e_P=\lceil B_N/\lgx(P/2)\rceil=\Theta(k/\lambda)=\Theta(\mu)\). The
+candidate \(P_0=\lfloor cn/(\lambda\mu^2)\rfloor\) satisfies
+\eqref{eq:prime-budget} for a small constant \(c\), because
+\((2e-1)(2J_{\max}+2)(P_0-1)=O(c\,n/\lambda)\) and
+\(4m\Xmax=O(\lambda\mu^{3/2}\sqrt n)=o(n/\lambda)\); conversely
+\eqref{eq:prime-budget} forces \(P=O(D_{\max}/(e\mu))=O(n/(\lambda\mu^2))\).
+Hence \(\ln P=\Theta(\lambda)\), and \cref{imp:window}(c) gives \(D'\)
+and \(L_2\). Further, \(h=\Theta(P/m)\) and \(T=\Theta(\lambda\mu)\) give
+\(h\ge64T\); \(4m\Xmax+2mk=o(D_{\max})\); \(h/T\le n\) gives
+\(J\le\lceil\lgx\lgx n\rceil+1\le J_{\max}\) by \cref{imp:chain}(iii);
+\(\cP\ne\emptyset\) by Bertrand's postulate~\cite{Erdos32}; and
+\(r\le n/4\). Finally \(k\ge8\mu\lambda\ge\lgx(16/\beta)\) and
+\(\Xmax=\Omega(\sqrt n)\ge2k+2\lgx(64/\beta)\) eventually.
+\end{proof}
+
+\begin{proof}[Proof of \cref{thm:counter}]
+Soundness is \cref{prop:sound} and the running time is
+\cref{prop:time}. For completeness it remains to verify
+\eqref{eq:window} under \(W\le a\beta\mathcal A_4(n)\); then
+\cref{prop:complete} gives \(\khat\le7\beta/16+2^{-n}\le\beta\) once
+\(2^{-n}\le\beta/2\), which holds for large \(n\) since
+\(\beta\ge n^{-B_1}\).
+
+If \(\bar\ell=h^2/(256T)\), the left side of \eqref{eq:window} is
+\(487mh/256=O(P)\), while
+\(L_w-1\ge L_2-1=\Theta(P^{3/2}/\lambda^{3/4})\), so \eqref{eq:window}
+holds for large \(n\). Otherwise \(\bar\ell=\ell_0=32mU\), and
+\eqref{eq:window} reads \(U<U^*:=h(L_w-1)/(487\cdot32m^2T)\). Every call
+type has \(L_w\ge L_2\): pair calls have \(L_w=L_2\), and single and
+parity calls have \(L_w=D'\ge L_2\) (\cref{sec:imports-nc}). Hence
+\(U^*\ge U^*_2:=h(L_2-1)/(487\cdot32m^2T)\), and by
+\cref{lem:asymptotics}
+\[
+ U^*_2=\Theta\Bigl(\frac{P\cdot P^{3/2}\lambda^{-3/4}}{\lambda\mu}\Bigr)
+ =\Theta\Bigl(\frac{n^{5/2}}{\lambda^{17/4}\mu^6}\Bigr)
+\]
+uniformly. (For single and parity calls \(U^*\) itself is larger,
+\(\Theta(n^3/(\lambda^5\mu^7))\); only the lower bound \(U^*_2\) is
+used.) Since \(\tau=O(\lambda\mu)<U^*_2\) eventually, it suffices that
+\(96r^{3/2}W/(\beta n^{3/2})\le U^*_2-1\), that is,
+\[
+ W\le\frac{\beta n^{3/2}(U^*_2-1)}{96r^{3/2}}
+ =\Theta\Bigl(\frac{\beta n^4}{\lambda^{17/4}\mu^{6}\cdot\mu^{3/2}}\Bigr)=\Theta\bigl(\beta\mathcal A_4(n)\bigr).
+\]
+Take \(a=a_{B_1,B_2}\) strictly below the uniform constant implicit
+here.
+\end{proof}
+
+\begin{remark}[Where the logarithms go]\label{rem:logs}
+Up to constants, \(\mathcal A_4=n^{3/2}\cdot U^*_2/r^{3/2}\), with
+\(U^*_2\asymp P\,L_2/T\); \(P\asymp n/(\lambda\mu^2)\), from the printer
+budget \(n/\lambda\) divided by \(e\asymp\mu\) and \(J\asymp\mu\);
+\(L_2\asymp P^{3/2}/\lambda^{3/4}\); \(T\asymp\lambda\mu\), from the union
+bound over \(2^{mk}\) walks; and \(r\asymp\mu\). This gives the powers
+\(\lambda^{1+3/2+3/4+1}=\lambda^{17/4}\) and
+\(\mu^{2+3+1+3/2}=\mu^{15/2}\). For comparison, the near-cubic gate cap
+is \(\mathcal A_3=n^3/(\lambda^{21/4}\mu^7)\)~\cite[Theorem~3.1]{NagCG}:
+the live-gate factor \(k/\sqrt n\) of~\cite[Lemma~3.3]{NagCG} is
+replaced here by the mixed-population factor \(r^{3/2}/n^{3/2}\)
+of~\cite[Theorem~A.4]{Nag72}. None of the constants is optimized.
+\end{remark}
+
+\section{From counting to almost-everywhere hardness}\label{sec:transfer}
+
+\begin{theorem}[Black-box near-quartic wire transfer]\label{thm:wire-transfer}
+For \(n\ge4\), put \(\lambda_n=\lceil\log_2n\rceil\), \(\mu_n=\lceil\log_2\lambda_n\rceil\), and \(\mathcal A_4(n)=n^4/(\lambda_n^{17/4}\mu_n^{15/2})\).
+A circuit is \(C(x)=g(\sum_iT_i(x))\), where the \(T_i\) are threshold gates and \(g\) is an arbitrary Boolean lookup, with \(W(C)=\sum_i(1+|\supp T_i|)\), counting repetitions.
+A call asks for the uniform acceptance probability of \(C^1\), \(C^1\oplus C^2\), or \(C^1\oplus\PAR_\Sigma\), and pays the total wires of its circuits.
+Suppose that for every fixed pair of positive integers \(B_1,B_2\), an oracle-free deterministic algorithm in the multitape model of \cref{thm:counter} takes a call and a finite binary witness and satisfies the following contract.
+A normalized call has \(n\ge4\), explicit lookup tables, integer bottom weights and thresholds of magnitude below \(2^{4n\lceil\log_2(n+1)\rceil}\), at most \(2n^4\) total wires, and a rational requested radius \(n^{-B_1}\le\beta\le1/16\) encoded in at most \(n^{B_2}\) bits; the parity uses at most \(n\) input indices.
+\begin{enumerate}[(i)]
+\item On every encoded call and every witness it returns \((\phat,\khat)\) with \(|\phat-\Pr[\mathrm{call}=1]|\le\khat\).
+\item For some \(a=a_{B_1,B_2}>0\), every sufficiently large normalized call with \(W\le a\beta\mathcal A_4(n)\) has a witness of polynomial length in \(n\) giving \(\khat\le\beta\).
+\item At every sufficiently large length, every normalized call and every witness take at most \(2^n/n^{\mu_n}\) steps, whether or not the completeness cap holds.
+\item Outputs are dyadic with denominators dividing \(2^{n+1}\) and encoded length polynomial in \(n\). On calls outside the normalized domain, time is polynomial in the encoded call length, independently of witness length.
+\end{enumerate}
+Under the published foundations of this paper, there is a rational \(0<\gamma<1\) such that, for each fixed real \(0<d<\gamma/5\), there are an integer \(K_d>0\), a language \(F_d\in\ENP\), and an integer \(n_0\ge4\) for which every real-weight \(\SYM\circ\THR\) circuit \(C\) on \(n\ge n_0\) inputs satisfies
+\[
+ W(C)\le\left\lfloor\mathcal A_4(n)/K_d\right\rfloor
+ \quad\Longrightarrow\quad \Pr_x[C(x)=F_d(x)]<1-d.
+\]
+\end{theorem}
+Lean: \path{NearQuarticWires.Transfer.transfer4_official}.\par\noindent
+The closed joint theorem is \path{NearQuarticWires.Release.main_from_published}.
+\begin{proof}
+This section and \cref{app:transfer} prove the implication using only the stated counter contract. The size test, simulation and length-dilation bounds are \cref{lem:ae-cap,lem:ae-machine,prop:ae-final}.
+\end{proof}
+The transfer isolates the counting algorithm as a replaceable component. Its checked interface fixes \(\mathcal A_4\); transferring a different cap additionally requires the corresponding size test, simulation and length-dilation bounds.
+
+
+We derive the wire lower bound from the certified counter.
+The transfer uses only complementation, restrictions, short circuit
+descriptions, and polynomial general-circuit simulation, together
+with the derived proof-system, refuter, and amplification interfaces.
+\Cref{app:transfer} gives every target-class step, and
+\cref{app:earlier} reproduces the supporting constructions.
+This transfer originates in \cite[Section~11]{NagCG}; all needed
+arguments are included in these appendices.
+
+Fix \(0<d<\gamma/5\) and use the fixed-error schedule
+of \cref{sec:ae-params}: a fixed \(\epsilon=2^{-e_0}\), for a
+positive integer \(e_0\), with \(\epsilon<\gamma/10\) and
+\(d<\gamma/5-\epsilon\). With the PCP width \(q\) defined there, put
+\[
+ P_q=128/\epsilon,\qquad\omega_q=\epsilon/128,\qquad
+ b(q)=\bigl\lfloor\eta_0\epsilon\,\mathcal A_4(q)\bigr\rfloor,
+\]
+where \(\eta_0\) is a fixed rational with \(0<\eta_0<\min\{1,a_{1,1}/512\}\), and
+\(a_{1,1}\) is the constant of \cref{thm:counter} for
+\(B_1=B_2=1\). The number \(b(q)\) is the \emph{verifier-length wire cap}: the
+weak machine of \cref{sec:ae-machine} guesses target circuits with
+at most \(b(q)\) wires.
+
+\begin{enumerate}[label=(S\arabic*)]
+\item \emph{Calls.} The expected gadget penalty decomposes into
+single, pair and parity calls on guessed circuits or their
+complements, by \eqref{earlier:g:eq:gadget-pair-identity}. All calls are made at the
+PCP width \(q\): each guessed circuit computes one proof coordinate as
+a function of the random string \(x\in\{0,1\}^q\). The complement of a
+\(\SYM\circ\THR\) circuit is obtained by replacing its lookup \(g\) by
+\(1-g\), with the same wire count. No circuit computing an
+exclusive-or is built; the exclusive-or is part of the call.
+\item \emph{Cap.} Two guessed circuits of at most \(b(q)\) wires each
+form a call with
+\(W\le2b(q)\le2\eta_0\epsilon\mathcal A_4(q)<(a_{1,1}/256)\epsilon\mathcal A_4(q)
+<a_{1,1}\omega_q\mathcal A_4(q)\), and \(W\le2q^4\). The radius
+\(\omega_q=\epsilon/128\le1/16\) is at least \(q^{-1}\) and has an
+encoding of at most \(q\) bits for large \(q\). So \cref{thm:counter}
+with \(B_1=B_2=1\), at input length \(q\), supplies a useful witness of
+radius at most \(\omega_q\) for every call the machine makes.
+\item \emph{Guessing and the size test.} The weak machine guesses, for
+each auxiliary proof coordinate, one normalized \(\SYM\circ\THR\)
+circuit on \(q\) inputs, and accepts its size if and only if
+\(W^4\lambda_q^{17}\mu_q^{30}\le(\eta_0\epsilon)^4q^{16}\). For an
+integer \(W\) this comparison is equivalent to \(W\le b(q)\). Every
+circuit with at most \(b(q)\) wires has a normalized description with
+no more wires (\cref{sec:counting}): \cref{imp:integer}, applied to each
+gate on its own inputs, gives integers of magnitude at most
+\(q^q<2^{B_0(q)}\).
+\item \emph{Simulation.} A \(\SYM\circ\THR\) circuit with at most
+\(q^4\) wires on at most \(Aq\) inputs has a general Boolean circuit of
+size \(O_A(q^5\log q)\), hence at most \(q^6\) for large \(q\):
+normalize each gate on its own inputs (integers of \(O(Aq\log(Aq))\)
+bits), evaluate each linear form by an adder tree and one comparison,
+count the at most \(q^4\) gate outputs, and look up \(g\). The exponent
+\(6\) does not depend on \(A\). Choose the general-circuit exponent
+\(G^\star\) with
+\(G^\star\ge b_{\rm amp}\) and \(G^\star/b_{\rm amp}>7\), where
+\(b_{\rm amp}\) is the amplification constant
+of \cref{imp:transfer-amplification}.
+\item \emph{Restrictions.} Cofactors (fixing the address inputs of a
+circuit) and averaging over an ignored suffix of inputs are literal
+restrictions. They do not increase the wire count, and the restricted
+circuits are normalized again after restriction, as in (S3).
+\item \emph{Lengths.} For \(q\le n\le B_{\rm len}q\), with the constant
+\(B_{\rm len}\) of \cref{sec:ae-lengths},
+\(\mathcal A_4(n)\le(n/q)^4\mathcal A_4(q)\le B_{\rm len}^4\mathcal A_4(q)\),
+because \(\lambda_n\ge\lambda_q\) and \(\mu_n\ge\mu_q\). Choose
+\(K_d>2B_{\rm len}^4/(\eta_0\epsilon)\). Then
+\(\lfloor\mathcal A_4(n)/K_d\rfloor<\eta_0\epsilon\mathcal A_4(q)/2\le b(q)\)
+once \(\eta_0\epsilon\mathcal A_4(q)\ge2\).
+\item \emph{Envelopes and time.} A normalized circuit with at most
+\(b(q)\le q^4\) wires has a description of \(q^{O(1)}\) bits, so all
+guesses together are \(o(N)\) for the source length \(N\), since
+\(q=\Theta(\log N)\). The polynomially many calls take
+\(2^qq^{O(1)-\mu_q}\) steps by \cref{thm:counter}(iii) at length \(q\),
+which is \(o(\Tclk(N))\) for the clock \(\Tclk\) of that section.
+\item \emph{Order of constants.} In the order of constants
+of~\cite[the paragraph after Lemma~C.3]{NagCG}, the exponent \(G^\star\) is chosen from
+the simulation exponent and \(b_{\rm amp}\), and \(\eta_0\) depends only
+on the counting theorem. Here the simulation exponent is the absolute
+constant \(6\) of (S4), and \(\eta_0\) depends only on
+\cref{thm:counter}; the order is unchanged.
+\end{enumerate}
+
+\begin{proof}[Proof of \cref{thm:main}]
+This is \cref{prop:ae-final}, which runs the proof
+of~\cite[Theorem~1.2]{NagCG} in~\cite[Sections~11.1--11.6]{NagCG}
+with the fixed-error schedule, \cref{thm:counter} in place
+of~\cite[Theorem~3.1]{NagCG}, and the substitutions (S1)--(S8). The
+counter's guarantees used there are soundness for every witness, a
+useful witness at radius \(\omega_q\) under the pair cap, running time
+\(2^q/q^{\mu_q}\) at length \(q\), a witness of polynomial length, and
+no oracle; these are exactly the guarantees of \cref{thm:counter}.
+\Cref{lem:ae-wires,lem:ae-cap} prove the properties of the wire count
+and of the cap used in (S1)--(S8); \cref{lem:ae-estimate,lem:ae-machine,lem:ae-amplified,lem:ae-table}
+carry out the certified estimate, the weak machine and the extraction.
+The conclusion is that \(F_d\) has agreement less than
+\(1-\gamma/5+\epsilon<1-d\) with every \(\SYM\circ\THR\) circuit with at
+most \(\lfloor\mathcal A_4(n)/K_d\rfloor\) wires, at every sufficiently
+large length \(n\).
+\end{proof}
+
+The author's near-cubic gate preprint~\cite{NagCG} also proves a refinement in which one
+language approaches the boundary error \(\gamma/5\)~\cite[Theorem~11.3
+and Corollary~11.4]{NagCG}. We do not state or claim its wire analogue.
+
+\section{Scope}\label{sec:scope}
+
+The earlier pointwise count-list analysis pays roughly the square root of the mixed population. The gain here comes from summing a closed walk before reconstructing its score distribution (\cref{lem:cycle}), rather than from a stronger per-gate population estimate. This comparison concerns those two analyses; it is not an obstruction to every gate-by-gate method.
+
+For the present parameters, the binding completeness requirement is the pair-call window condition \eqref{eq:window}. When \(\bar\ell=32mU\), it is exactly
+\[
+ U<U_2^*:=\frac{h(L_2-1)}{487\cdot32m^2T}.
+\]
+The alternative branch \(\bar\ell=h^2/(256T)\) is asymptotically slack. The degree constraint \eqref{eq:prime-budget} fixes the selected scale \(P=\Theta(n/(\lambda\mu^2))\); hence \(U_2^*=\Theta(n^{5/2}/(\lambda^{17/4}\mu^6))\), and the sufficient wire cap is
+\[
+ W\le\frac{\beta n^{3/2}(U_2^*-1)}{96r^{3/2}}
+   =\Theta(\beta\mathcal A_4(n)).
+\]
+The rank bound in \cref{earlier:g:rem:rank} shows that the \(P^{3/2}\) power of the two-score window is sharp for recovering arbitrary full-box distributions from these residue data, up to logarithms. This does not rule out exploiting additional structure in circuit score distributions or a different counting method.
+
+\Cref{thm:main} is a constant-error lower bound. We do not know
+whether vanishing-correlation bounds hold at the near-quartic wire
+scale. The wire theorem concerns ordinary symmetric tops; its Fourier
+moduli \(\Omega_j=4mG_j+1\) use the unweighted count of bottom-gate
+outputs. The gate corollary covers integer top weights by charging every signed
+top coefficient through its absolute value. It gives no bound on
+the unweighted number of gates in an unrestricted real-weight
+\(\THR\circ\THR\) circuit: converting large unequal top weights
+to repeated connections may greatly increase the charged resource. The constants, including the
+logarithmic powers of \cref{rem:logs}, are not optimized, and the
+length from which the theorem holds is not computed. The proof uses only the \publishedinputcount\ published results of \cref{sec:formal}; the transfer interfaces of \cref{app:transfer} are derived from them (\cref{app:earlier}), and \cref{app:transfer} re-derives every transfer step that involves the target class.
+
+The formal verification is described in \cref{sec:formal}.
+
+\appendix
+\section{The almost-everywhere transfer for the wire measure}\label[appendix]{app:transfer}
+
+This appendix proves \cref{thm:main} from \cref{thm:counter}.
+Every step involving the target circuit class is restated and proved
+for the wire measure. The class-independent source, proof-table,
+and machine constructions are reproduced in \cref{app:earlier};
+citations below identify their origin. The transfer originates in
+\cite[Sections~11.1--11.6]{NagCG}. The following derived interfaces
+are proved from the published foundations of \cref{par:five-inputs}.
+
+\begin{imported}[Short PCP: {\cite[Section~5, proof of Theorem~1.4 and footnote~5]{MW20}}]
+\label{imp:transfer-short-pcp}
+Fix a verifier \(V(x,y)\) with running time \(T(a)\ge a\) on
+explicit inputs \(x\in\{0,1\}^a\), for \(a\ge1\), where \(T(a)\) is computable
+in \(\poly(a,\log T(a))\) time. In the same polynomial time one can
+construct an oracle circuit \(C_x^O\) of
+\(\poly(a,\log T(a))\) size, with
+\(\ell=\log_2 T(a)+O(\log\log T(a))\) input bits and oracle gates
+of arity \(\ell\), such that:
+\begin{enumerate}[(a)]
+\item if \(V(x,y)\) accepts some \(y\in\{0,1\}^{T(a)}\), some
+oracle \(O:\{0,1\}^\ell\to\{0,1\}\) makes \(C_x^O\)
+unsatisfiable;
+\item if it rejects every such \(y\), then for every oracle \(O\),
+at least a \(1-1/a\) fraction of inputs satisfy \(C_x^O\).
+\end{enumerate}
+\end{imported}
+The full ordinary-machine construction, including the explicit
+clock convention, is proved in \cref{earlier:release-short-pcp}. Satisfying assignments of \(C_x^O\) are rejecting
+random strings, so an accepted oracle makes the circuit
+\emph{unsatisfiable}. The explicit-input dependence in the circuit
+size is retained.
+
+\begin{imported}[Fixed-machine refuter: {\cite[Theorem~1.13, proved as Theorem~4.6]{CLW20}}]
+\label{imp:transfer-refuter}
+For a time-constructible clock
+\(N\le\Tclk(N)\le2^{\poly(N)}\), there are a fixed language
+\(L_{\Tclk}\in\mathrm{NTIME}[\Tclk(N)]\) and a deterministic
+SAT-oracle procedure \(R_{\Tclk}\) with this property. For each
+fixed nondeterministic machine \(M\) that runs in
+\(o(\Tclk(N))\) time and guesses at most \(N/10\) bits,
+\(R_{\Tclk}(M,1^N)\) returns, at every sufficiently large \(N\),
+a word of length \(N\) on which \(M\) and \(L_{\Tclk}\)
+disagree. Its time is \(\poly(\Tclk(N))\).
+\end{imported}
+The multitape and framed formulations are proved in
+\cref{earlier:r:lem:multitape-refuter,earlier:r:cor:framed-refuter}.
+The weak machine below guesses at most \(\lfloor N/16\rfloor\)
+bits and is fixed before its source input is chosen.
+
+\begin{imported}[General-circuit amplification: {\cite[Lemma~3.9]{CLW20}}]
+\label{imp:transfer-amplification}
+There is an absolute constant \(b_{\rm amp}\ge1\) such that, for
+every fixed integer \(G^\star\ge b_{\rm amp}\), there is a constant
+\(a_{G^\star}\ge1\) with the following property. A Boolean function
+on \(q\) inputs with no general circuit of size \(q^{G^\star}\)
+determines, from its truth table in \(2^{O(q)}\) time, a function
+on at most \(a_{G^\star}q\) inputs that has agreement less than
+\(1/2+q^{-G^\star/b_{\rm amp}}\) with every general circuit of
+size \(q^{G^\star/b_{\rm amp}}\).
+\end{imported}
+The full-range construction is proved in
+\cref{earlier:release-interfaces}, here specialized to the size function \(S(q)=q^{G^\star}\). The constant \(b_{\rm amp}\)
+is chosen before \(G^\star\); the arity and running-time constants
+may depend on \(G^\star\). Amplification is used only when a
+source function or an outer proof oracle is hard for general circuits.
+
+\begin{imported}[Pointwise three-query PCPP: {\cite[Lemma~24]{CW19}}]
+\label{imp:transfer-pcpp}
+There are a rational constant \(0<\gamma<1\), a constant-rate binary
+linear code \(\operatorname{Enc}\) with a polynomial-time encoder,
+and a polynomial-time transformation taking a general circuit
+\(D\) on \(q\) inputs to a polynomial-size list of three-literal
+clauses on systematic and auxiliary variables, such that for every
+\(x\in\{0,1\}^q\), with the systematic variables fixed to
+\((x,\operatorname{Enc}(x))\):
+\begin{enumerate}[(a)]
+\item if \(D(x)=1\), a polynomial-time computable auxiliary
+assignment satisfies every clause;
+\item if \(D(x)=0\) and \(q\ge2\), every auxiliary assignment
+leaves at least a \(\gamma\) fraction of clauses false.
+\end{enumerate}
+Each systematic coordinate is a parity of input coordinates, and the
+number of clauses may be taken to be a power of two.
+\end{imported}
+The uniform interface and its clause conversion are proved in
+\cref{earlier:release-interfaces}; \cref{earlier:gate-pcpp-gadget} reproduces the decoder-based pointwise argument of~\cite{NagCG}. The formal proof uses only the encoder: it applies the proximity construction to the circuit that accepts
+exactly the systematic words of inputs accepted by \(D\).
+Positive relative distance separates a rejected systematic word from
+every accepted one. Perfect completeness and an efficient honest
+proof give part~(a); the proximity gap gives part~(b).
+The underlying published proximity and encoder theorems are the two
+Chen--Williams inputs of \cref{par:five-inputs}.
+
+\paragraph{Conventions.} A \emph{target circuit} is a \(\SYM\circ\THR\)
+circuit (\cref{def:class}). A \emph{general circuit} is a Boolean
+circuit of fan-in-two AND, OR and NOT gates, and its size is its number
+of gates. To avoid clashes with the counter's notation, this appendix
+writes:
+\begin{itemize}
+\item \(\zeta\in\{0,1\}^N\) for the source input, written \(z\)
+in~\cite{NagCG};
+\item \(\mathcal U\) for the certified estimate of the gadget penalty,
+written \(U\) there;
+\item \(G^\star\) for the general-circuit exponent, written \(G\) there;
+\item \(M_{\rm cl}\) for the number of clauses, written \(M\) there.
+\end{itemize}
+
+\paragraph{Where the target class enters.} In the proof
+of~\cite[Theorem~1.2]{NagCG}, target circuits occur in exactly four
+places:
+\begin{itemize}
+\item the counter evaluates calls on them (\cref{sec:ae-estimate});
+\item the weak machine guesses them, one per auxiliary proof coordinate
+(\cref{sec:ae-machine});
+\item the extraction step compares the hard functions with them
+(\cref{sec:ae-extract});
+\item the padding step restricts them (\cref{sec:ae-lengths}).
+\end{itemize}
+The source circuit, the proof-oracle circuit, the short-PCP circuit,
+the outer verifier and the amplifier's circuits are general circuits.
+Their sizes are fixed polynomials in the native width \(q\) and do not
+depend on the target class. A target circuit undergoes only four operations: complementation of its output, literal restriction, integer normalization, and simulation by a general circuit (\cref{lem:ae-wires}(e)). It is never composed with another circuit,
+duplicated inside one, padded, or substituted into one.
+\Cref{lem:ae-wires} proves the properties of the wire count that these
+operations need.
+
+\subsection{The wire count}\label{sec:ae-measure}
+
+A \emph{normalized description} of a target circuit on \(a\) inputs
+lists \(a\) and the number \(G\) of bottom gates. For each bottom gate it
+lists the fan-in \(f_i\), the indices and integer weights of the
+\(f_i\) inputs read, and an integer threshold. It ends with the lookup
+table \((g(0),\dots,g(G))\). All integers are written in a fixed
+self-delimiting binary code that uses \(O(\log(|v|+2))\) bits for an
+integer \(v\). A bottom gate of fan-in zero is written
+\(\ind[0\ge\theta]\) with \(\theta\in\{0,1\}\).
+
+\begin{lemma}[Properties of the wire count]\label{lem:ae-wires}
+Let \(C\) be a target circuit on \(a\ge1\) inputs.
+\begin{enumerate}[(a)]
+\item \emph{Complement.} Replacing the lookup \(g\) by \(1-g\) gives
+a target circuit that computes \(1-C\) and has the same bottom gates,
+so its wire count is \(W(C)\).
+\item \emph{Restriction.} Fixing any set of inputs to constants gives
+a target circuit \(C'\) on the remaining inputs. It has the same number
+of bottom gates and the same lookup, and \(W(C')\le W(C)\).
+\item \emph{Averaging.} Write the inputs as \((x,y)\). If
+\(F(x,y)\) does not depend on \(y\), some assignment \(\rho\) of \(y\)
+satisfies \(\agr(C(\cdot,\rho),F(\cdot,\rho))\ge\agr(C,F)\).
+\item \emph{Normalization.} \(C\) has a normalized description with
+the same lookup and at most the same wire count. In it, every weight
+and threshold of a bottom gate of fan-in \(f\ge1\) is an integer in
+\(\pm f^f\). Its length is at most
+\(c_0(W(C)+1)\,a\lceil\lgx(a+1)\rceil\) bits, for an absolute
+constant \(c_0\).
+\item \emph{Simulation.} For every fixed \(A\ge1\) there is \(q_A\)
+such that for all \(q\ge q_A\) the following holds. If \(a\le Aq\) and
+\(W(C)\le q^4\), then a general circuit of size at most \(q^6\)
+computes \(C\).
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+(a) The bottom gates are unchanged, and \((1-g)(s)=1-g(s)\) for every
+count \(s\).
+
+(b) Fix \(x_l=c_l\) for \(l\in R\). The bottom gate \(T_i\) becomes
+\[
+ \ind\Bigl[\sum_{l\notin R}w_{i,l}x_l\ge\theta_i-\sum_{l\in R}w_{i,l}c_l\Bigr].
+\]
+This is a threshold gate on the remaining inputs. Its nonzero weights
+are among those of \(T_i\), so its fan-in is at most \(f_i\). A
+bottom gate all of whose inputs are fixed becomes a gate of fan-in zero
+and is still counted once. The bottom gates and the lookup are kept, so
+\(W(C')=G+\sum_if_i'\le W(C)\).
+
+(c) \(\agr(C,F)=\E_\rho\Pr_x[C(x,\rho)=F(x,\rho)]\), and some
+\(\rho\) attains at least the mean.
+
+(d) Apply \cref{imp:integer} to each bottom gate of fan-in \(f\ge1\),
+as a function of the \(f\) inputs it reads. This gives integer weights
+and a threshold in \(\pm f^f\) that compute the same function on those
+inputs. A weight that becomes zero only lowers the fan-in. Keep the
+lookup. If the support shrinks, repeat normalization on the smaller
+support; this terminates with the stated bound for the resulting
+fan-in. Encode any resulting constant by the fan-in-zero convention.
+
+Length: a bottom gate of fan-in \(f\ge1\) writes \(f\) input indices
+and \(f+1\) integers of magnitude at most \(f^f\). That takes
+\(O((f+1)(f\lgx(f+1)+\lgx(a+1)))\le O((f+1)\,a\lgx(a+1))\) bits,
+since \(f\le a\). A bottom gate of fan-in zero takes \(O(1)\) bits.
+Since \(\sum_i(f_i+1)=W(C)\), the bottom gates take
+\(O(W(C)\,a\lgx(a+1))\) bits. The lookup takes \(G+1\le W(C)+1\) bits
+and the header takes \(O(\lgx(a+1)+\lgx(G+2))\) bits.
+
+(e) Normalize \(C\) as in~(d). If \(G=0\), \(C\) is a constant and
+has a circuit of three gates, for example \(x_1\wedge\neg x_1\) or its
+negation. Otherwise build the circuit in three stages.
+\begin{itemize}
+\item \emph{Bottom gates.} Consider a bottom gate \(T_i\) of fan-in
+\(f_i\ge1\) with weights \(w_{i,l}\) and threshold \(\theta_i\). Put
+\(L_i=\lceil f_i\lgx(f_i+1)\rceil+\lceil\lgx(f_i+2)\rceil+2\). Every
+partial sum of the \(f_i+1\) integers \(w_{i,l}x_l\) (\(l\) read by
+\(T_i\)) and \(-\theta_i\) has magnitude at most
+\((f_i+1)f_i^{f_i}<2^{L_i-1}\). So the sum is computed without
+overflow in \(L_i\)-bit two's complement:
+\begin{itemize}
+\item each term \(w_{i,l}x_l\) is the bit pattern of \(w_{i,l}\)
+ANDed with \(x_l\);
+\item \(f_i\) ripple-carry adders of width \(L_i\) add the terms;
+\item \(T_i\) is the negation of the sign bit.
+\end{itemize}
+This uses at most \(c_1(f_i+1)L_i\) gates for an absolute \(c_1\).
+Bottom gates of fan-in zero are constants.
+\item \emph{Count.} A tree of ripple-carry adders of width
+\(\lceil\lgx(G+1)\rceil\) computes the count \(s=\sum_iT_i\) in at most
+\(c_1G\lgx(G+2)\) gates.
+\item \emph{Lookup.} A binary tree of two-to-one multiplexers on the
+bits of \(s\) selects \(g(s)\) from the table, padded with zeros to
+\(2^{\lceil\lgx(G+1)\rceil}\le2G+2\) entries. It uses at most
+\(c_1(G+1)\) gates.
+\end{itemize}
+The constants \(0\) and \(1\) are produced once, with three gates.
+Since \(f_i\le a\le Aq\), we have \(L_i\le c_2Aq\lgx(Aq+2)\) for an
+absolute \(c_2\). Using \(\sum_i(f_i+1)=W(C)\le q^4\) and \(G\le W(C)\),
+the size is at most
+\[
+ c_1c_2\,W(C)\,Aq\lgx(Aq+2)+c_1G\lgx(G+2)+c_1(G+1)+3
+ =O_A\bigl(q^5\log q\bigr),
+\]
+which is at most \(q^6\) for all \(q\ge q_A\).
+\end{proof}
+
+\subsection{Parameters and the verifier-length wire cap}\label{sec:ae-params}
+
+Fix \(0<d<\gamma/5\). Use the fixed-error schedule
+of~\cite[Section~11.4]{NagCG}: a fixed \(\epsilon=2^{-e_0}\), for a
+positive integer \(e_0\), with \(\epsilon<\gamma/10\) and
+\(d<\gamma/5-\epsilon\). Put
+\[
+ P_q=128/\epsilon,\qquad\omega_q=\epsilon/128,\qquad
+ b(q)=\bigl\lfloor\eta_0\epsilon\,\mathcal A_4(q)\bigr\rfloor .
+\]
+Here \(\eta_0\) is a fixed rational with \(0<\eta_0<\min\{1,a_{1,1}/512\}\), and
+\(a_{1,1}\) is the constant of \cref{thm:counter} for \(B_1=B_2=1\).
+This is~\cite[Equation~(14)]{NagCG} with \(\mathcal A_4\) in place of
+\(\mathcal A_3\).
+
+\begin{lemma}[Verifier-length wire cap]\label{lem:ae-cap}
+For all \(q\ge4\):
+\begin{enumerate}[(i)]
+\item \(b(q)\le q^4\);
+\item \(2b(q)<a_{1,1}\,\omega_q\,\mathcal A_4(q)\);
+\item for every integer \(W\ge0\), \(W\le b(q)\) if and only if
+\(W^4\lambda_q^{17}\mu_q^{30}\le(\eta_0\epsilon)^4q^{16}\), a
+comparison of exact rationals;
+\item if \(q\ge2^{e_0+8}\), then \(q^{-1}\le\omega_q\le1/16\), and
+\(\omega_q\) has a binary representation of at most \(q\) bits;
+\item \(\mathcal A_4(n)\le(n/q)^4\mathcal A_4(q)\) for every
+\(n\ge q\).
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+(i) \(\eta_0\epsilon<1\) and \(\mathcal A_4(q)\le q^4\).
+
+(ii)
+\(2b(q)\le2\eta_0\epsilon\mathcal A_4(q)<(a_{1,1}/256)\,\epsilon\,\mathcal A_4(q)
+=(a_{1,1}/2)\,\omega_q\mathcal A_4(q)\).
+
+(iii) \(b(q)=\lfloor x\rfloor\) with
+\(x=\eta_0\epsilon q^4/(\lambda_q^{17/4}\mu_q^{15/2})>0\). For an integer
+\(W\ge0\), \(W\le\lfloor x\rfloor\) if and only if \(W\le x\), if and
+only if \(W^4\le x^4=(\eta_0\epsilon)^4q^{16}/(\lambda_q^{17}\mu_q^{30})\).
+
+(iv) \(\omega_q=2^{-e_0-7}\in[q^{-1},1/16]\) for these \(q\), and it is
+written with \(e_0+8\le q\) bits.
+
+(v) \(\lambda\) and \(\mu\) are nondecreasing.
+\end{proof}
+
+\subsection{The gadget and the certified estimate}\label{sec:ae-estimate}
+
+\cite[Sections~11.1--11.2]{NagCG} supply the following, all of which
+are statements about Boolean values and do not involve the target
+class:
+\begin{itemize}
+\item the pointwise three-query PCPP of \cref{imp:transfer-pcpp},
+with rejection gap \(\gamma\), systematic coordinates that are parities
+of the input, and auxiliary coordinates;
+\item the Garey--Johnson--Stockmeyer penalty \(Q(x_1,x_2,x_3,y)\)
+\eqref{earlier:g:eq:gadget-penalty} (\cite[Equation~(10)]{NagCG}). It is nonnegative on Boolean
+arguments, at least one when the original clause is false, and zero
+when the clause is true and \(y=x_1x_2x_3\);
+\item its weighted stability, \cref{earlier:g:lem:gadget-stability};
+\item the identity \eqref{earlier:g:eq:gadget-pair-identity}
+\[
+ Q=1+\tfrac12\Bigl(y-\sum_ix_i-\sum_{i<j}(x_i\oplus x_j)+\sum_i(x_i\oplus y)\Bigr),
+\]
+with ten probability terms, each of coefficient \(\pm\frac12\).
+\end{itemize}
+
+Fix \(q\) and a list of \(M_{\rm cl}\) three-literal clauses, with fresh
+helper names, as produced by the weak machine
+(\cref{sec:ae-machine}). For each auxiliary name \(X\), including each
+helper, fix a target circuit \(C_X\) on \(q\) inputs. A literal is
+\(C_X(x)\), a systematic parity \(\PAR_\Sigma(x)\), or the complement
+of either. Write \(\E Q\) for the exact average of \(Q\) over the
+gadgets and over \(x\in\{0,1\}^q\), with each auxiliary coordinate
+\(X\) evaluated as \(C_X(x)\).
+
+Define \(\mathcal U\) as in~\cite[Section~11.2]{NagCG}:
+\begin{itemize}
+\item each exact term of the identity contributes its value;
+\item for each nonexact term, let \((\phat,\khat)\) be the counter's
+estimate and radius, and let \(\sigma\in\{\pm1\}\) be the term's sign;
+substitute \(\sigma\phat+\khat\) for the signed probability;
+\item average over the gadgets.
+\end{itemize}
+
+\begin{lemma}[Certified estimate for guesses below the wire cap]\label{lem:ae-estimate}
+Suppose that \(q\) is large, that every \(C_X\) is given by a
+normalized description, and that \(W(C_X)\le b(q)\). Then:
+\begin{enumerate}[(i)]
+\item every nonexact term is a normalized single, pair or parity call
+of length \(q\), with total wire count at most \(2b(q)\) and requested
+radius \(\omega_q\), which \cref{thm:counter} with \(B_1=B_2=1\)
+admits;
+\item for every choice of witnesses, \(\mathcal U\ge\E Q\);
+\item some choice of witnesses gives \(\mathcal U\le\E Q+10\omega_q\).
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+(i) Classify the ten terms. A complemented auxiliary literal
+\(1-C_X\) is the target circuit of \cref{lem:ae-wires}(a), with the
+same wire count. The complement of a parity is the parity XOR the
+constant one.
+\begin{itemize}
+\item \emph{One literal.} If it is a parity or its complement, its
+probability is exact: \(1/2\) for a nonempty support, and \(0\) or
+\(1\) for an empty one. Otherwise it is a single call on \(C_X\) or on
+\(1-C_X\).
+\item \emph{Two auxiliary literals.} If they have the same name, the
+XOR is the constant \(0\) or \(1\). Otherwise, absorbing complements
+into the circuits, the term is a pair call \(C^1\oplus C^2\).
+\item \emph{One auxiliary and one systematic literal.} Absorbing a
+complement into the circuit, the term is a parity call
+\(C^1\oplus\PAR_\Sigma\).
+\item \emph{Two systematic literals.} The XOR is
+\(\PAR_{\Sigma\triangle\Sigma'}\), possibly XOR \(1\), and is exact.
+\end{itemize}
+In every call each circuit has a normalized description on \(q\)
+inputs whose integers have magnitude at most \(q^q<2^{B_0(q)}\)
+(\cref{lem:ae-wires}(d)). The total wire count is at most
+\(2b(q)\le2q^4\) (\cref{lem:ae-cap}(i)), and the radius meets the
+encoding conditions with \(B_1=B_2=1\) (\cref{lem:ae-cap}(iv)). So the
+call is normalized in the sense of \cref{sec:counting}.
+
+(ii) By \cref{thm:counter}(i), every witness gives
+\(|\phat-p|\le\khat\) for the true probability \(p\), so
+\(\sigma\phat+\khat\ge\sigma p\). Summing the terms of one gadget with
+their coefficients bounds the gadget's expected penalty from above.
+Averaging over the gadgets gives \(\mathcal U\ge\E Q\).
+
+(iii) By \cref{lem:ae-cap}(ii), every call has
+\(W\le2b(q)<a_{1,1}\omega_q\mathcal A_4(q)\). So
+\cref{thm:counter}(ii), at length \(q\), gives each call a witness of
+polynomial length with \(\khat\le\omega_q\). Then
+\(\sigma\phat+\khat\le\sigma p+2\omega_q\). Each gadget has at most
+ten nonexact terms, each of coefficient \(\frac12\), so
+\(\mathcal U\le\E Q+10\omega_q\).
+\end{proof}
+
+This is~\cite[Equations~(12) and~(13)]{NagCG}, with \cref{thm:counter}
+in place of~\cite[Theorem~3.1]{NagCG}.
+
+\subsection{The weak machine}\label{sec:ae-machine}
+
+The weak machine \(\mathsf M_{\rm wire}\) is the machine
+of~\cite[Section~11.4]{NagCG} with target circuits measured by wires.
+Its constants are fixed in advance in the order of
+\cref{sec:ae-constants}. Steps marked (V) are class-independent;
+their constructions are given in \cref{app:earlier}.
+\begin{enumerate}[label=(M\arabic*)]
+\item (V) \emph{Fixed objects}, all as in~\cite[Section~11.4]{NagCG}:
+\begin{itemize}
+\item the clock \(\Tclk(N)=N^{C_{\rm clk}}\);
+\item the hierarchy language \(L_{\Tclk}\) and its multitape
+verifier (\cref{earlier:r:lem:multitape-refuter});
+\item the succinct verifier \(\mathcal V_{G^\star}\) and its time
+bound \(T_{G^\star}\)~\cref{earlier:r:lem:succinct-verifier};
+\item \(L_\nu=\nu^{G'}\) and the native width \(q=q(N)\).
+\end{itemize}
+Only source lengths \(N=2^\nu\) are used.
+\item (V) \emph{Guards.}
+\begin{itemize}
+\item Reject unless \(N=2^\nu\).
+\item Compute a fixed polynomial envelope for all guesses
+(\cref{lem:ae-machine}(i)) and reject if it exceeds \(\lfloor N/16\rfloor\).
+Bound every subsequent guess by its allotted envelope, rejecting if
+its description would exceed that bound.
+\item Check the precision guards of \cref{lem:ae-cap}(iv) and
+\(\gamma/L_\nu<\epsilon\).
+\item Reject if the guessed source circuit's description has more than
+\(L_\nu\) bits.
+\end{itemize}
+\item (V) \emph{Source circuit.} Guess a general circuit
+\(B_{\rm src}\) with \(q\) inputs and at most \(q^{G^\star}\) gates.
+Check \eqref{earlier:g:eq:source-check}, that is,
+\(B_{\rm src}(\mathrm{bin}_\nu(i)0^{q-\nu})=\zeta_i\) for every
+\(i<N\).
+\item (V) \emph{Clauses.}
+\begin{itemize}
+\item Construct \(C^O_{\langle B_{\rm src}\rangle_\nu}\) by the short
+PCP.
+\item Guess a general circuit \(B_{\rm pf}\) with \(q\) inputs and at
+most \(q^{G^\star}\) gates, and form the outer verifier \(D_B\).
+\item Apply the PCPP, and repeat the clause list to exactly
+\(M_{\rm cl}=2^{\lceil d_{G^\star}\lgx(q+2)\rceil}\) clauses, rejecting if it
+is longer.
+\item Introduce one fresh helper name per clause.
+\end{itemize}
+\item \emph{Target guesses.} For each distinct auxiliary name \(X\),
+guess a normalized description of a target circuit \(C_X\) on \(q\)
+inputs. Reject if it is malformed, if some integer has magnitude at
+least \(2^{B_0(q)}\), or if
+\(W(C_X)^4\lambda_q^{17}\mu_q^{30}>(\eta_0\epsilon)^4q^{16}\). By
+\cref{lem:ae-cap}(iii), the last test rejects exactly when
+\(W(C_X)>b(q)\). Systematic coordinates are the prescribed parities.
+\item \emph{Estimate.} Guess witness prefixes for the nonexact calls
+of \cref{sec:ae-estimate}, each of the polynomial length that
+\cref{thm:counter}(iii) reads. Run the counter of \cref{thm:counter}
+with \(B_1=B_2=1\) and radius \(\omega_q\) on each call, and form
+\(\mathcal U\). Accept if and only if \(\mathcal U<\gamma-\epsilon\).
+\end{enumerate}
+
+\begin{lemma}[The weak machine]\label{lem:ae-machine}
+For all sufficiently large \(\nu\), with \(N=2^\nu\):
+\begin{enumerate}[(i)]
+\item \(\mathsf M_{\rm wire}\) guesses at most \(q^{c}\) bits, for a
+constant \(c\) fixed before \(N\), hence at most \(\lfloor N/16\rfloor\);
+\item it halts within \(o(\Tclk(N))\) steps on every branch;
+\item on every \(\zeta\notin L_{\Tclk}\), every branch rejects.
+\end{enumerate}
+Consequently, for all sufficiently large \(\nu\), the refuter returns
+a word \(\zeta_N\in L_{\Tclk}\cap\{0,1\}^N\) on which every branch
+of \(\mathsf M_{\rm wire}\) rejects.
+\end{lemma}
+\begin{proof}
+(i) The source and proof-oracle circuits have descriptions of
+\(q^{O(G^\star)}\) bits~\cite[Section~11.4]{NagCG}. There are at most
+\(4M_{\rm cl}\le8(q+2)^{d_{G^\star}}\) auxiliary names: at most three literal
+names and one helper per clause. The explicit description format,
+\(W\le b(q)\le q^4\), and the checked integer bound
+\(B_0(q)=O(q\log(q+1))\) give a fixed bound of
+\(O((q^4+1)q\log(q+1))\) bits for every admitted target description.
+Use this as its guess envelope. There are at most
+\(10M_{\rm cl}\) calls, each with a witness prefix of polynomial
+length. Since \(q=\Theta(\log N)\), the total is \(o(N)\).
+
+(ii) Steps (M1)--(M4) take at most \(N^{d_0}+q^{O(1)}\) steps with
+\(d_0=2\)~\cite[Section~11.4]{NagCG}. Step (M5) is arithmetic on
+integers of polynomial bit length. Step (M6) makes at most
+\(10M_{\rm cl}=q^{O(1)}\) calls at length \(q\). By
+\cref{thm:counter}(iii), together they take \(2^qq^{O(1)-\mu_q}\)
+steps, and polynomial-bit arithmetic adds a factor \(q^{O(1)}\). Since
+\(2^q/\Tclk(N)=q^{O(1)}\)~\cite[Section~11.4 and Appendix~C]{NagCG},
+this is \(\Tclk(N)\,q^{O(1)-\mu_q}=o(\Tclk(N))\). Finally
+\(N^{d_0}=o(\Tclk(N))\) because \(C_{\rm clk}>d_0+2\).
+
+(iii) This is the argument of~\cite[Section~11.4]{NagCG}. Consider a
+branch that passes the source check; every other branch rejects.
+\begin{itemize}
+\item \(\mathrm{tt}_N(B_{\rm src})=\zeta\notin L_{\Tclk}\), so
+\(\mathcal V_{G^\star}\) rejects \(\langle B_{\rm src}\rangle_\nu\) with
+every witness~\cref{earlier:r:lem:succinct-verifier}.
+\item By the short PCP, \(C^{O_{B_{\rm pf}}}_{\langle B_{\rm src}\rangle_\nu}\)
+is satisfied by at least a \(1-1/L_\nu\) fraction of its inputs. So
+\(D_B(x)=1\) for at most a \(1/L_\nu\) fraction of \(x\).
+\item For every other \(x\), the PCPP leaves at least a \(\gamma\)
+fraction of the clauses false under every auxiliary assignment, in
+particular under \((C_X(x))_X\). Each false clause has penalty at least
+one for either helper value, and all penalties are nonnegative.
+\end{itemize}
+Hence \(\E Q\ge\gamma(1-1/L_\nu)>\gamma-\epsilon\) by the guard
+\(\gamma/L_\nu<\epsilon\). By \cref{lem:ae-estimate}(ii),
+\(\mathcal U\ge\E Q\) for every witness, so the branch rejects. This
+step uses only the soundness of the counter. It holds for every Boolean
+guess, whatever its size.
+
+The machine is one fixed nondeterministic multitape machine. By (i)
+and (ii), the refuter of \cref{imp:transfer-refuter} applies to it: for all sufficiently large \(N\)
+it returns a word on which \(\mathsf M_{\rm wire}\) and \(L_{\Tclk}\)
+disagree. By (iii) the machine rejects every word outside
+\(L_{\Tclk}\), so that word lies in \(L_{\Tclk}\) and the machine
+rejects it.
+\end{proof}
+
+\subsection{Extracting a hard function}\label{sec:ae-extract}
+
+Fix a large \(\nu\), \(N=2^\nu\), \(q=q(N)\), and the rejected word
+\(\zeta=\zeta_N\in L_{\Tclk}\) of \cref{lem:ae-machine}. The canonical
+choices of~\cite[Section~11.5, items~(i)--(iii)]{NagCG} use only
+\(\zeta\), the source check, the short PCP and general circuits with
+at most \(q^{G^\star}\) gates. Their construction is reproduced in
+\cref{earlier:gate-canonical}. They give one of
+two outcomes.
+\begin{itemize}
+\item \textsc{NoSource} or \textsc{NoProof}: a function \(H\) on \(q\)
+inputs with general circuit complexity greater than \(q^{G^\star}\).
+\item \textsc{Tautology}: a pair \(B=(B^*_{\rm src},B^*_{\rm pf})\)
+whose source circuit passes the check and for which \(D_B\) is a
+tautology. Every auxiliary name \(X\) has an honest function
+\(\Pi_X\) on \(q\) inputs: the efficient honest PCPP proof for an
+original name, and the AND of its clause's three honest literal values
+for a helper. For a systematic name \(X\), let \(\Pi_X\) be its
+prescribed parity. The honest table \(\mathsf T\)
+of~\cite[Section~11.5]{NagCG} has
+\(q_0(q)=q+\lgx M_{\rm cl}+\lgx P_q\)
+inputs \eqref{earlier:g:eq:gadget-table-arity}. Its first \(q\) inputs are the
+random string \(x\). Its remaining inputs are an address \(\alpha\):
+a gadget and one of \(P_q\) positions, which cycle through that
+gadget's five-entry list \((X_{a,1},X_{a,2},X_{a,3},Y_a,Y_a)\) of
+names. At \((x,\alpha)\) the table returns \(\Pi_X(x)\) for the name
+\(X\) at that position.
+\end{itemize}
+
+\begin{lemma}[\textsc{NoSource} and \textsc{NoProof}]\label{lem:ae-amplified}
+Let \(H'\), on \(a'\le a_{G^\star}q\) inputs, be the function that
+general-circuit amplification (\cref{imp:transfer-amplification})
+produces from \(H\). For all large \(q\), every target circuit \(C\)
+on \(a'\) inputs with \(W(C)\le q^4\) has
+\(\agr(C,H')<\tfrac12+q^{-G^\star/b_{\rm amp}}\).
+\end{lemma}
+\begin{proof}
+The amplification interface applies because \(G^\star\ge b_{\rm amp}\). By
+\cref{lem:ae-wires}(e) with \(A=a_{G^\star}\), \(C\) is computed by a
+general circuit of size at most \(q^6\le q^{G^\star/b_{\rm amp}}\),
+since \(G^\star/b_{\rm amp}>7\). The amplified function has agreement
+less than \(\frac12+q^{-G^\star/b_{\rm amp}}\) with every general
+circuit of that size.
+\end{proof}
+
+\begin{lemma}[\textsc{Tautology}]\label{lem:ae-table}
+Every target circuit \(C\) on \(q_0(q)\) inputs with \(W(C)\le b(q)\)
+has \(\agr(C,\mathsf T)<1-\gamma/5+\epsilon\).
+\end{lemma}
+\begin{proof}
+Let \(\delta=1-\agr(C,\mathsf T)\), and suppose that
+\(\delta\le\gamma/5-\epsilon\).
+
+\emph{Cofactors.} For each auxiliary name \(X\), choose, among the
+addresses \(\alpha\) whose list entry is \(X\), one address
+\(\alpha_X\) that minimizes the error of the cofactor
+\(C(\cdot,\alpha_X)\) against \(\Pi_X\). Put \(C_X=C(\cdot,\alpha_X)\).
+By \cref{lem:ae-wires}(b), \(C_X\) is a target circuit on \(q\) inputs
+with \(W(C_X)\le W(C)\le b(q)\). By \cref{lem:ae-wires}(d), it has a
+normalized description with no more wires, which passes the tests of
+step~(M5). So \(\mathsf M_{\rm wire}\) has a branch that guesses \(B\),
+passes the source check, and guesses these descriptions.
+
+\emph{Penalty.} The weighted-cofactor incidence argument of \cref{earlier:g:sec:gadget-extract} gives, for this branch,
+\(\E Q\le(P_q/\lfloor P_q/5\rfloor)\,\delta\le(5+\epsilon)\,\delta\). Its
+proof uses only \cref{earlier:g:lem:gadget-stability} and the choice of one
+minimizing cofactor per name, and it holds for any Boolean functions
+\(C_X\).
+The weighted incidence calculation is reproduced in \cref{earlier:g:sec:gadget-extract} (paragraph ``Weighted-cofactor incidence'').
+
+\emph{Estimate.} By \cref{lem:ae-estimate}(iii), some witnesses give
+\[
+ \mathcal U\le(5+\epsilon)\Bigl(\frac\gamma5-\epsilon\Bigr)+10\omega_q
+ \le\gamma-4\epsilon+\frac{10\epsilon}{128}<\gamma-\epsilon,
+\]
+using \(\gamma<1\). So this branch accepts \(\zeta\), contradicting
+\cref{lem:ae-machine}. Hence \(\delta>\gamma/5-\epsilon\).
+\end{proof}
+
+\subsection{Every sufficiently large length}\label{sec:ae-lengths}
+
+\cite[Section~11.6]{NagCG} sets up the final lengths as follows.
+\begin{itemize}
+\item Pad the hard function (\(H'\) in \textsc{NoSource} and
+\textsc{NoProof}, \(\mathsf T\) in \textsc{Tautology}) to exactly
+\(m(q)=K_{\rm amp}q_0(q)\) inputs, ignoring a suffix, for a fixed
+integer \(K_{\rm amp}\ge a_{G^\star}\).
+\item For a final length \(n\), choose the largest \(\nu\) with
+\(m(q(2^\nu))\le n/2\), and let \(F_d\) at length \(n\) be the padded
+function of that \(\nu\), ignoring its remaining inputs. When no
+\(\nu\) qualifies, which happens for only finitely many \(n\), the
+slice is zero.
+\item There is a fixed \(B_{\rm len}\) such that eventually
+\(q\le n\le B_{\rm len}q\).
+\end{itemize}
+None of this refers to the target class.
+
+\begin{proposition}[The main theorem]\label{prop:ae-final}
+Let \(K_d\) be an integer with \(K_d>2B_{\rm len}^4/(\eta_0\epsilon)\).
+For every sufficiently large \(n\), every target circuit \(C\) on
+\(n\) inputs with \(W(C)\le\lfloor\mathcal A_4(n)/K_d\rfloor\) has
+\(\agr(C,F_d)<1-d\). Moreover, \(F_d\in\ENP\).
+\end{proposition}
+\begin{proof}
+Let \(\nu\) and \(q\) be the parameters selected for \(n\). As
+\(n\to\infty\), both tend to infinity, so every statement above for
+large \(q\) applies for large \(n\).
+
+\emph{Cap.} By \cref{lem:ae-cap}(v),
+\(\mathcal A_4(n)\le(n/q)^4\mathcal A_4(q)\le B_{\rm len}^4\mathcal A_4(q)\).
+So
+\[
+ \lfloor\mathcal A_4(n)/K_d\rfloor
+ <\tfrac12\eta_0\epsilon\,\mathcal A_4(q)\le b(q)
+\]
+once \(\eta_0\epsilon\mathcal A_4(q)\ge2\), because \(\lfloor x\rfloor\ge x/2\)
+for \(x\ge1\).
+
+\emph{Restriction.} At length \(n\), \(F_d\) depends only on the
+\(a'\le m(q)\) inputs of \(H'\), or on the \(q_0(q)\) inputs of
+\(\mathsf T\), where it equals that function. By
+\cref{lem:ae-wires}(c), applied to all other inputs at once, some
+restriction \(C'\) of \(C\) to those inputs satisfies
+\(\agr(C',H')\ge\agr(C,F_d)\), respectively
+\(\agr(C',\mathsf T)\ge\agr(C,F_d)\). By \cref{lem:ae-wires}(b),
+\(W(C')\le W(C)<b(q)\le q^4\).
+
+\emph{Conclusion.} By \cref{lem:ae-amplified,lem:ae-table},
+\(\agr(C,F_d)<\max\{\frac12+q^{-G^\star/b_{\rm amp}},\,1-\gamma/5+\epsilon\}\).
+For large \(q\) this maximum is \(1-\gamma/5+\epsilon\), which is less
+than \(1-d\) because \(d<\gamma/5-\epsilon\).
+
+\emph{Uniformity.} \cite[Section~11.6, final paragraph]{NagCG} computes
+\(F_d\) at length \(n\) in time \(2^{O(q)}\) with a SAT oracle, in five
+steps:
+\begin{itemize}
+\item run the refuter on the fixed machine, here
+\(\mathsf M_{\rm wire}\), in time \(\poly(\Tclk(N))=2^{O(q)}\), to
+obtain \(\zeta\);
+\item recover the first source circuit \(B^*_{\rm src}\), or its
+absence, by prefix self-reduction on a SAT formula of size
+\(Nq^{O(G^\star)}\);
+\item recover the first oracle \(O^*\) by prefix self-reduction on a
+formula of size \(2^{O(q)}\); if no such oracle exists at an exceptional
+initial length, set the slice to zero, as in the cited construction;
+\item recover the first \(B^*_{\rm pf}\), or its absence, in the same
+way;
+\item compute \(H'\) in time \(2^{O(q)}\), or compute \(\mathsf T\)
+from the honest PCPP proof and the AND helpers in polynomial time.
+\end{itemize}
+These formulas involve the source circuit, the oracle and the
+proof-oracle circuit, and no target circuit. The target class enters
+only through the fixed machine handed to the refuter. Since
+\(q\le n\), \(F_d\in\ENP\).
+\end{proof}
+
+\subsection{Order of constants}\label{sec:ae-constants}
+
+The constants are chosen in the order of~\cite[the paragraph after
+Lemma~C.3]{NagCG}, with two substitutions: the counter is
+\cref{thm:counter}, and the simulation exponent is the absolute
+constant \(6\) of \cref{lem:ae-wires}(e).
+\begin{enumerate}
+\item \(\epsilon=2^{-e_0}\), from \(d\) and \(\gamma\).
+\item \(\eta_0\), from \(a_{1,1}\) of \cref{thm:counter}.
+\item \(d_0=2\).
+\item \(G^\star\) with \(G^\star\ge b_{\rm amp}\) and
+\(G^\star/b_{\rm amp}>7\), from \(b_{\rm amp}\) and the simulation
+exponent \(6\). This fixes \(a_{G^\star}\).
+\item \(G'\ge2\), from \(G^\star\) and the description format of
+general circuits.
+\item \(C_{\rm clk}>d_0+2\). This fixes \(\mathcal V_{G^\star}\) and
+\(T_{G^\star}\).
+\item The constants of the short PCP for \(\mathcal V_{G^\star}\), then
+\(A_{\rm pad}\), as in~\cite[Appendix~C]{NagCG}.
+\item The clause-count exponent \(d_{G^\star}\).
+\item \(K_{\rm amp}\ge a_{G^\star}\), then \(B_{\rm len}\), then
+\(K_d>2B_{\rm len}^4/(\eta_0\epsilon)\).
+\end{enumerate}
+Only two entries refer to the target class: \(\eta_0\), which depends
+only on \cref{thm:counter}, and the exponent \(6\), which is absolute
+and depends on no multiplier \(A\). \Cref{lem:ae-wires}(e) is used only
+with \(A=a_{G^\star}\), which is fixed at step~4. No constant depends
+on one chosen after it.
+
+\clearpage
+\section{Reference tables}\label[appendix]{app:tables}
+
+\begin{table}[!htbp]
+\centering\small
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{.27\textwidth}X>{\raggedright\arraybackslash}p{.12\textwidth}@{}}
+\toprule
+Symbol & Meaning & Set in\\
+\midrule
+\(n\); \(\lambda,\mu\) & input length of the counter; \(\lceil\lgx n\rceil\), \(\lceil\lgx\lambda\rceil\) & \S\ref{sec:main}\\
+\(\topwt(C)\) & total top weight \(\sum_i|c_i|\) of the integer-weighted extension & \S\ref{sec:main}\\
+\(W\); \(G_j\); \(f_{j,i}\) & total wires of a call; bottom gates of circuit \(j\); fan-in of bottom gate \((j,i)\) & \S\ref{sec:counting}\\
+\(\mathcal A_4\) & the cap \(n^4/(\lambda^{17/4}\mu^{15/2})\) & \S\ref{sec:main}\\
+\(r,s,b,k\); \(N\) & blocks; \(b=2^s-1\); \(k=rs\); \(N=2^{k/2}\) patterns per side & \S\ref{sec:imports-star}\\
+\(z\); \(c(z)\); \(u,v\); \(F(u)\) & column (cell address); its center; left and right patterns; coordinates flipped by \(u\) & \S\ref{sec:imports-star}\\
+\(\Delta_{j,i}\), \(R_j\), \(\pop\) & mixed residual of a bottom gate; of circuit \(j\); population & \S\ref{sec:cells}\\
+\(m\); \(\Omega_j\), \(\Theta\); \(M_F\) & trace order \(4\); Fourier moduli and group; Fourier mass bound \(\lceil\sqrt{|\Theta|}\,\rceil\) & \S\ref{sec:fourier}\\
+\(Q\); \(\eta\); \(\Gamma\); \(S\) & samples; sampler accuracy; sample-count function; seed length & \S\ref{sec:sampler}, \S\ref{sec:cycle}\\
+\(w\), \(e_l\); \(Y_{j,\sigma}\); \(\kappa_\sigma\) & closed walk and its edges; signed walk sum; sign-pattern weight & \S\ref{sec:cycle}\\
+\(\cS\); \(X\); \(\tau,U,\Xmax\) & subsampled bottom gates; their residual count; mask parameters & \S\ref{sec:masks}\\
+\(\xi^{(j)}_r\); \(E^{(j)}_{r,\sigma}\), \(\varphi^{(j)}_\sigma\) & witness selection vectors; digits and final error of a walk sum & \S\ref{sec:walks}\\
+\(T,h,\ell_0\); \(a_r,A,M_1,J\) & chain inputs; chain ratios, product, first denominator, length & \S\ref{sec:imports-nc}\\
+\(P\), \(\cP\), \(p\), \(e\) & prime scale; primes in \((P/2,P]\); a prime; lifting exponent & \S\ref{sec:params}\\
+\(D'\), \(L_2\), \(L_w\) & one-score window; two-score window; window in use & \S\ref{sec:imports-nc}\\
+\(h_E\), \(\Lambda\) & digit bound \(\lfloor P/4\rfloor\); final-error bound & \S\ref{sec:params}\\
+\(\beta\); \((\phat,\khat)\) & requested radius; returned estimate and radius & \S\ref{sec:counting}\\
+\bottomrule
+\end{tabularx}
+\caption{Recurring notation. Subscripts \(j\in\{1,2\}\) index the
+circuits of a call.}
+\label{tab:notation}
+\end{table}
+
+
+\clearpage
+
+\input{app-attribution.tex}
+\input{app-statements.tex}
+\input{app-earlier.tex}
+\clearpage
+
+\section*{AI methodology statement}
+Generative AI tools from OpenAI, Anthropic, and Google (the models Astra, Opus, Fable, Sol, and Argon) were used
+substantively throughout this work: exploratory proof search and
+parameter selection; drafting and revising all sections; constructing the Lean formalization; literature
+navigation and comparison of cited statements with their sources; and
+adversarial checks of candidate arguments.
+These tools materially affected the mathematical exposition and proof
+development; their review passes are not independent human validation.
+The author selected the research targets and retained arguments and
+takes responsibility for the mathematical claims, proofs, originality,
+citations, and final submission. No model is an author.
+
+The correctness of both theorems, as formally stated, is certified by a kernel-checked Lean proof from the \publishedinputcount\ published results listed in \cref{sec:formal}; the faithfulness of the formal statements to this paper and to the cited sources is documented statement by statement in the companion's source mapping. AI review is not relied on for correctness.
+
+\clearpage
+\begin{thebibliography}{WilACC14}
+\raggedright
+
+\bibitem[AC88]{AC88}
+Noga Alon and Fan R. K. Chung. Explicit construction of linear sized
+tolerant networks. \emph{Discrete Mathematics} 72(1--3):15--19, 1988.
+\href{https://doi.org/10.1016/0012-365X(88)90189-6}{doi:10.1016/0012-365X(88)90189-6}.
+
+
+\bibitem[ACW16]{ACW16}
+Josh Alman, Timothy M. Chan, and R. Ryan Williams.
+Polynomial representations of threshold functions and algorithmic
+applications. In \emph{FOCS 2016}, pp.~467--476.
+\href{https://doi.org/10.1109/FOCS.2016.57}{doi:10.1109/FOCS.2016.57}.
+
+\bibitem[AGHP92]{AGHP92}
+Noga Alon, Oded Goldreich, Johan H\aa{}stad, and Ren\'e Peralta.
+Simple constructions of almost \(k\)-wise independent random variables.
+\emph{Random Structures \& Algorithms} 3(3):289--304, 1992.
+\href{https://doi.org/10.1002/rsa.3240030308}{doi:10.1002/rsa.3240030308}.
+
+
+\bibitem[Apo76]{Apostol76}
+Tom M. Apostol. \emph{Introduction to Analytic Number Theory}.
+Springer, 1976.
+\href{https://doi.org/10.1007/978-1-4757-5579-4}{doi:10.1007/978-1-4757-5579-4}.
+
+
+\bibitem[Bar68]{Bareiss68}
+Erwin H. Bareiss. Sylvester's identity and multistep integer-preserving
+Gaussian elimination. \emph{Mathematics of Computation}
+22(103):565--578, 1968.
+\href{https://doi.org/10.1090/S0025-5718-1968-0226829-0}{doi:10.1090/S0025-5718-1968-0226829-0}.
+
+\bibitem[BCGT13]{BCGT13}
+Eli Ben-Sasson, Alessandro Chiesa, Daniel Genkin, and Eran Tromer.
+On the concrete efficiency of probabilistically-checkable proofs.
+In \emph{STOC 2013}, pp.~585--594.
+\href{https://doi.org/10.1145/2488608.2488681}{doi:10.1145/2488608.2488681}.
+Full version: \href{https://eccc.weizmann.ac.il/report/2012/045/}{ECCC TR12-045}.
+
+\bibitem[Ben65]{Ben65}
+V\'aclav E. Bene\v{s}. \emph{Mathematical Theory of Connecting Networks
+and Telephone Traffic}. Academic Press, New York, 1965.
+
+
+\bibitem[BGHSV06]{BGHSV06}
+Eli Ben-Sasson, Oded Goldreich, Prahladh Harsha, Madhu Sudan,
+and Salil P. Vadhan. Robust PCPs of proximity, shorter PCPs, and
+applications to coding. \emph{SIAM Journal on Computing}
+36(4):889--974, 2006.
+\href{https://doi.org/10.1137/S0097539705446810}{doi:10.1137/S0097539705446810}.
+
+\bibitem[BGW70]{BGW70}
+Ronald V. Book, Sheila A. Greibach, and Ben Wegbreit.
+Time- and tape-bounded Turing acceptors and AFLs.
+\emph{Journal of Computer and System Sciences} 4(6):606--621, 1970.
+\href{https://doi.org/10.1016/S0022-0000(70)80031-9}{doi:10.1016/S0022-0000(70)80031-9}.
+
+
+\bibitem[BT94]{BT94}
+Richard Beigel and Jun Tarui. On ACC.
+\emph{Computational Complexity} 4:350--366, 1994.
+\href{https://doi.org/10.1007/BF01263423}{doi:10.1007/BF01263423}.
+
+\bibitem[BV14]{BV14}
+Eli Ben-Sasson and Emanuele Viola. Short PCPs with projection queries.
+In \emph{ICALP 2014}, pp.~163--173.
+\href{https://doi.org/10.1007/978-3-662-43948-7_14}{doi:10.1007/978-3-662-43948-7\_14}.
+Full version: \href{https://eccc.weizmann.ac.il/report/2014/017/}{ECCC TR14-017}.
+
+\bibitem[BW24]{BW24}
+Gabriel Bathie and R. Ryan Williams. Towards stronger depth lower
+bounds. In \emph{ITCS 2024}, LIPIcs~287, 10:1--10:24.
+\href{https://doi.org/10.4230/LIPIcs.ITCS.2024.10}{doi:10.4230/LIPIcs.ITCS.2024.10}.
+Full version: \href{https://eccc.weizmann.ac.il/report/2023/184/}{ECCC TR23-184}.
+
+\bibitem[CLW20]{CLW20}
+Lijie Chen, Xin Lyu, and R. Ryan Williams.
+Almost-everywhere circuit lower bounds from non-trivial derandomization.
+In \emph{FOCS 2020}, pp.~1--12.
+\href{https://doi.org/10.1109/FOCS46700.2020.00009}{doi:10.1109/FOCS46700.2020.00009}.
+Full version: \href{https://eccc.weizmann.ac.il/report/2020/150/}{ECCC TR20-150}.
+
+\bibitem[Cop82]{Cop82}
+Don Coppersmith. Rapid multiplication of rectangular matrices.
+\emph{SIAM Journal on Computing} 11(3):467--471, 1982.
+\href{https://doi.org/10.1137/0211037}{doi:10.1137/0211037}.
+
+\bibitem[CTW26]{CTW26}
+Lijie Chen, Avishay Tal, and Yichuan Wang.
+Super-quadratic lower bounds for depth-2 linear threshold circuits.
+In \emph{STOC 2026}, pp.~874--885.
+\href{https://doi.org/10.1145/3798129.3800802}{doi:10.1145/3798129.3800802}.
+Full version: \href{https://eccc.weizmann.ac.il/report/2026/039/}{ECCC TR26-039}.
+
+\bibitem[CW19]{CW19}
+Lijie Chen and R. Ryan Williams.
+Stronger connections between circuit analysis and circuit lower
+bounds, via PCPs of proximity.
+In \emph{CCC 2019}, LIPIcs~137, 19:1--19:43.
+\href{https://doi.org/10.4230/LIPIcs.CCC.2019.19}{doi:10.4230/LIPIcs.CCC.2019.19}.
+
+\bibitem[CW79]{CarterWegman}
+J. Lawrence Carter and Mark N. Wegman.
+\newblock Universal classes of hash functions.
+\newblock \emph{Journal of Computer and System Sciences}, 18(2):143--154, 1979.
+\newblock \href{https://doi.org/10.1016/0022-0000(79)90044-8}{doi:10.1016/0022-0000(79)90044-8}.
+
+
+\bibitem[Erd32]{Erdos32}
+Paul Erd\H{o}s. Beweis eines Satzes von Tschebyschef.
+\emph{Acta Litterarum ac Scientiarum, Szeged} 5:194--198, 1932.
+
+\bibitem[FS16]{FS16}
+Lance Fortnow and Rahul Santhanam. New non-uniform lower bounds for
+uniform classes. In \emph{CCC 2016}, LIPIcs~50, 19:1--19:14.
+\href{https://doi.org/10.4230/LIPIcs.CCC.2016.19}{doi:10.4230/LIPIcs.CCC.2016.19}.
+
+\bibitem[GGP99]{GGP99}
+R. J. Gardner, P. Gritzmann, and D. Prangenberg.
+On the computational complexity of reconstructing lattice sets from their X-rays.
+\emph{Discrete Mathematics} 202(1--3):45--71, 1999.
+\href{https://doi.org/10.1016/S0012-365X(98)00347-1}{doi:10.1016/S0012-365X(98)00347-1}.
+
+\bibitem[GJS76]{GJS76}
+Michael R. Garey, David S. Johnson, and Larry Stockmeyer.
+Some simplified NP-complete graph problems.
+\emph{Theoretical Computer Science} 1(3):237--267, 1976.
+\href{https://doi.org/10.1016/0304-3975(76)90059-1}{doi:10.1016/0304-3975(76)90059-1}.
+
+\bibitem[Ham50]{Hamming}
+Richard W. Hamming.
+Error detecting and error correcting codes.
+\emph{Bell System Technical Journal} 29(2):147--160, 1950.
+\href{https://doi.org/10.1002/j.1538-7305.1950.tb00463.x}{doi:10.1002/j.1538-7305.1950.tb00463.x}.
+
+\bibitem[HP10]{HP10}
+Kristoffer Arnsfelt Hansen and Vladimir V. Podolskii.
+Exact threshold circuits. In \emph{CCC 2010}, pp.~270--279.
+\href{https://doi.org/10.1109/CCC.2010.33}{doi:10.1109/CCC.2010.33}.
+
+\bibitem[HT01]{HT01}
+Lajos Hajdu and Robert Tijdeman. Algebraic aspects of discrete tomography.
+\emph{Journal f\"ur die reine und angewandte Mathematik} 534:119--128, 2001.
+\href{https://doi.org/10.1515/crll.2001.037}{doi:10.1515/crll.2001.037}.
+
+\bibitem[KW16]{KW16}
+Daniel M. Kane and R. Ryan Williams.
+Super-linear gate and super-quadratic wire lower bounds for depth-two
+and depth-three threshold circuits.
+In \emph{STOC 2016}, pp.~633--643.
+\href{https://doi.org/10.1145/2897518.2897636}{doi:10.1145/2897518.2897636}.
+Full version: \href{https://arxiv.org/abs/1511.07860}{arXiv:1511.07860}.
+
+\bibitem[Mat91]{Mat91}
+Ji\v{r}\'i Matou\v{s}ek. Computing dominances in \(E^n\).
+\emph{Information Processing Letters} 38(5):277--278, 1991.
+\href{https://doi.org/10.1016/0020-0190(91)90071-O}{doi:10.1016/0020-0190(91)90071-O}.
+
+\bibitem[MTT61]{MTT61}
+Saburo Muroga, Iwao Toda, and Satoru Takasu.
+Theory of majority decision elements.
+\emph{Journal of the Franklin Institute} 271(5):376--418, 1961.
+\href{https://doi.org/10.1016/0016-0032(61)90702-5}{doi:10.1016/0016-0032(61)90702-5}.
+
+\bibitem[MW20]{MW20}
+Cody D. Murray and R. Ryan Williams. Circuit lower bounds for
+nondeterministic quasi-polytime from a new easy witness lemma.
+\emph{SIAM Journal on Computing} 49(5):STOC18-300--STOC18-322, 2020.
+\href{https://doi.org/10.1137/18M1195887}{doi:10.1137/18M1195887}.
+The statement used is in Section~5, in the proof of Theorem~1.4,
+pp.~STOC18-316--STOC18-317, with footnote~5. Preprint:
+\href{https://eccc.weizmann.ac.il/report/2017/188/}{ECCC TR17-188}.
+
+\bibitem[Nag26a]{NagCubic}
+Dev Nag. Almost-everywhere near-cubic wire lower bounds for
+\(\SYM\circ\THR\) and \(\THR\circ\THR\).
+Preprint, 2026.
+\href{https://doi.org/10.5281/zenodo.22773981}{doi:10.5281/zenodo.22773981}.
+Lean formalization: \href{https://github.com/devnag/near-cubic-wires}{\nolinkurl{github.com/devnag/near-cubic-wires}}.
+Public report: \href{https://eccc.weizmann.ac.il/report/2026/167/}{ECCC TR26-167}.
+
+\bibitem[Nag26b]{Nag72}
+Dev Nag. Wire--correlation tradeoffs at exponent \(7/2\)
+for depth-two threshold circuits.
+Preprint, 2026.
+\href{https://doi.org/10.5281/zenodo.22774131}{doi:10.5281/zenodo.22774131}.
+Lean formalization: \href{https://github.com/devnag/wire_three_five}{\nolinkurl{github.com/devnag/wire_three_five}}.
+
+\bibitem[Nag26c]{NagCG}
+Dev Nag. Almost-everywhere near-cubic gate lower bounds for
+\(\SYM\circ\THR\) circuits.
+Preprint, 2026.
+\href{https://doi.org/10.5281/zenodo.23784263}{doi:10.5281/zenodo.23784263}.
+Lean companion:
+\href{https://github.com/devnag/near-cubic-gates-lean}{github.com/devnag/near-cubic-gates-lean}.
+
+\bibitem[NN93]{NN93}
+Joseph Naor and Moni Naor. Small-bias probability spaces: efficient
+constructions and applications. \emph{SIAM Journal on Computing}
+22(4):838--856, 1993.
+\href{https://doi.org/10.1137/0222053}{doi:10.1137/0222053}.
+
+
+\bibitem[SFM78]{SFM78}
+Joel I. Seiferas, Michael J. Fischer, and Albert R. Meyer.
+Separating nondeterministic time complexity classes.
+\emph{Journal of the ACM} 25(1):146--167, 1978.
+\href{https://doi.org/10.1145/322047.322061}{doi:10.1145/322047.322061}.
+
+
+\bibitem[Sho88]{Sho88}
+Victor Shoup. New algorithms for finding irreducible polynomials over
+finite fields. In \emph{FOCS 1988}, pp.~283--290. Cited
+through~\cite[Algorithm~17]{BCGT13}.
+
+
+\bibitem[STV01]{STV01}
+Madhu Sudan, Luca Trevisan, and Salil Vadhan.
+Pseudorandom generators without the XOR lemma.
+\emph{Journal of Computer and System Sciences} 62(2):236--266, 2001.
+\href{https://doi.org/10.1006/jcss.2000.1730}{doi:10.1006/jcss.2000.1730}. Full version: \href{https://eccc.weizmann.ac.il/report/1998/074/}{ECCC TR98-074}.
+
+\bibitem[Tam16]{Tam16}
+Suguru Tamaki. A satisfiability algorithm for depth two circuits
+with a sub-quadratic number of symmetric and threshold gates.
+\href{https://eccc.weizmann.ac.il/report/2016/100/}{ECCC TR16-100}, 2016.
+
+\bibitem[Tro12]{Tropp}
+Joel A. Tropp.
+User-friendly tail bounds for sums of random matrices.
+\emph{Foundations of Computational Mathematics} 12:389--434, 2012.
+\href{https://doi.org/10.1007/s10208-011-9099-z}{doi:10.1007/s10208-011-9099-z}.
+
+\bibitem[Ver18]{Vershynin18}
+Roman Vershynin. \emph{High-Dimensional Probability:
+An Introduction with Applications in Data Science}. First edition.
+Cambridge University Press, 2018.
+\href{https://doi.org/10.1017/9781108231596}{doi:10.1017/9781108231596}.
+
+\bibitem[Wil13]{Wil13}
+R. Ryan Williams. Improving exhaustive search implies superpolynomial
+lower bounds. \emph{SIAM Journal on Computing} 42(3):1218--1244, 2013.
+\href{https://doi.org/10.1137/10080703X}{doi:10.1137/10080703X}.
+
+\bibitem[WilACC14]{WilACC14}
+R. Ryan Williams. Nonuniform ACC circuit lower bounds.
+\emph{Journal of the ACM} 61(1), Article~2, 2014.
+\href{https://doi.org/10.1145/2559903}{doi:10.1145/2559903}.
+
+\end{thebibliography}
+
+\end{document}

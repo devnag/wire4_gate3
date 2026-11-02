@@ -1,0 +1,89 @@
+\begingroup
+\hypersetup{allcolors=black}
+\begin{figure}[!t]
+\centering
+\begin{tikzpicture}[x=1cm,y=1cm,>=Latex,
+ box/.style={draw,rounded corners=1.2pt,align=center,font=\footnotesize,
+  inner xsep=2.5pt,inner ysep=2.5pt,outer sep=0pt,
+  execute at begin node={\hyphenpenalty=10000\exhyphenpenalty=10000}},
+ input/.style={box,fill=black!12,text width=1.67cm,minimum height=1.75cm},
+ derived/.style={box,text width=1.92cm,minimum height=1.40cm},
+ component/.style={box,text width=1.90cm,minimum height=2.20cm},
+ new/.style={font=\footnotesize\bfseries,line width=.75pt},
+ edge/.style={->,line width=.45pt,shorten >=2pt},
+ bus/.style={line width=.45pt}]
+\node[input] (bcgt) at (-6.81,0) {BCGT\\Thm.~11.1\\\cite{BCGT13}};
+\node[input] (shoup) at (-4.54,0) {Shoup\\Alg.~17\\\cite{BCGT13}};
+\node[input] (stv) at (-2.27,0) {STV\\Thm.~29\\\cite{STV01}};
+\node[input,text width=1.77cm] (cw22) at (0,0) {CW\\Lem.~22\\sound.~\(1/2\)\\\cite{CW19}};
+\node[input] (cw26) at (2.27,0) {CW\\Lem.~26\\\cite{CW19}};
+
+\node[input,text width=1.77cm] (williams) at (6.81,0) {Williams\\Cor.~4.4\\\cite{WilACC14}};
+\begin{scope}[on background layer]
+ \draw[rounded corners=4pt,line width=.45pt] (-8.20,-1.25) rectangle (8.20,-10.55);
+\end{scope}
+\node[anchor=north west,align=left,font=\footnotesize,text width=1.60cm,
+ inner sep=0pt] (leanlabel) at (-8.00,-1.35)
+ {Lean 4};
+\node[derived] (pcp) at (-5.2,-2.10) {Short PCP\\\cite{MW20}};
+\node[derived] (amp) at (-2.6,-2.10) {Amplification\\\cite{CLW20}};
+\node[derived] (pcpp) at (0,-2.10) {Three-query\\PCPP\\\cite{CW19}};
+\node[derived] (refuter) at (2.6,-2.10) {Refuter\\\cite{CLW20}};
+
+\node[component] (cells) at (-6.81,-4.55) {Product-star\\cells: \(3/2\)\\\S\ref{sec:cells}};
+\node[component] (sampler) at (-4.086,-4.55) {Matrix\\sampler\\\S\ref{sec:sampler}};
+\node[component,new] (cycle) at (-1.362,-4.55) {Cycle-sum\\identity\\\S\ref{sec:cycle}};
+\node[component,new] (masks) at (1.362,-4.55) {Integer\\masks\\\S\ref{sec:masks}};
+\node[component] (localize) at (4.086,-4.55) {Localize: \(P\)\\Tomography\\\(P^{3/2}\)\\Population\\\(P^{5/2}\), \S\ref{sec:walks}};
+\node[component] (printing) at (6.81,-4.55) {Printing\\\S\ref{sec:printing}};
+\node[box,new,text width=3.70cm,minimum height=1.10cm] (counter) at (0,-6.85)
+ {Certified counting\\\cref{thm:counter}};
+\node[box,text width=3.70cm,minimum height=1.40cm] (classical) at (5.8,-6.85)
+ {Classical tools\\Hajdu--Tijdeman\\Beigel--Tarui};
+\node[box,new,text width=3.70cm,minimum height=1.10cm] (transfer) at (0,-8.35)
+ {Wire transfer\\\S\ref{sec:transfer}, \cref{app:transfer}};
+\node[box,text width=4.00cm,minimum height=1.10cm] (wire) at (-3.6,-9.85)
+ {Thm.~\ref{thm:main}: wires};
+\node[box,text width=4.00cm,minimum height=1.10cm] (gate) at (3.6,-9.85)
+ {Cor.~\ref{thm:gates}: gates};
+\draw[edge] (bcgt.south) -- (-6.81,-1.00) -- (-5.6,-1.00) -- (-5.6,-1.40);
+\draw[edge] (shoup.south) -- (-4.54,-1.10) -- (-4.8,-1.10) -- (-4.8,-1.40);
+\draw[edge] (stv.south) -- (-2.27,-1.05) -- (-2.6,-1.05) -- (amp.north);
+\draw[edge] (cw22.south) -- (0,-1.00) -- (-.4,-1.00) -- (-.4,-1.40);
+\draw[edge] (cw26.south) -- (2.27,-1.10) -- (.4,-1.10) -- (.4,-1.40);
+
+\draw[edge] (williams.south) -- (printing.north);
+\foreach \v in {pcp,amp,pcpp,refuter} {
+ \draw[bus] (\v.south) -- (\v.south |- 0,-3.05);
+}
+\draw[bus] (-8.02,-3.05) -- (2.6,-3.05);
+\foreach \x in {-5.2,-2.6,0,2.6} \fill (\x,-3.05) circle[radius=.025cm];
+\draw[edge] (-8.02,-3.05) -- (-8.02,-8.35) -- (transfer.west);
+\foreach \v in {cells,sampler,cycle,masks,localize,printing} {
+ \draw[bus] (\v.south) -- (\v.south |- 0,-5.95);
+}
+\draw[bus] (-6.81,-5.95) -- (6.81,-5.95);
+\foreach \x in {-6.81,-4.086,-1.362,1.362,4.086,6.81}
+ \fill (\x,-5.95) circle[radius=.025cm];
+\fill (0,-5.95) circle[radius=.035cm];
+\draw[edge] (0,-5.95) -- (counter.north);
+\draw[edge] (counter.south) -- (transfer.north);
+\draw[edge] (transfer.south) -- (0,-9.10) -- (-3.6,-9.10) -- (wire.north);
+\draw[edge] (wire.east) -- (gate.west);
+\end{tikzpicture}
+\par\smallskip
+{\footnotesize \(W/n^{3/2}\lesssim P\cdot P^{3/2}=P^{5/2},\quad P\approx n\quad\Longrightarrow\quad W\lesssim n^4\).\\
+Logarithmic factors suppressed: \(3/2+(1+3/2)=4\).}
+\par\smallskip
+{\footnotesize Lean: \texttt{NearQuarticWires.Release.main\_from\_published}:
+\texttt{PublishedInputs} $\to$ \texttt{JointStatement4}}
+\footnotesize
+\caption[Proof architecture]{Proof architecture. Shaded: the
+\publishedinputcount\ published results the formal proof assumes;
+bold: parts new relative to the author's preprints~\cite{Nag72,NagCG}; arrows: ``is used to prove''.
+Everything inside the frame is checked by the Lean kernel.\par
+The \(P\) factor is localization; the \(P^{3/2}\) window is tomography; their product bounds the allowed population. Classical tools: \cite{HT01,BT94} and \cref{sec:attribution}.\par
+Lean companion: \leanrepo.}
+\label{fig:proof-dag}
+\end{figure}
+\endgroup

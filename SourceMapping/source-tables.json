@@ -1,0 +1,1308 @@
+{
+  "schema": "near-cubic-gates/source-tables/1",
+  "tables": [
+    {
+      "id": "williams",
+      "page": "SourceMapping/5-rectangular-product.md",
+      "title": "Williams: rectangular integer matrix product",
+      "premises": [
+        "NearCubicGates.Published.Williams.RectangularProductLeaf"
+      ],
+      "notes": [
+        "Corollary 4.4 is the published statement. Corollary C.2 repeats it after the implementation discussion.",
+        "The source does not define a tape alphabet, transition-table encoding, matrix byte codec, or a rounding convention for N^{.1}. These remain explicit transcription conventions, not additional quotations attributed to the paper.",
+        "The source definition of poly and its explicit multitape implementation statements are quoted below. The Lean existential constants C and e instantiate that asymptotic convention.",
+        "The display N^{.1} is transcribed as printed; the Lean natural dimension m satisfies (m : Real) = N^(1/10). Because m is a natural number with (m : ℝ) = N^(1/10), the premise speaks only about perfect tenth powers N = k^10; this restricts (weakens) the printed statement, and the adapter `williams14_of_leaf` instantiates exactly N = k^10, m = k."
+      ],
+      "rows": [
+        {
+          "id": "williams-cor44",
+          "label": "Corollary 4.4",
+          "quotes": [
+            {
+              "id": "williams-cor44-source",
+              "source": "wilacc14-jacm",
+              "pdf_sha256": "78d7c472224906600e31369914d4210d875af894b92903c362c3c1cf680b021c",
+              "pdf_page": 17,
+              "printed_page": "2:17",
+              "locator": "Corollary 4.4",
+              "revision": "Published JACM 61(1), Article 2, January 2014, DOI 10.1145/2559903",
+              "text": "For all sufficiently large \\(N\\), two 0-1 matrices of dimensions \\(N\\times N^{.1}\\) and \\(N^{.1}\\times N\\) can be multiplied over the integers in \\(O(N^2\\cdot\\operatorname{poly}(\\log N))\\) time.",
+              "sha256": "c6353af3cb3c906b72cbb21fd93fad68555cddd4086a3716b08b074bd67f5d00",
+              "transcribed": true,
+              "transcription_note": "Transcribed from the rendered published page. Mathematical typesetting is represented in TeX; line wrapping and line-break hyphenation are joined. The source words and punctuation are retained.",
+              "omissions": []
+            }
+          ],
+          "lean": [
+            "NearCubicGates.Published.Williams.RectangularProductLeaf"
+          ],
+          "note": "The retained premise is this integer 0-1 matrix multiplication statement, expressed with one fixed machine and fixed asymptotic constants."
+        },
+        {
+          "id": "williams-poly-definition",
+          "label": "Polynomial-time notation",
+          "quotes": [
+            {
+              "id": "williams-poly-source",
+              "source": "wilacc14-jacm",
+              "pdf_sha256": "78d7c472224906600e31369914d4210d875af894b92903c362c3c1cf680b021c",
+              "pdf_page": 6,
+              "printed_page": "2:6",
+              "locator": "Notation paragraph",
+              "revision": "Published JACM 61(1), Article 2, January 2014, DOI 10.1145/2559903",
+              "text": "Inside of an algorithm description, the integer \\(n\\) refers to the length of the input to the algorithm. For a function \\(f:\\mathbb{N}\\to\\mathbb{N}\\), we use \\(\\operatorname{poly}(f(n))\\) to denote a growth rate of the form \\(cf(n)^c\\) for a constant \\(c\\).",
+              "sha256": "5872ff41be803eec1c43537274d2fe1347781373e9f6d52628782e750723dd1b",
+              "transcribed": true,
+              "transcription_note": "Transcribed from the rendered published page. Mathematical typesetting is represented in TeX; line wrapping and line-break hyphenation are joined. The source words and punctuation are retained.",
+              "omissions": []
+            }
+          ],
+          "lean": [
+            "NearCubicGates.Published.Williams.RectangularProductLeaf"
+          ],
+          "note": "The source uses asymptotic notation; the Lean premise exposes the constant, exponent, and onset explicitly. The logarithm base in Lean is a representation convention."
+        },
+        {
+          "id": "williams-multitape",
+          "label": "Multitape implementation",
+          "quotes": [
+            {
+              "id": "williams-multitape-source",
+              "source": "wilacc14-jacm",
+              "pdf_sha256": "78d7c472224906600e31369914d4210d875af894b92903c362c3c1cf680b021c",
+              "pdf_page": 26,
+              "printed_page": "2:26",
+              "locator": "Appendix C, paragraph after Lemma 6.1",
+              "revision": "Published JACM 61(1), Article 2, January 2014, DOI 10.1145/2559903",
+              "text": "Prima facie, it could be that Coppersmith’s algorithm is nonuniform, making it difficult to apply. For the sake of completeness, here we verify using standard ideas that Coppersmith’s algorithm can indeed be implemented to run (even on a multitape TM) in \\(O(N^2\\cdot\\operatorname{poly}(\\log N))\\) time, on matrices over any field of \\(\\operatorname{poly}(N)\\) elements. (As we work with 0-1 matrices \\(A^{\\prime\\prime}\\) and \\(B^{\\prime\\prime}\\) in our application, it suffices for us to work over a prime field of \\(\\operatorname{poly}(N)\\) elements.)",
+              "sha256": "23a6ff8db92c8fff58f6ca78052c1a22362eee9485969480f943038461502478",
+              "transcribed": true,
+              "transcription_note": "Transcribed from the rendered published page. Mathematical typesetting is represented in TeX; line wrapping and line-break hyphenation are joined. The source words and punctuation are retained.",
+              "omissions": []
+            }
+          ],
+          "lean": [
+            "NearCubicGates.Published.Williams.MultitapeTM",
+            "NearCubicGates.Published.Williams.MultitapeTM.step",
+            "NearCubicGates.Published.Williams.MultitapeTM.run",
+            "NearCubicGates.Published.Williams.MultitapeTM.initial"
+          ],
+          "note": "Williams supplies the explicit multitape implementation assertion. The concrete finite alphabet, one-sided tapes, transition semantics, and input/output layout are the transcription conventions documented in Statement.lean, not source definitions supplied by Appendix C."
+        },
+        {
+          "id": "williams-corC2",
+          "label": "Corollary C.2",
+          "quotes": [
+            {
+              "id": "williams-corC2-source",
+              "source": "wilacc14-jacm",
+              "pdf_sha256": "78d7c472224906600e31369914d4210d875af894b92903c362c3c1cf680b021c",
+              "pdf_page": 29,
+              "printed_page": "2:29",
+              "locator": "Corollary C.2",
+              "revision": "Published JACM 61(1), Article 2, January 2014, DOI 10.1145/2559903",
+              "text": "For all sufficiently large \\(N\\), two 0-1 matrices of dimensions \\(N\\times N^{.1}\\) and \\(N^{.1}\\times N\\) can be multiplied over the integers in \\(O(N^2\\cdot\\operatorname{poly}(\\log N))\\) time.",
+              "sha256": "c6353af3cb3c906b72cbb21fd93fad68555cddd4086a3716b08b074bd67f5d00",
+              "transcribed": true,
+              "transcription_note": "Transcribed from the rendered published page. Mathematical typesetting is represented in TeX; line wrapping and line-break hyphenation are joined. The source words and punctuation are retained.",
+              "omissions": []
+            }
+          ],
+          "lean": [
+            "NearCubicGates.Published.Williams.integerProduct",
+            "NearCubicGates.Published.Williams.RectangularProductLeaf"
+          ],
+          "note": "This repeats Corollary 4.4 after the implementation discussion. integerProduct is ordinary integer multiplication of zero-one matrices; rowMajor, inputWord, numberWord and outputWord fix the otherwise-unspecified representation."
+        }
+      ]
+    },
+    {
+      "id": "bcgt-fixed",
+      "page": "SourceMapping/6-short-pcp.md",
+      "title": "BCGT13: the printed source and the proof-established fixed-tuple release premise",
+      "premises": [
+        "NearCubicGates.Published.BCGT13.BCGT13_Theorem11_1_Fixed"
+      ],
+      "notes": [
+        "The source column prints the published statements as printed, including the original soundness formula. The retained fixed-tuple bound and the recorded listing conventions are identified explicitly; they are not substituted into a purported verbatim quotation.",
+        "Mathematical typography is transcribed using Unicode and plain-text superscripts/subscripts, and every such quote is marked transcribed. The full source PDF identity and physical/printed locators are given for independent comparison.",
+        "The rows below also give the definitions and verifier listings that the fixed BCGT13 statement uses. Source listings are verbatim; transcription choices and proved adjustments are stated outside the quotations."
+      ],
+      "rows": [
+        {
+          "id": "bcgt-theorem",
+          "label": "Printed Theorem 11.1 beside the retained fixed-tuple premise",
+          "quotes": [
+            {
+              "id": "bcgt11-1-soundness",
+              "source": "bcgt13-eccc-TR12-045-rev3",
+              "pdf_sha256": "9f16fb370af704e8a08429608ab93c1c4934d806661d0064bd881615cc4d7aa0",
+              "pdf_page": 51,
+              "printed_page": "51",
+              "locator": "Theorem 11.1, first display and its parameter introduction",
+              "revision": "BCGT ECCC TR12-045 revision 3, December 28, 2012",
+              "text": "Theorem 11.1. The (strong) PCPP verifiers V_RS and V_VRS have respective soundness functions\ns_RS(δ,n) ≥ (1/(1 + (2^(η+1) + κ^(log c))/(1−2^(−η)))) δ and\ns_VRS(δ,n) ≥ (1/(2 + (2^(η+1) + κ^(log c))/(1−2^(−η)))) δ,\nwhere n = 2^κ, (η,κ_0,γ,µ) are any integers satisfying",
+              "sha256": "fe8b07561c4a15ebd7f82c83334d6fcb7142277d42b6479f6c7936e61b957423",
+              "transcribed": true,
+              "transcription_note": "Mathematical notation transcribed from the rendered page; superscripts/subscripts are written using ^ and _, fractions using parentheses, with typographic line wrapping normalized.",
+              "omissions": []
+            }
+          ],
+          "lean": [
+            "NearCubicGates.Published.BCGT13.BCGT13_Theorem11_1_Fixed",
+            "NearCubicGates.Published.BCGT13.Tuple.fixed",
+            "NearCubicGates.Published.BCGT13.repairedSoundTerm"
+          ],
+          "note": "The source column is the original printed sum-form bound. The Lean field is the separately identified proof-established weakening at (2,4,0,1), with K(κ)=16κ^(log₂c); these are not claimed to be literal identical formulas. The derivation and witnesses above explain the retained bound."
+        },
+        {
+          "id": "bcgt-parameters",
+          "label": "Printed parameter conditions and the printed definition of c",
+          "quotes": [
+            {
+              "id": "bcgt11-1-parameters",
+              "source": "bcgt13-eccc-TR12-045-rev3",
+              "pdf_sha256": "9f16fb370af704e8a08429608ab93c1c4934d806661d0064bd881615cc4d7aa0",
+              "pdf_page": 51,
+              "printed_page": "51",
+              "locator": "Theorem 11.1, all seven conditions and the definition of c",
+              "revision": "BCGT ECCC TR12-045 revision 3, December 28, 2012",
+              "text": "min{⌊(κ_0+1)/2⌋−γ, ⌈(κ_0+1)/2⌉+γ} ≥ 1\nmax{⌊(κ_0+1)/2⌋−γ+µ+1, ⌈(κ_0+1)/2⌉+γ} ≤ κ_0\nmin{⌊(κ_0+1)/2⌋−γ+µ+1, ⌈(κ_0+1)/2⌉+γ} ≥ η+1\nκ_0 + (3+(−1)^(κ_0 mod 2))/2 > ⌊(κ_0 + (3+(−1)^(κ_0 mod 2))/2)/2⌋−γ+µ+1,\nκ_0 + (1+(−1)^(κ_0 mod 2))/2 > ⌊(κ_0 + (1+(−1)^(κ_0 mod 2))/2)/2⌋+γ\nµ+1 ≥ η ≥ max{2,µ+1}\nµ ≥ γ\nand\nc := (a + b/2 + √(b(b+4a))/2)^(1/min{e_1,e_2}), where\nc_0 := 4/(1−1/2^(η−1)−1/2^η)^2,\na := 2^(η+1)(1+c_0)/(2^(η−1)−1) > 0,\nb := 2^(µ+2) > 0,\ne_1 := log((κ_0+(3+(−1)^(κ_0 mod 2))/2)/(⌊(κ_0+(3+(−1)^(κ_0 mod 2))/2)/2⌋−γ+µ+1)),\ne_2 := log((κ_0+(1+(−1)^(κ_0 mod 2))/2)/(⌈(κ_0+(1+(−1)^(κ_0 mod 2))/2)/2⌉+γ)).",
+              "sha256": "dee501ec04385fc4bee3214c25085dc2a8fc89c49abfef82040ef16c0abba527",
+              "transcribed": true,
+              "transcription_note": "Mathematical notation transcribed from the rendered page; superscripts/subscripts are written using ^ and _, fractions using parentheses, with typographic line wrapping normalized.",
+              "omissions": [
+                "The parenthetical alternative effective-c discussion after the displayed definition is omitted."
+              ]
+            }
+          ],
+          "lean": [
+            "NearCubicGates.Published.BCGT13.Equation6",
+            "NearCubicGates.Published.BCGT13.floorHalf",
+            "NearCubicGates.Published.BCGT13.ceilHalf",
+            "NearCubicGates.Published.BCGT13.sThree",
+            "NearCubicGates.Published.BCGT13.sOne",
+            "NearCubicGates.Published.BCGT13.constC",
+            "NearCubicGates.Published.BCGT13.soundTerm",
+            "NearCubicGates.Published.BCGT13.Tuple",
+            "NearCubicGates.Published.BCGT13.Tuple.Valid",
+            "NearCubicGates.Published.BCGT13.Tuple.PositiveExponents"
+          ],
+          "note": "The published parameters are integers; the retained release tuple is natural. The separate positive-exponent condition states the domain on which the displayed reciprocal exponent is defined. Base-two logarithms are the documented transcription convention."
+        },
+        {
+          "id": "bcgt-code-definitions",
+          "label": "Polynomial evaluation, degree bounds, RS and VRS",
+          "quotes": [
+            {
+              "id": "bcgt-def4-1",
+              "source": "bcgt13-eccc-TR12-045-rev3",
+              "pdf_sha256": "9f16fb370af704e8a08429608ab93c1c4934d806661d0064bd881615cc4d7aa0",
+              "pdf_page": 18,
+              "printed_page": "18",
+              "locator": "Definition 4.1",
+              "revision": "BCGT ECCC TR12-045 revision 3, December 28, 2012",
+              "text": "Definition 4.1. Let 𝔽 be a field and S a subset of 𝔽. The evaluation of a polynomial P(x) = ∑_(i=0)^d a_i x^i over S is the function p : S → 𝔽 defined by p(s) = P(s) for all s ∈ S. The formal sum P(x) is called the polynomial corresponding to (the function) p. Similar definitions hold for multivariate polynomials.",
+              "sha256": "3dfee08cbe8bdc68e62e7526f7edece77cbb09b4ca115e28917860b290888f1b",
+              "transcribed": true,
+              "transcription_note": "Mathematical notation transcribed from the rendered page; superscripts/subscripts are written using ^ and _, fractions using parentheses, with typographic line wrapping normalized.",
+              "omissions": []
+            },
+            {
+              "id": "bcgt-def4-2-to4-4",
+              "source": "bcgt13-eccc-TR12-045-rev3",
+              "pdf_sha256": "9f16fb370af704e8a08429608ab93c1c4934d806661d0064bd881615cc4d7aa0",
+              "pdf_page": 18,
+              "printed_page": "18",
+              "locator": "Definitions 4.2–4.4",
+              "revision": "BCGT ECCC TR12-045 revision 3, December 28, 2012",
+              "text": "Definition 4.2. Let 𝔽 be a field and d ≥ 0. A polynomial P (x) over 𝔽 has degree d if the\ndegree of P in x is at most d.\n\nDefinition 4.3. Let 𝔽 be a field, S a subset of 𝔽, and d ≥ 0. The Reed–Solomon code of\ndegree d over 𝔽 evaluated at S is the set of functions\n\nRS(𝔽, S, d) := {p : S → 𝔽 s.t. p is an evaluation of a polynomial of degree at most d over S} .\n\nDefinition 4.4. Let 𝔽 be a field, S and H subsets of 𝔽, and d ≥ 0. The H-vanishing Reed–\nSolomon code of degree d over 𝔽 evaluated at S is the set of functions\n\nVRS(𝔽, S, H, d) := {p ∈ RS(𝔽, S, d) s.t. the polynomial corresponding to p vanishes on H} .",
+              "sha256": "cb38342d78a995f2a43a93a800da8e63dd9029a3ecd53bb0b3af7ba102d79626",
+              "transcribed": true,
+              "transcription_note": "The wording and line wrapping of the pinned layout-text extraction are retained; blackboard field symbols are transcribed from the rendered pinned page.",
+              "omissions": []
+            }
+          ],
+          "lean": [
+            "NearCubicGates.Published.BCGT13.RS",
+            "NearCubicGates.Published.BCGT13.VRS"
+          ],
+          "note": "The source’s phrase “has degree d” means degree at most d (Definition 4.2). The formal functions extend from a finite evaluation set to the whole ambient field; equality is required only on the named set, as the source states."
+        },
+        {
+          "id": "bcgt-distances",
+          "label": "Fractional distance and distance to the RS code",
+          "quotes": [
+            {
+              "id": "bcgt-def4-7",
+              "source": "bcgt13-eccc-TR12-045-rev3",
+              "pdf_sha256": "9f16fb370af704e8a08429608ab93c1c4934d806661d0064bd881615cc4d7aa0",
+              "pdf_page": 18,
+              "printed_page": "18",
+              "locator": "Definition 4.7",
+              "revision": "BCGT ECCC TR12-045 revision 3, December 28, 2012",
+              "text": "Definition 4.7. Let Σ be a finite alphabet and N a positive integer. For any two Σ-strings a and b in Σ^N, the fractional (Hamming) distance over the alphabet Σ between a and b, denoted Δ_N(a,b), is equal to the number of positions where a and b differ divided by N,\nΔ_N(a,b) := |{i∈N : a_i ≠ b_i}|/N.",
+              "sha256": "22d1f384a03a51b25485a3b6b9727f25b2dcb48715a7bd9faefdf2698957f71c",
+              "transcribed": true,
+              "transcription_note": "Mathematical notation transcribed from the rendered page; superscripts/subscripts are written using ^ and _, fractions using parentheses, with typographic line wrapping normalized.",
+              "omissions": [
+                "The subsequent sentence about viewing strings as functions is omitted."
+              ]
+            },
+            {
+              "id": "bcgt-def4-8",
+              "source": "bcgt13-eccc-TR12-045-rev3",
+              "pdf_sha256": "9f16fb370af704e8a08429608ab93c1c4934d806661d0064bd881615cc4d7aa0",
+              "pdf_page": 19,
+              "printed_page": "19",
+              "locator": "Definition 4.8",
+              "revision": "BCGT ECCC TR12-045 revision 3, December 28, 2012",
+              "text": "Definition 4.8. Let 𝔽 be a field, V a subset of 𝔽, f : V → 𝔽 a univariate function, and d ≥ 0. We denote by δ_V^(d)(f) the fractional Hamming distance of f to RS(𝔽,V,d), i.e.,\nδ_V^(d)(f) := inf_(P∈𝔽[x], deg_x(P)≤d) Δ_V(f,P).",
+              "sha256": "d74bbf5d1e9e1b150923db2596d8e160d3935a4a98c01fe03873eaa6bd5399a5",
+              "transcribed": true,
+              "transcription_note": "Mathematical notation transcribed from the rendered page; superscripts/subscripts are written using ^ and _, fractions using parentheses, with typographic line wrapping normalized.",
+              "omissions": []
+            }
+          ],
+          "lean": [
+            "NearCubicGates.Published.BCGT13.fracDist",
+            "NearCubicGates.Published.BCGT13.RS"
+          ],
+          "note": "The retained soundness is quantified over every codeword; on the finite source evaluation set this expresses the corresponding distance lower bound without an extra approximate-minimum choice."
+        },
+        {
+          "id": "bcgt-strong-pcpp",
+          "label": "The source PCPP vocabulary and strong completeness/soundness",
+          "quotes": [
+            {
+              "id": "bcgt-pcpp-verifier-definition",
+              "source": "bcgt13-eccc-TR12-045-rev3",
+              "pdf_sha256": "9f16fb370af704e8a08429608ab93c1c4934d806661d0064bd881615cc4d7aa0",
+              "pdf_page": 20,
+              "printed_page": "20",
+              "locator": "Paragraph defining an (r,q)-PCPP verifier",
+              "revision": "BCGT ECCC TR12-045 revision 3, December 28, 2012",
+              "text": "For functions r,q : ℕ → ℕ we say that a probabilistic oracle machine V is a (r,q)-PCPP verifier if, given an explicit input x = (x′,N′) with |x′| = n and oracle access to an N-bit implicit input y and proof π, V runs in time 2^(O(r(n))), tosses r(n) coins, makes q(n) queries to (y,π), and outputs either 1 (“accept”) or 0 (“reject”).",
+              "sha256": "825cc5a6e40d4593ccd82076f4dd6ca7fcd45549bd435748869fb37257abbdc0",
+              "transcribed": true,
+              "transcription_note": "Mathematical notation transcribed from the rendered page; superscripts/subscripts are written using ^ and _, fractions using parentheses, with typographic line wrapping normalized.",
+              "omissions": []
+            },
+            {
+              "id": "bcgt-def4-15",
+              "source": "bcgt13-eccc-TR12-045-rev3",
+              "pdf_sha256": "9f16fb370af704e8a08429608ab93c1c4934d806661d0064bd881615cc4d7aa0",
+              "pdf_page": 20,
+              "printed_page": "20",
+              "locator": "Definition 4.15",
+              "revision": "BCGT ECCC TR12-045 revision 3, December 28, 2012",
+              "text": "Definition 4.15. Let s ∈ (0,1] × ℕ → (0,1] and r,q : ℕ → ℕ. A pair language L belongs to the class Strong-PCP_(s(δ,n))[r(n),q(n)] if there exists a (r,q)-PCPP verifier V_L such that the following holds:\n1. (Perfect) Completeness: If (x,y) ∈ L then there exists π such that Pr_R[V_L^(y,π)(x;R) = 1] = 1.\n2. Soundness: For every π it holds that Pr_R[V_L^(y,π)(x;R) = 1] ≤ 1−s(Δ(y,L_x),n).",
+              "sha256": "acebbfea8d671fb0270acad0b7653b5e092cb501699c8c86ad15051cc94f739b",
+              "transcribed": true,
+              "transcription_note": "Mathematical notation transcribed from the rendered page; superscripts/subscripts are written using ^ and _, fractions using parentheses, with typographic line wrapping normalized.",
+              "omissions": []
+            }
+          ],
+          "lean": [
+            "NearCubicGates.Published.BCGT13.FlatVerifier",
+            "NearCubicGates.Published.BCGT13.FlatVerifier.answers",
+            "NearCubicGates.Published.BCGT13.FlatVerifier.accepts",
+            "NearCubicGates.Published.BCGT13.FlatVerifier.acceptProb",
+            "NearCubicGates.Published.BCGT13.BCGT13_Theorem11_1_Fixed"
+          ],
+          "note": "The table prints the source’s generic verifier convention as well as Definition 4.15. The retained BCGT premise contains the semantic completeness and soundness clauses for the named verifiers, without a separate running-time field; the physical constructor and its costs are supplied by proved adapters, as explained above."
+        },
+        {
+          "id": "bcgt-nonadaptive-definition1214",
+          "label": "Definition 12.14: non-adaptive PCPP verifier",
+          "quotes": [
+            {
+              "id": "bcgt-definition1214-source",
+              "source": "bcgt13-eccc-TR12-045-rev3",
+              "pdf_sha256": "9f16fb370af704e8a08429608ab93c1c4934d806661d0064bd881615cc4d7aa0",
+              "pdf_page": 75,
+              "printed_page": "75",
+              "locator": "Definition 12.14",
+              "revision": "ECCC TR12-045 revision 3, December 28, 2012",
+              "text": "A PCPP verifier \\(V\\) is non-adaptive if its queries are based only on the explicit input and its internal coin tosses, independently of the answers given to previous queries. That is, \\(V\\) can be decomposed into a pair of algorithms \\(Q\\) and \\(D\\) such that on explicit input \\(x\\) and a random tape \\(r\\), the verifier makes the query sequence \\(Q(x,r,1),\\ldots,Q(x,r,p(|x|))\\), obtains the answers \\(b_1,\\ldots,b_{p(|x|)}\\), and decides according to \\(D(x,r,b_1\\cdots b_{p(|x|)})\\), where \\(p\\) is some fixed polynomial.",
+              "sha256": "7cb82a034afcce6640f0059eb6b10885f97ce2d208f271bf349a4df419771e05",
+              "transcribed": true,
+              "transcription_note": "Transcribed against the rendered published page. Mathematical typesetting is represented in TeX; line wrapping and line-break hyphenation are joined. Printed formulas, indices and conditions are retained without repair.",
+              "omissions": []
+            }
+          ],
+          "lean": [
+            "NearCubicGates.Published.BCGT13.FlatVerifier",
+            "NearCubicGates.Published.BCGT13.FlatVerifier.answers",
+            "NearCubicGates.Published.BCGT13.FlatVerifier.accepts",
+            "NearCubicGates.Published.BCGT13.FlatVerifier.acceptProb"
+          ],
+          "note": "FlatVerifier records the separate query and decision functions, together with randomness, query count and proof length. The 1-based concatenated input/proof indexing, the optional query value, and zero answers outside the valid domain are explicit transcription conventions; they are not extra source quotations or efficiency claims."
+        },
+        {
+          "id": "bcgt-oracle-alphabet-remark1215",
+          "label": "Remark 12.15: field-element oracles",
+          "quotes": [
+            {
+              "id": "bcgt-remark1215-source",
+              "source": "bcgt13-eccc-TR12-045-rev3",
+              "pdf_sha256": "9f16fb370af704e8a08429608ab93c1c4934d806661d0064bd881615cc4d7aa0",
+              "pdf_page": 75,
+              "printed_page": "75",
+              "locator": "Remark 12.15",
+              "revision": "ECCC TR12-045 revision 3, December 28, 2012",
+              "text": "Note that the alphabet of proof oracles (as well as implicit inputs) are elements of a finite field \\(\\mathbb{F}_{2^\\ell}\\), and not bits. Thus, our descriptions of \\(Q\\) and \\(D\\) will reason about indexing into strings of such field elements. The departure from binary oracles is mostly inconsequential, with the exception of a minor note that will come up later in the proof of almost universal arguments. (See Remark 12.41.)",
+              "sha256": "a99c88bd241e17066b611ba696b41bad1de2421f516c2a91c8a66640bfd6b4f9",
+              "transcribed": true,
+              "transcription_note": "Transcribed against the rendered published page. Mathematical typesetting is represented in TeX; line wrapping and line-break hyphenation are joined. Printed formulas, indices and conditions are retained without repair.",
+              "omissions": []
+            }
+          ],
+          "lean": [
+            "NearCubicGates.Published.BCGT13.FlatVerifier",
+            "NearCubicGates.Published.BCGT13.FlatVerifier.answers"
+          ],
+          "note": "The flat oracle answers are field elements. Binary serialization and any conversion to ordinary machines are separate proved adapters; they are not attributed to this remark."
+        },
+        {
+          "id": "bcgt-getrandelt-algorithm19",
+          "label": "Algorithm 19: GetRandElt",
+          "quotes": [
+            {
+              "id": "bcgt-algorithm19-source",
+              "source": "bcgt13-eccc-TR12-045-rev3",
+              "pdf_sha256": "9f16fb370af704e8a08429608ab93c1c4934d806661d0064bd881615cc4d7aa0",
+              "pdf_page": 125,
+              "printed_page": "125",
+              "locator": "Algorithm 19, complete listing",
+              "revision": "ECCC TR12-045 revision 3, December 28, 2012",
+              "text": "inputs:\n• \\(I_\\ell\\), irreducible polynomial of degree \\(\\ell\\) over \\(\\mathbb{F}_2\\) with root \\(\\mathsf{x}\\), inducing the field extension \\(\\mathbb{F}_{2^\\ell}:=\\mathbb{F}_2(\\mathsf{x})\\)\n• \\(\\mathcal{B}_S=(a_1,\\ldots,a_\\kappa)\\) and \\(\\mathcal{O}_S\\), basis and offset for the \\(\\kappa\\)-dimensional affine subspace \\(S\\subseteq\\mathbb{F}_{2^\\ell}\\)\n• \\((r_1,\\ldots,r_\\kappa)\\), random binary string used to select the element of \\(S\\)\noutput:\n• \\(\\alpha\\), selected element of \\(S\\)\n\n1. \\(\\alpha:=(\\sum_{j=1}^{\\kappa}r_j a_j)+\\mathcal{O}_S\\)\n2. output \\(\\alpha\\)\n\nnotes:\n• the random bits are simply the coefficients of the linear combination",
+              "sha256": "7af156f64be147247c0f5b4a7e44b99ac33539142d21e310b729924b58888b4a",
+              "transcribed": true,
+              "transcription_note": "Transcribed against the rendered published page. Mathematical typesetting is represented in TeX; line wrapping and line-break hyphenation are joined. Printed formulas, indices and conditions are retained without repair.",
+              "omissions": []
+            }
+          ],
+          "lean": [
+            "NearCubicGates.Published.BCGT13.getRandElt"
+          ],
+          "note": "The displayed field-linear combination is transcribed directly. Reading absent bits as zero and ignoring extra bits merely totalizes the Lean function outside the stated random-string length."
+        },
+        {
+          "id": "bcgt-eltwithindex-algorithm20",
+          "label": "Algorithm 20: GetEltWithIndex",
+          "quotes": [
+            {
+              "id": "bcgt-algorithm20-source",
+              "source": "bcgt13-eccc-TR12-045-rev3",
+              "pdf_sha256": "9f16fb370af704e8a08429608ab93c1c4934d806661d0064bd881615cc4d7aa0",
+              "pdf_page": 125,
+              "printed_page": "125",
+              "locator": "Algorithm 20, complete listing",
+              "revision": "ECCC TR12-045 revision 3, December 28, 2012",
+              "text": "inputs:\n• \\(I_\\ell\\), irreducible polynomial of degree \\(\\ell\\) over \\(\\mathbb{F}_2\\) with root \\(\\mathsf{x}\\), inducing the field extension \\(\\mathbb{F}_{2^\\ell}:=\\mathbb{F}_2(\\mathsf{x})\\)\n• \\(\\mathcal{B}_S=(a_1,\\ldots,a_\\kappa)\\) and \\(\\mathcal{O}_S\\), basis and offset for the \\(\\kappa\\)-dimensional affine subspace \\(S\\subseteq\\mathbb{F}_{2^\\ell}\\)\n• \\(i\\), index in \\(\\{1,\\ldots,2^\\kappa\\}\\) of the desired element of \\(S\\)\noutput:\n• \\(\\alpha\\), selected element of \\(S\\)\n\n1. \\(\\alpha:=(\\sum_{j=1}^{\\kappa}i_j a_j)+\\mathcal{O}_S\\)\n2. output \\(\\alpha\\)\n\nnotes:\n• \\(i_1\\cdots i_\\kappa\\) is \\((i-1)\\) in binary",
+              "sha256": "9cfca55083d69d95aae38b925898d7199b0ea889b8d03b513e14a972d93be381",
+              "transcribed": true,
+              "transcription_note": "Transcribed against the rendered published page. Mathematical typesetting is represented in TeX; line wrapping and line-break hyphenation are joined. Printed formulas, indices and conditions are retained without repair.",
+              "omissions": []
+            }
+          ],
+          "lean": [
+            "NearCubicGates.Published.BCGT13.eltWithIndex",
+            "NearCubicGates.Published.BCGT13.indexOfElt",
+            "NearCubicGates.Published.BCGT13.span",
+            "NearCubicGates.Published.BCGT13.IsBasis"
+          ],
+          "note": "Lean fixes the bit order to least significant first and defines the inverse index by the same finite enumeration, returning zero if no index exists. These ordering and off-domain choices are recorded conventions. IsBasis states that the enumeration contains exactly 2^κ distinct points."
+        },
+        {
+          "id": "bcgt-subspacepoly-algorithm21",
+          "label": "Algorithm 21: FindSubspPoly output",
+          "quotes": [
+            {
+              "id": "bcgt-algorithm21-output-source",
+              "source": "bcgt13-eccc-TR12-045-rev3",
+              "pdf_sha256": "9f16fb370af704e8a08429608ab93c1c4934d806661d0064bd881615cc4d7aa0",
+              "pdf_page": 126,
+              "printed_page": "126",
+              "locator": "Algorithm 21, inputs and output specification",
+              "revision": "ECCC TR12-045 revision 3, December 28, 2012",
+              "text": "inputs:\n• \\(I_\\ell\\), irreducible polynomial of degree \\(\\ell\\) over \\(\\mathbb{F}_2\\) with root \\(\\mathsf{x}\\), inducing the field extension \\(\\mathbb{F}_{2^\\ell}:=\\mathbb{F}_2(\\mathsf{x})\\)\n• \\(\\mathcal{B}_S=(a_1,\\ldots,a_\\kappa)\\) and \\(\\mathcal{O}_S\\), basis and offset for the \\(\\kappa\\)-dimensional affine subspace \\(S\\subseteq\\mathbb{F}_{2^\\ell}\\)\noutput:\n• \\([Z_S]^{\\mathsf A}\\), an \\(O(\\kappa)\\) arithmetic circuit for computing \\(Z_S(x)=\\sum_{i=0}^{\\kappa}\\beta_i x^{2^i}+\\gamma\\), the vanishing polynomial for the affine subspace \\(S\\)",
+              "sha256": "fbceb1765d718008cb176c008bf60120456785e64c198aa599dc17bf1801f953",
+              "transcribed": true,
+              "transcription_note": "Transcribed against the rendered published page. Mathematical typesetting is represented in TeX; line wrapping and line-break hyphenation are joined. Printed formulas, indices and conditions are retained without repair.",
+              "omissions": [
+                "Algorithm 21 steps 1–3 and its subsequent recursion notes are omitted after this complete input/output specification. No edited version of those steps is quoted."
+              ]
+            }
+          ],
+          "lean": [
+            "NearCubicGates.Published.BCGT13.zEval"
+          ],
+          "note": "zEval denotes the value of the vanishing polynomial. This row does not assume the printed circuit construction or its complexity bound; it records the named output used by the mathematical verifier."
+        },
+        {
+          "id": "bcgt-subspaceinterp-algorithm23",
+          "label": "Algorithm 23: SubspaceInterp output",
+          "quotes": [
+            {
+              "id": "bcgt-algorithm23-output-source",
+              "source": "bcgt13-eccc-TR12-045-rev3",
+              "pdf_sha256": "9f16fb370af704e8a08429608ab93c1c4934d806661d0064bd881615cc4d7aa0",
+              "pdf_page": 128,
+              "printed_page": "128",
+              "locator": "Algorithm 23, inputs and output specification",
+              "revision": "ECCC TR12-045 revision 3, December 28, 2012",
+              "text": "inputs:\n• \\(I_\\ell\\), irreducible polynomial of degree \\(\\ell\\) over \\(\\mathbb{F}_2\\) with root \\(\\mathsf{x}\\), inducing the field extension \\(\\mathbb{F}_{2^\\ell}:=\\mathbb{F}_2(\\mathsf{x})\\)\n• \\(\\mathcal{B}_S=(a_1,\\ldots,a_\\kappa)\\) and \\(\\mathcal{O}_S\\), basis and offset for the \\(\\kappa\\)-dimensional affine subspace \\(S\\subseteq\\mathbb{F}_{2^\\ell}\\)\n• \\((\\alpha_0,\\ldots,\\alpha_{2^\\kappa-1})\\), elements in \\(\\mathbb{F}_{2^\\ell}\\)\noutput:\n• \\(P(x)=\\sum_{i=0}^{d}\\beta_i x^i\\), with \\(d<2^\\kappa\\), such that \\(P(\\sum_{i=1}^{\\kappa}b_i a_i)=\\alpha_{\\sum_{i=i}^{\\kappa}b_i2^{i-1}}\\) for \\(b_1\\cdots b_\\kappa\\in\\{0,1\\}^{\\kappa}\\)",
+              "sha256": "2f9aa136d1090e875f57b34b3a9596efe1602f1c6f879b26cbb754e1d976c244",
+              "transcribed": true,
+              "transcription_note": "Transcribed against the rendered published page. Mathematical typesetting is represented in TeX; line wrapping and line-break hyphenation are joined. Printed formulas, indices and conditions are retained without repair.",
+              "omissions": [
+                "Algorithm 23 step 1, the recursive definition of A, and its final note are omitted after this complete printed input/output specification. No repaired recursive listing is substituted."
+              ]
+            }
+          ],
+          "lean": [
+            "NearCubicGates.Published.BCGT13.degreeTest"
+          ],
+          "note": "The source output line is reproduced as printed, including its sum subscript i=i and absence of an offset in that displayed interpolation argument. The Lean degreeTest uses the mathematical interpolation condition on the actual affine points from eltWithIndex; the existing convention/deviation discussion is retained outside the quotation. No printed recursive implementation is imported here."
+        },
+        {
+          "id": "bcgt-verifier-algorithm12",
+          "label": "Algorithm 12: V_VRS",
+          "quotes": [
+            {
+              "id": "bcgt-algorithm12-source",
+              "source": "bcgt13-eccc-TR12-045-rev3",
+              "pdf_sha256": "9f16fb370af704e8a08429608ab93c1c4934d806661d0064bd881615cc4d7aa0",
+              "pdf_page": 118,
+              "printed_page": "118",
+              "locator": "Algorithm 12, complete listing",
+              "revision": "ECCC TR12-045 revision 3, December 28, 2012",
+              "text": "inputs:\n• \\(I_\\ell\\), irreducible polynomial of degree \\(\\ell\\) over \\(\\mathbb{F}_2\\) with root \\(\\mathsf{x}\\), inducing the field extension \\(\\mathbb{F}_{2^\\ell}:=\\mathbb{F}_2(\\mathsf{x})\\)\n• \\(\\mathcal{B}_S\\) and \\(\\mathcal{O}_S\\), basis and offset for the \\(\\kappa\\)-dimensional affine subspace \\(S\\subseteq\\mathbb{F}_{2^\\ell}\\)\n• \\(\\mathcal{B}_H\\) and \\(\\mathcal{O}_H\\), basis and offset for the \\(\\lambda\\)-dimensional affine subspace \\(H\\subseteq\\mathbb{F}_{2^\\ell}\\)\n• \\(d\\), positive integer indicating what “low-degree” means\nrandomness:\n• \\(r_1\\cdots r_{\\operatorname{rand}_{\\mathrm{VRS}}(\\ell,\\kappa,\\lambda,d)}\\)\noracles:\n• \\(p\\), function from \\(S\\) to \\(\\mathbb{F}_{2^\\ell}\\)\n• \\(\\pi=(\\widetilde p,\\widetilde\\pi)\\), proof of proximity to \\(\\mathrm{VRS}(\\mathbb{F}_{2^\\ell},S,H,d)\\) for the function \\(p\\)\n\n1. Proximity test of \\(\\widetilde p\\) to \\(\\mathrm{RS}(\\mathbb{F}_{2^\\ell},S,d-|H|)\\):\n   (a) \\(r'_1\\cdots r'_{\\operatorname{rand}_{\\mathrm{RS}}(\\ell,\\kappa,d-|H|)}:=r_1\\cdots r_{\\operatorname{rand}_{\\mathrm{RS}}(\\ell,\\kappa,d-|H|)}\\)\n   (b) \\(b_{\\mathrm{RS}}:=V_{\\mathrm{RS}}^{(\\widetilde p,\\widetilde\\pi)}(I_\\ell,\\mathcal B_S,\\mathcal O_S,d-|H|;r'_1\\cdots r'_{\\operatorname{rand}_{\\mathrm{RS}}(\\ell,\\kappa,d-|H|)})\\)\n2. Consistency check between \\(p\\) and \\(\\widetilde p\\):\n   (a) \\(r_1^{(\\alpha)}\\cdots r_\\kappa^{(\\alpha)}:=r_1\\cdots r_\\kappa\\)\n   (b) \\(\\alpha:=\\operatorname{GetRandElt}(I_\\ell,\\mathcal B_S,\\mathcal O_S,(r_1^{(\\alpha)},\\ldots,r_\\kappa^{(\\alpha)}))\\)\n   (c) query \\(\\alpha\\) to \\(p\\)\n   (d) query \\(\\alpha\\) to \\(\\widetilde p\\)\n   (e) \\([Z_H]^{\\mathsf A}:=\\operatorname{FindSubspPoly}(I_\\ell,\\mathcal B_H,\\mathcal O_H)\\)\n   (f) \\(\\omega:=[Z_H]^{\\mathsf A}(\\alpha)\\)\n   (g) if \\((p(\\alpha)=\\omega\\cdot\\widetilde p(\\alpha))\\), then \\(b_{\\mathrm{consist}}:=1\\), else \\(b_{\\mathrm{consist}}:=0\\)\n3. \\(b:=b_{\\mathrm{RS}}\\wedge b_{\\mathrm{consist}}\\)\n4. output \\(b\\)\n\nnotes:\n• see Lemma C.5 for complexity bounds on queries and randomness\n• see Lemma 12.20 for the “non-adaptive decomposition” of \\(V_{\\mathrm{VRS}}\\) into \\(Q_{\\mathrm{VRS}}\\) and \\(D_{\\mathrm{VRS}}\\)\n• see Algorithm 3 for \\(P_{\\mathrm{VRS}}\\), the corresponding prover\n• it must be that \\(d\\ge|H|\\), otherwise \\(p\\) is certainly not in \\(\\mathrm{VRS}(\\mathbb{F}_{2^\\ell},S,H,d)\\)",
+              "sha256": "efc7b1e7f65f6b61b2802a5cfcfbf35a0be23dada38c587ad34149bb8812fcd0",
+              "transcribed": true,
+              "transcription_note": "Transcribed against the rendered published page. Mathematical typesetting is represented in TeX; line wrapping and line-break hyphenation are joined. Printed formulas, indices and conditions are retained without repair.",
+              "omissions": []
+            }
+          ],
+          "lean": [
+            "NearCubicGates.Published.BCGT13.vVRS"
+          ],
+          "note": "This is the printed Algorithm 12 listing, including its consistency test p(α)=ω·p̃(α). The recorded transcription follows that decision rule; the existing comparison with the non-adaptive decomposition stays outside the quotation."
+        },
+        {
+          "id": "bcgt-verifier-algorithm13",
+          "label": "Algorithm 13: V_RS",
+          "quotes": [
+            {
+              "id": "bcgt-algorithm13-source",
+              "source": "bcgt13-eccc-TR12-045-rev3",
+              "pdf_sha256": "9f16fb370af704e8a08429608ab93c1c4934d806661d0064bd881615cc4d7aa0",
+              "pdf_page": 119,
+              "printed_page": "119",
+              "locator": "Algorithm 13, complete listing",
+              "revision": "ECCC TR12-045 revision 3, December 28, 2012",
+              "text": "inputs:\n• \\(I_\\ell\\), irreducible polynomial of degree \\(\\ell\\) over \\(\\mathbb{F}_2\\) with root \\(\\mathsf{x}\\), inducing the field extension \\(\\mathbb{F}_{2^\\ell}:=\\mathbb{F}_2(\\mathsf{x})\\)\n• \\(\\mathcal{B}_S\\) and \\(\\mathcal{O}_S\\), basis and offset for the \\(\\kappa\\)-dimensional affine subspace \\(S\\subseteq\\mathbb{F}_{2^\\ell}\\)\n• \\(d\\), positive integer indicating what “low-degree” means\nrandomness:\n• \\(r_1\\cdots r_{\\operatorname{rand}_{\\mathrm{RS}}(\\ell,\\kappa,d)}\\)\noracles:\n• \\(p\\), function from \\(S\\) to \\(\\mathbb{F}_{2^\\ell}\\)\n• \\(\\pi\\), proof of proximity to \\(\\mathrm{RS}(\\mathbb{F}_{2^\\ell},S,d)\\) for the function \\(p\\)\n\n1. if \\(\\kappa\\le\\eta\\), then:\n   (a) for \\(i=1,\\ldots,2^\\kappa\\):\n       i. \\(\\alpha_i:=\\operatorname{GetEltWithIndex}(I_\\ell,\\mathcal B_S,\\mathcal O_S,i)\\)\n       ii. query \\(\\alpha_i\\) to \\(p\\)\n   (b) \\(P:=\\operatorname{SubspaceInterp}(I_\\ell,\\mathcal B_S,\\mathcal O_S,(p(\\alpha_1),\\ldots,p(\\alpha_{2^\\kappa})))\\)\n   (c) \\(\\widetilde d:=\\deg(P)\\)\n   (d) if \\(\\widetilde d\\le d\\), output \\(1\\), else output \\(0\\)\n2. if \\(\\kappa>\\eta\\), then:\n   (a) \\(d_{\\kappa,\\eta}:=|S|/2^\\eta-1=2^\\kappa/2^\\eta-1\\)\n   (b) if \\(d<d_{\\kappa,\\eta}\\), then output \\(b:=V_{\\mathrm{RS},<}^{(p,\\pi)}(I_\\ell,\\mathcal B_S,\\mathcal O_S,d;r_1\\cdots r_{\\operatorname{rand}_{\\mathrm{RS},<}(\\ell,\\kappa,d)})\\)\n   (c) if \\(d=d_{\\kappa,\\eta}\\), then output \\(b:=V_{\\mathrm{RS},=}^{(p,\\pi)}(I_\\ell,\\mathcal B_S,\\mathcal O_S;r_1\\cdots r_{\\operatorname{rand}_{\\mathrm{RS},=}(\\ell,\\kappa)})\\)\n   (d) if \\(d>d_{\\kappa,\\eta}\\), then output \\(b:=V_{\\mathrm{RS},>}^{(p,\\pi)}(I_\\ell,\\mathcal B_S,\\mathcal O_S,d;r_1\\cdots r_{\\operatorname{rand}_{\\mathrm{RS},>}(\\ell,\\kappa,d)})\\)\n\nnotes:\n• see Lemma C.4 for complexity bounds on queries and randomness\n• see Lemma 12.19 for the “non-adaptive decomposition” of \\(V_{\\mathrm{RS}}\\) into \\(Q_{\\mathrm{RS}}\\) and \\(D_{\\mathrm{RS}}\\)\n• see Algorithm 4 for \\(P_{\\mathrm{RS}}\\), the corresponding prover\n• if \\(\\kappa\\le\\eta\\), then \\(V_{\\mathrm{RS}}\\) can just check directly whether \\(p\\) is in \\(\\mathrm{RS}(\\mathbb{F}_{2^\\ell},S,d)\\) or not",
+              "sha256": "6995fc73c5d039f63f410dce143e6f6293a9fea06ce45b0bd746ef8454767be5",
+              "transcribed": true,
+              "transcription_note": "Transcribed against the rendered published page. Mathematical typesetting is represented in TeX; line wrapping and line-break hyphenation are joined. Printed formulas, indices and conditions are retained without repair.",
+              "omissions": []
+            }
+          ],
+          "lean": [
+            "NearCubicGates.Published.BCGT13.vRS",
+            "NearCubicGates.Published.BCGT13.dKE",
+            "NearCubicGates.Published.BCGT13.degreeTest"
+          ],
+          "note": "The printed positive-degree input condition and its three degree branches are preserved. The typed Lean function is totalized, while the retained theorem states its source degree range explicitly."
+        },
+        {
+          "id": "bcgt-verifier-algorithm14",
+          "label": "Algorithm 14: V_RS,>",
+          "quotes": [
+            {
+              "id": "bcgt-algorithm14-source",
+              "source": "bcgt13-eccc-TR12-045-rev3",
+              "pdf_sha256": "9f16fb370af704e8a08429608ab93c1c4934d806661d0064bd881615cc4d7aa0",
+              "pdf_page": 120,
+              "printed_page": "120",
+              "locator": "Algorithm 14, complete listing",
+              "revision": "ECCC TR12-045 revision 3, December 28, 2012",
+              "text": "inputs:\n• \\(I_\\ell\\), irreducible polynomial of degree \\(\\ell\\) over \\(\\mathbb{F}_2\\) with root \\(\\mathsf{x}\\), inducing the field extension \\(\\mathbb{F}_{2^\\ell}:=\\mathbb{F}_2(\\mathsf{x})\\)\n• \\(\\mathcal{B}_S\\) and \\(\\mathcal{O}_S\\), basis and offset for the \\(\\kappa\\)-dimensional affine subset \\(S\\subseteq\\mathbb{F}_{2^\\ell}\\)\n• \\(d\\), positive integer, greater than \\(|S|/2^\\eta-1\\), indicating what “low-degree” means\nrandomness:\n• \\(r_1\\cdots r_{\\operatorname{rand}_{\\mathrm{RS},>}(\\ell,\\kappa,d)}\\)\noracles:\n• \\(p\\), function from \\(S\\) to \\(\\mathbb{F}_{2^\\ell}\\)\n• \\(\\pi=((p_0,\\pi_0),\\ldots,(p_{2^\\eta-1},\\pi_{2^\\eta-1}))\\), proof of proximity to \\(\\mathrm{RS}(\\mathbb{F}_{2^\\ell},S,d)\\) for the function \\(p\\)\n\n1. if \\(d\\ge|S|\\), then output \\(b:=1\\)\n2. if \\(d<|S|\\), then:\n   (a) \\(d_{\\kappa,\\eta}:=|S|/2^\\eta-1=2^\\kappa/2^\\eta-1\\)\n   (b) \\(m_{\\kappa,\\eta,d}:=\\lfloor(d+1)/(d_{\\kappa,\\eta}+1)\\rfloor\\)\n   (c) \\(r_1^{(\\tau)}\\cdots r_\\kappa^{(\\tau)}:=r_1\\cdots r_\\kappa\\)\n   (d) \\(\\tau:=\\operatorname{GetRandElt}(I_\\ell,\\mathcal B_S,\\mathcal O_S,(r_1^{(\\tau)},\\ldots,r_\\kappa^{(\\tau)}))\\)\n   (e) query \\(\\tau\\) to \\(p\\)\n   (f) for \\(i=0,\\ldots,m_{\\kappa,\\eta,d}-1\\):\n       i. \\(r_1^{(i)}\\cdots r_{\\operatorname{rand}_{\\mathrm{RS},=}(\\ell,\\kappa)}^{(i)}:=r_1\\cdots r_{\\operatorname{rand}_{\\mathrm{RS},=}(\\ell,\\kappa)}\\)\n       ii. query \\(\\tau\\) to \\(p_i\\)\n       iii. \\(b_i:=V_{\\mathrm{RS},=}^{(p_i,\\pi_i)}(I_\\ell,\\mathcal B_S,\\mathcal O_S,d_{\\kappa,\\eta};r_1^{(i)}\\cdots r_{\\operatorname{rand}_{\\mathrm{RS},=}(\\ell,\\kappa)}^{(i)})\\)\n   (g) if \\(m_{\\kappa,\\eta,d}\\cdot(d_{\\kappa,\\eta}+1)=d+1\\), then:\n       i. \\(\\omega_\\tau:=\\sum_{i=0}^{m-1}\\tau^{i(d_{\\kappa,\\eta}+1)}\\cdot p_i(\\tau)\\)\n       ii. if \\(p(\\tau)=\\omega_\\tau\\), then \\(b_{\\mathrm{consist}}:=1\\), else \\(b_{\\mathrm{consist}}:=0\\)\n       iii. \\(b:=b_0\\wedge\\cdots\\wedge b_{m_{\\kappa,\\eta,d}-1}\\wedge b_{\\mathrm{consist}}\\)\n       iv. output \\(b\\)\n   (h) if \\(m_{\\kappa,\\eta,d}\\cdot(d_{\\kappa,\\eta}+1)<d+1\\), then:\n       i. \\(d_{\\kappa,\\eta,d}:=d-m_{\\kappa,\\eta,d}\\cdot(d_{\\kappa,\\eta}+1)\\)\n       ii. \\(r_1^{(m_{\\kappa,\\eta,d})}\\cdots r_{\\operatorname{rand}_{\\mathrm{RS},<}(\\ell,\\kappa,d_{\\kappa,\\eta,d})}^{(m_{\\kappa,\\eta,d})}:=r_1\\cdots r_{\\operatorname{rand}_{\\mathrm{RS},<}(\\ell,\\kappa,d_{\\kappa,\\eta,d})}\\)\n       iii. \\(b_{m_{\\kappa,\\eta,d}}:=V_{\\mathrm{RS},<}^{(p_{m_{\\kappa,\\eta,d}},\\pi_{m_{\\kappa,\\eta,d}})}(I_\\ell,\\mathcal B_S,\\mathcal O_S,d_{\\kappa,\\eta,d};r_1^{(m_{\\kappa,\\eta,d})}\\cdots r_{\\operatorname{rand}_{\\mathrm{RS},<}(\\ell,\\kappa,d_{\\kappa,\\eta,d})}^{(m_{\\kappa,\\eta,d})})\\)\n       iv. query \\(\\tau\\) to \\(p_{m_{\\kappa,\\eta,d}}\\)\n       v. \\(\\omega_\\tau:=\\sum_{i=0}^{m_{\\kappa,\\eta,d}}\\tau^{i(d_{\\kappa,\\eta}+1)}\\cdot p_i(\\tau)\\)\n       vi. if \\(p(\\tau)=\\omega_\\tau\\), then \\(b_{\\mathrm{consist}}:=1\\), else \\(b_{\\mathrm{consist}}:=0\\)\n       vii. \\(b:=b_0\\wedge\\cdots\\wedge b_{m_{\\kappa,\\eta,d}-1}\\wedge b_{m_{\\kappa,\\eta,d}}\\wedge b_{\\mathrm{consist}}\\)\n       viii. output \\(b\\)\n\nnotes:\n• see Lemma C.3 for complexity bounds on queries and randomness\n• see Lemma 12.18 for the “non-adaptive decomposition” of \\(V_{\\mathrm{RS},>}\\) into \\(Q_{\\mathrm{RS},>}\\) and \\(D_{\\mathrm{RS},>}\\)\n• see Algorithm 5 for \\(P_{\\mathrm{RS},>}\\), the corresponding prover\n• if \\(d\\ge|S|\\), every function \\(p:S\\to\\mathbb{F}_{2^\\ell}\\) is in \\(\\mathrm{RS}(\\mathbb{F}_{2^\\ell},S,d)\\) (cf. Step 1)\n• if \\(d<|S|\\), then \\(\\lfloor(d+1)/(d_{\\kappa,\\eta}+1)\\rfloor\\in\\{0,\\ldots,2^\\eta\\}\\), because \\(|S|=2^\\eta\\cdot(d_{\\kappa,\\eta}+1)\\)",
+              "sha256": "17389edead765c8ac486765eb4a078e37cd5c0cc53abd843d4dd4e271a174357",
+              "transcribed": true,
+              "transcription_note": "Transcribed against the rendered published page. Mathematical typesetting is represented in TeX; line wrapping and line-break hyphenation are joined. Printed formulas, indices and conditions are retained without repair.",
+              "omissions": []
+            }
+          ],
+          "lean": [
+            "NearCubicGates.Published.BCGT13.vGt",
+            "NearCubicGates.Published.BCGT13.dKE",
+            "NearCubicGates.Published.BCGT13.mKED"
+          ],
+          "note": "The floor defining m and both branches are reproduced from Algorithm 14. In particular, the printed extra d_{κ,η} argument in step 2(f)iii and the unsubscripted m in step 2(g)i are not silently normalized inside the source quotation. Existing transcription conventions remain outside it."
+        },
+        {
+          "id": "bcgt-verifier-algorithm15",
+          "label": "Algorithm 15: V_RS,<",
+          "quotes": [
+            {
+              "id": "bcgt-algorithm15-source",
+              "source": "bcgt13-eccc-TR12-045-rev3",
+              "pdf_sha256": "9f16fb370af704e8a08429608ab93c1c4934d806661d0064bd881615cc4d7aa0",
+              "pdf_page": 121,
+              "printed_page": "121",
+              "locator": "Algorithm 15, complete listing",
+              "revision": "ECCC TR12-045 revision 3, December 28, 2012",
+              "text": "inputs:\n• \\(I_\\ell\\), irreducible polynomial of degree \\(\\ell\\) over \\(\\mathbb{F}_2\\) with root \\(\\mathsf{x}\\), inducing the field extension \\(\\mathbb{F}_{2^\\ell}:=\\mathbb{F}_2(\\mathsf{x})\\)\n• \\(\\mathcal{B}_S\\) and \\(\\mathcal{O}_S\\), basis for the \\(\\kappa\\)-dimensional affine subset \\(S\\subseteq\\mathbb{F}_{2^\\ell}\\)\n• \\(d\\), positive integer, less than \\(|S|/2^\\eta-1\\), indicating what “low-degree” means\nrandomness:\n• \\(r_1\\cdots r_{\\operatorname{rand}_{\\mathrm{RS},<}(\\ell,\\kappa,d)}\\)\noracles:\n• \\(p\\), function from \\(S\\) to \\(\\mathbb{F}_{2^\\ell}\\)\n• \\(\\pi=(\\pi_1,\\pi_2)\\), proof of proximity to \\(\\mathrm{RS}(\\mathbb{F}_{2^\\ell},S,d)\\) for the function \\(p\\)\n\n1. \\(d_{\\kappa,\\eta}:=|S|/2^\\eta-1=2^\\kappa/2^\\eta-1\\)\n2. \\(r'_1\\cdots r'_{\\operatorname{rand}_{\\mathrm{RS},=}(\\ell,\\kappa)}:=r_1\\cdots r_{\\operatorname{rand}_{\\mathrm{RS},=}(\\ell,\\kappa)}\\)\n3. \\(b_1:=V_{\\mathrm{RS},=}^{(p,\\pi_1)}(I_\\ell,\\mathcal B_S,\\mathcal O_S;r'_1\\cdots r'_{\\operatorname{rand}_{\\mathrm{RS},=}(\\ell,\\kappa)})\\)\n4. \\(r''_1\\cdots r''_{\\operatorname{rand}_{\\mathrm{RS},=}(\\ell,\\kappa)}:=r_1\\cdots r_{\\operatorname{rand}_{\\mathrm{RS},=}(\\ell,\\kappa)}\\)\n5. compute the polynomial \\(Q(x):=x^{d_{\\kappa,\\eta}-d}\\in\\mathbb{F}_{2^\\ell}[x]\\)\n6. “\\(p':=p\\cdot Q\\)” (see notes below)\n7. \\(b_2:=V_{\\mathrm{RS},=}^{(p',\\pi_2)}(I_\\ell,\\mathcal B_S,\\mathcal O_S;r''_1\\cdots r''_{\\operatorname{rand}_{\\mathrm{RS},=}(\\ell,\\kappa)})\\)\n8. \\(b:=b_1\\wedge b_2\\)\n9. output \\(b\\)\n\nnotes:\n• see Lemma C.2 for complexity bounds on queries and randomness\n• see Lemma 12.17 for the “non-adaptive decomposition” of \\(V_{\\mathrm{RS},<}\\) into \\(Q_{\\mathrm{RS},<}\\) and \\(D_{\\mathrm{RS},<}\\)\n• see Algorithm 6 for \\(P_{\\mathrm{RS},<}\\), the corresponding prover\n• in Step 7, we must simulate the implicit input \\(p'\\) (which is also a function from \\(S\\) to \\(\\mathbb{F}_{2^\\ell}\\)), and we do so as follows: for each query \\(\\alpha\\), query \\(\\alpha\\) to the (real) implicit input \\(p\\) and then return \\(p(\\alpha)\\cdot Q(\\alpha)\\); note that \\(Q(\\alpha)\\) can be evaluated in time that is \\(\\operatorname{poly}(\\ell,\\log(d_{\\kappa,\\eta}-d))\\)",
+              "sha256": "c7e93efcd1a02942944a2933fc546e9ffd98259c1c85f26d8a690fffe7f6fed9",
+              "transcribed": true,
+              "transcription_note": "Transcribed against the rendered published page. Mathematical typesetting is represented in TeX; line wrapping and line-break hyphenation are joined. Printed formulas, indices and conditions are retained without repair.",
+              "omissions": []
+            }
+          ],
+          "lean": [
+            "NearCubicGates.Published.BCGT13.vLt",
+            "NearCubicGates.Published.BCGT13.dKE"
+          ],
+          "note": "Both recursive tests use the same initial random prefix, as printed. The source simulation of p′ is included in full; the typed flat verifier applies that transformation to the appropriate answers."
+        },
+        {
+          "id": "bcgt-verifier-algorithm16",
+          "label": "Algorithm 16: V_RS,=",
+          "quotes": [
+            {
+              "id": "bcgt-algorithm16-source",
+              "source": "bcgt13-eccc-TR12-045-rev3",
+              "pdf_sha256": "9f16fb370af704e8a08429608ab93c1c4934d806661d0064bd881615cc4d7aa0",
+              "pdf_page": 122,
+              "printed_page": "122",
+              "locator": "Algorithm 16, complete listing",
+              "revision": "ECCC TR12-045 revision 3, December 28, 2012",
+              "text": "inputs:\n• \\(I_\\ell\\), irreducible polynomial of degree \\(\\ell\\) over \\(\\mathbb{F}_2\\) with root \\(\\mathsf{x}\\), inducing the field extension \\(\\mathbb{F}_{2^\\ell}:=\\mathbb{F}_2(\\mathsf{x})\\)\n• \\(\\mathcal{B}_L=(a_1,\\ldots,a_\\kappa)\\) and \\(\\mathcal{O}_L\\), basis and offset for the \\(\\kappa\\)-dimensional affine subset \\(L\\subseteq\\mathbb{F}_{2^\\ell}\\)\nrandomness:\n• \\(r_1\\cdots r_{\\operatorname{rand}_{\\mathrm{RS},=}(\\ell,\\kappa)}\\)\noracles:\n• \\(p\\), function from \\(L\\) to \\(\\mathbb{F}_{2^\\ell}\\)\n• \\(\\pi=(f,\\Pi)\\), proof of proximity to \\(\\mathrm{RS}(\\mathbb{F}_{2^\\ell},L,|L|/2^\\eta-1)\\) for the function \\(p\\)\n\n1. if \\(\\kappa\\le\\kappa_0\\), then:\n   (a) for \\(i=1,\\ldots,2^\\kappa\\):\n       i. \\(\\alpha_i:=\\operatorname{GetEltWithIndex}(I_\\ell,\\mathcal B_L,\\mathcal O_L,i)\\)\n       ii. query \\(\\alpha_i\\) to \\(p\\)\n   (b) \\(d_{\\kappa,\\eta}:=|L|/2^\\eta-1=2^\\kappa/2^\\eta-1\\)\n   (c) \\(P:=\\operatorname{SubspaceInterp}(I_\\ell,\\mathcal B_L,\\mathcal O_L,(p(\\alpha_1),\\ldots,p(\\alpha_{2^\\kappa})))\\)\n   (d) \\(\\widetilde d:=\\deg(P)\\)\n   (e) if \\(\\widetilde d\\le d_{\\kappa,\\eta}\\), output \\(1\\), else output \\(0\\)\n2. if \\(\\kappa>\\kappa_0\\), then:\n   (a) \\(\\mathcal B_{L_0}:=(a_1,\\ldots,a_{\\lfloor\\kappa/2\\rfloor-\\gamma})\\), \\(\\mathcal O_{L_0}:=\\mathcal O_L\\)\n   (b) \\([Z_{L_0}]^{\\mathsf A}:=\\operatorname{FindSubspPoly}(I_\\ell,\\mathcal B_{L_0},\\mathcal O_{L_0})\\)\n   (c) \\(\\mathcal B_{L'_0}:=(a_1,\\ldots,a_{\\lfloor\\kappa/2\\rfloor-\\gamma+\\mu})\\), \\(\\mathcal O_{L'_0}:=\\mathcal O_L\\)\n   (d) if \\(r_1=0\\), then do a random row test:\n       i. \\(m:=1+\\lceil\\kappa/2\\rceil+\\gamma\\)\n       ii. \\(\\mathcal B_{L_1}:=(a_{\\lfloor\\kappa/2\\rfloor-\\gamma+1},\\ldots,a_\\kappa)\\), \\(\\mathcal O_{L_1}:=\\mathcal O_L\\)\n       iii. \\(\\beta:=\\operatorname{GetRandElt}(I_\\ell,\\mathcal B_{L_1},\\mathcal O_{L_1},(r_2,\\ldots,r_{1+\\lceil\\kappa/2\\rceil+\\gamma}))\\)\n       iv. if \\(\\beta\\in L'_0\\), then \\(\\mathcal B_{L_\\beta}:=(a_1,\\ldots,a_{\\lfloor\\kappa/2\\rfloor-\\gamma+\\mu},a_{\\lfloor\\kappa/2\\rfloor-\\gamma+\\mu+1})\\);\n       v. if \\(\\beta\\notin L'_0\\), then \\(\\mathcal B_{L_\\beta}:=(a_1,\\ldots,a_{\\lfloor\\kappa/2\\rfloor-\\gamma+\\mu},\\beta+\\mathcal O_{L'_0})\\)\n       vi. \\(\\mathcal O_{L_\\beta}:=\\mathcal O_{L'_0}\\)\n       vii. \\(\\beta':=[Z_{L_0}]^{\\mathsf A}(\\beta)\\)\n       viii. \\(b:=V_{\\mathrm{RS},=}^{(\\widehat f|_{\\beta'}^{\\leftrightarrow},\\pi_{\\beta'}^{\\leftrightarrow})}(I_\\ell,\\mathcal B_{L_\\beta},\\mathcal O_{L_\\beta};r_{m+1}\\cdots r_{\\operatorname{rand}_{\\mathrm{RS},=}(\\ell,\\kappa)})\\)\n       ix. output \\(b\\)\n   (e) if \\(r_1=1\\), then do a random column test:\n       i. \\(m:=1+\\lfloor\\kappa/2\\rfloor-\\gamma+\\mu\\)\n       ii. \\(\\alpha:=\\operatorname{GetRandElt}(I_\\ell,\\mathcal B_{L'_0},\\mathcal O_{L'_0},(r_2,\\ldots,r_{1+\\lfloor\\kappa/2\\rfloor-\\gamma+\\mu}))\\)\n       iii. \\(\\mathcal B_{Z_{L_0}(L_1)}:=([Z_{L_0}]^{\\mathsf A}(a_{\\lfloor\\kappa/2\\rfloor-\\gamma+1})+[Z_{L_0}]^{\\mathsf A}(0_{\\mathbb F_{2^\\ell}}),\\ldots,[Z_{L_0}]^{\\mathsf A}(a_\\kappa)+[Z_{L_0}]^{\\mathsf A}(0_{\\mathbb F_{2^\\ell}}))\\),\n            \\(\\mathcal O_{Z_{L_0}(L_1)}:=[Z_{L_0}]^{\\mathsf A}(\\mathcal O_{L_1})\\)\n       iv. \\(b:=V_{\\mathrm{RS},=}^{(\\widehat f|_\\alpha^{\\updownarrow},\\pi_\\alpha^{\\updownarrow})}(I_\\ell,\\mathcal B_{Z_{L_0}(L_1)},\\mathcal O_{Z_{L_0}(L_1)};r_{m+1}\\cdots r_{\\operatorname{rand}_{\\mathrm{RS},=}(\\ell,\\kappa)})\\)\n       v. output \\(b\\)\n\nnotes:\n• see Theorem 11.3 for how the parameters \\((\\eta,\\kappa_0,\\gamma,\\mu)\\) can be chosen\n• see Lemma C.1 for complexity bounds on queries and randomness\n• see Lemma 12.16 for the “non-adaptive decomposition” of \\(V_{\\mathrm{RS},=}\\) into \\(Q_{\\mathrm{RS},=}\\) and \\(D_{\\mathrm{RS},=}\\)\n• see Algorithm 7 for \\(P_{\\mathrm{RS},=}\\), the corresponding prover\n• in Step 2(d)viii, \\(\\widehat f|_{\\beta'}^{\\leftrightarrow}\\) is a function with domain \\(L_\\beta\\times\\{\\beta'\\}\\) that is simulated as follows: for each query \\(\\alpha\\in L_\\beta\\) to \\(\\widehat f|_{\\beta'}^{\\leftrightarrow}\\), if \\(Z_{L_0}(\\alpha)=\\beta'\\) then return \\(p(\\alpha)\\), else return \\(f(\\alpha,\\beta')\\)\n• in Step 2(e)iv, \\(\\widehat f|_\\alpha^{\\updownarrow}\\) is a function with domain \\(\\{\\alpha\\}\\times Z_{L_0}(L_1)\\) that is simulated as follows: for each query \\(\\beta'\\in Z_{L_0}(L_1)\\) to \\(\\widehat f|_\\alpha^{\\updownarrow}\\), if \\(Z_{L_0}(\\alpha)=\\beta'\\) then return \\(p(\\alpha)\\), else return \\(f(\\alpha,\\beta')\\)",
+              "sha256": "55e0522d2597d4fcaa87be9bc835d8856ef0ab45a4f645e70276284c62a6b000",
+              "transcribed": true,
+              "transcription_note": "Transcribed against the rendered published page. Mathematical typesetting is represented in TeX; line wrapping and line-break hyphenation are joined. Printed formulas, indices and conditions are retained without repair.",
+              "omissions": []
+            }
+          ],
+          "lean": [
+            "NearCubicGates.Published.BCGT13.vEq",
+            "NearCubicGates.Published.BCGT13.translate",
+            "NearCubicGates.Published.BCGT13.qEq",
+            "NearCubicGates.Published.BCGT13.dEq",
+            "NearCubicGates.Published.BCGT13.TrOut",
+            "NearCubicGates.Published.BCGT13.degreeTest"
+          ],
+          "note": "The full printed recursive verifier and its row/column simulations are quoted. The flat query translation and decision procedures are the non-adaptive representation described in Lemma 12.16; their indexing and fuel conventions remain explicit in the Lean declarations."
+        },
+        {
+          "id": "bcgt-explicit-implicit-input",
+          "label": "Field and affine-input convention",
+          "quotes": [
+            {
+              "id": "bcgt-explicit-implicit-input-source",
+              "source": "bcgt13-eccc-TR12-045-rev3",
+              "pdf_sha256": "9f16fb370af704e8a08429608ab93c1c4934d806661d0064bd881615cc4d7aa0",
+              "pdf_page": 75,
+              "printed_page": "75–76",
+              "locator": "§12.3.1, first sentence of the proof of Lemma 12.16, spanning printed/PDF pages 75–76",
+              "revision": "ECCC TR12-045 revision 3, December 28, 2012",
+              "text": "The explicit input of \\(V_{\\mathrm{RS},=}\\) is \\((I_\\ell,\\mathcal B_L,\\mathcal O_L)\\), where \\(I_\\ell\\) is an irreducible polynomial over \\(\\mathbb F_2\\) of degree \\(\\ell\\) with root \\(\\mathsf{x}\\), which induces the field extension \\(\\mathbb F_{2^\\ell}:=\\mathbb F_2(\\mathsf{x})\\), and \\(\\mathcal B_L=(a_1,\\ldots,a_\\kappa)\\) and \\(\\mathcal O_L\\) are the basis and the offset of a \\(\\kappa\\)-dimensional affine subspace \\(L\\subseteq\\mathbb F_{2^\\ell}\\); the implicit input of \\(V_{\\mathrm{RS},=}\\) is a function \\(p:L\\to\\mathbb F_{2^\\ell}\\).",
+              "sha256": "13d1e88f7d51f2c9373895e0c73ec576a83576d03235641bb0f1d964ec4c7c51",
+              "transcribed": true,
+              "transcription_note": "Transcribed against the rendered published page. Mathematical typesetting is represented in TeX; line wrapping and line-break hyphenation are joined. Printed formulas, indices and conditions are retained without repair.",
+              "omissions": [],
+              "pdf_page_end": 76
+            }
+          ],
+          "lean": [
+            "NearCubicGates.Published.BCGT13.FlatVerifier",
+            "NearCubicGates.Published.BCGT13.span",
+            "NearCubicGates.Published.BCGT13.IsBasis",
+            "NearCubicGates.Published.BCGT13.vEq"
+          ],
+          "note": "This source sentence identifies the field, basis, offset, explicit input and implicit function. The mathematical Lean functions are stated for a characteristic-two finite field with the specified cardinality; the separate finite-field representation conventions are retained in the existing prose."
+        },
+        {
+          "id": "bcgt-vanishing-product",
+          "label": "Vanishing-polynomial definition",
+          "quotes": [
+            {
+              "id": "bcgt-vanishing-product-source",
+              "source": "bcgt13-eccc-TR12-045-rev3",
+              "pdf_sha256": "9f16fb370af704e8a08429608ab93c1c4934d806661d0064bd881615cc4d7aa0",
+              "pdf_page": 56,
+              "printed_page": "56",
+              "locator": "Lemma 11.7, defining sentence after the display of L₀ and L₁",
+              "revision": "ECCC TR12-045 revision 3, December 28, 2012",
+              "text": "Let \\(Z_{L_0}\\) be the vanishing polynomial of \\(L_0\\), i.e., \\(Z_{L_0}(x):=\\prod_{\\alpha\\in L_0}(x-\\alpha)\\).",
+              "sha256": "725d3539631c65a3ece86db3206cea8d954f4a48c24981f2ac7b567d69b556e6",
+              "transcribed": true,
+              "transcription_note": "Transcribed against the rendered published page. Mathematical typesetting is represented in TeX; line wrapping and line-break hyphenation are joined. Printed formulas, indices and conditions are retained without repair.",
+              "omissions": [
+                "Only the complete defining sentence is quoted. The preceding definitions of the particular split subspaces and the subsequent conclusions/proof of Lemma 11.7 are not reproduced."
+              ]
+            }
+          ],
+          "lean": [
+            "NearCubicGates.Published.BCGT13.zEval",
+            "NearCubicGates.Published.BCGT13.span"
+          ],
+          "note": "This is the source product definition evaluated by zEval on the affine point set. It is separate from the omitted implementation steps of Algorithm 21 and carries no imported arithmetic-circuit bound."
+        }
+      ]
+    },
+    {
+      "id": "shoup",
+      "page": "SourceMapping/6-short-pcp.md",
+      "title": "Deterministic irreducible-polynomial construction: BCGT Algorithm 17 and Shoup TR 763",
+      "premises": [
+        "NearCubicGates.Published.Shoup.FindIrrPolyAlgorithm17"
+      ],
+      "notes": [
+        "The release’s named field is BCGT13 Algorithm 17’s deterministic degree-only construction over F₂. Shoup’s Corollary 3.2 is checked in UW–Madison Technical Report 763, not represented as an inspection of the FOCS proceedings PDF cited by BCGT.",
+        "The unary positive degree, full coefficient list, constant-first order and ordinary word-machine conventions are explicit on the Lean side; they are not presented as source wording that the publications did not specify."
+      ],
+      "rows": [
+        {
+          "id": "shoup-alg17",
+          "label": "BCGT Algorithm 17: source of the retained premise",
+          "quotes": [
+            {
+              "id": "bcgt-alg17",
+              "source": "bcgt13-eccc-TR12-045-rev3",
+              "pdf_sha256": "9f16fb370af704e8a08429608ab93c1c4934d806661d0064bd881615cc4d7aa0",
+              "pdf_page": 124,
+              "printed_page": "124",
+              "locator": "Algorithm 17 FindIrrPoly, inputs/output/step1",
+              "revision": "BCGT ECCC TR12-045 revision 3, December 28, 2012",
+              "text": "Algorithm 17 FindIrrPoly\ninputs:\n• 1^ℓ, desired degree presented in unary\noutput:\n• I_ℓ, irreducible polynomial of degree ℓ over F_2 with root x, inducing the field extension F_(2^ℓ) := F_2(x)\n1. the algorithm of [Sho88, Corollary 3.2], which runs in time poly(ℓ)",
+              "sha256": "3f6b416ffd16b0e1e9d115d409fc3e056a077ff833cd550fb0983818181c2ee7",
+              "transcribed": true,
+              "transcription_note": "Mathematical notation transcribed from the rendered page; superscripts/subscripts are written using ^ and _, fractions using parentheses, with typographic line wrapping normalized.",
+              "omissions": [
+                "The practice-oriented notes after step1 are omitted."
+              ]
+            }
+          ],
+          "lean": [
+            "NearCubicGates.Published.Shoup.FindIrrPolyAlgorithm17",
+            "NearCubicGates.Published.Shoup.IrreducibleChoice",
+            "NearCubicGates.Published.Shoup.PolyTimeIrrChoice"
+          ],
+          "note": "The publication’s adjoining root x names the field extension; the retained leaf asks only for the irreducible polynomial and its complete coefficient output, not a further computational root-finding oracle."
+        },
+        {
+          "id": "shoup-corollary",
+          "label": "The exact Corollary 3.2 in the checked technical-report version",
+          "quotes": [
+            {
+              "id": "sho88-cor3-2",
+              "source": "sho88-tr763",
+              "pdf_sha256": "14c05b951140d2b8996ecdac6edac7aad4c2d3a9687247b16758a421b4fee4de",
+              "pdf_page": 9,
+              "printed_page": "8",
+              "locator": "§3, Corollary 3.2",
+              "revision": "Shoup UW–Madison Computer Sciences TR 763, April 1, 1988 (checked report version)",
+              "text": "Corollary 3.2. We can construct an irreducible polynomial over F of degree n deterministically in time polynomial in n and p.",
+              "sha256": "7b5c02639f3d648f65b9319b30f4247001de319a273bd1cd372c95ed3bcc8233",
+              "transcribed": true,
+              "transcription_note": "Transcribed from the scanned page; mathematical superscripts/subscripts are written using ^ and _ and fractions using parentheses.",
+              "omissions": []
+            }
+          ],
+          "lean": [
+            "NearCubicGates.Published.Shoup.FindIrrPolyAlgorithm17",
+            "NearCubicGates.Published.Shoup.PolyTimeIrrChoice"
+          ],
+          "note": "Fixing p=2 specializes the printed polynomial(n,p) bound to polynomial in the positive degree. This does not assert unrestricted deterministic polynomial time in log p."
+        },
+        {
+          "id": "shoup-field-degree",
+          "label": "The report’s field and positive-degree parameters",
+          "quotes": [
+            {
+              "id": "sho88-intro-field",
+              "source": "sho88-tr763",
+              "pdf_sha256": "14c05b951140d2b8996ecdac6edac7aad4c2d3a9687247b16758a421b4fee4de",
+              "pdf_page": 3,
+              "printed_page": "2",
+              "locator": "§1, opening paragraph",
+              "revision": "Shoup UW–Madison Computer Sciences TR 763, April 1, 1988 (checked report version)",
+              "text": "Let p be a prime number, F the finite field GF(p), and n a positive integer. Consider the problem of finding an irreducible polynomial in F[X] of degree n.",
+              "sha256": "aeb580e8aa6c8dde9e1c8dac525ca894b1059abfadad7df6a97ca8d41e87dff1",
+              "transcribed": true,
+              "transcription_note": "Transcribed from the scanned page; mathematical superscripts/subscripts are written using ^ and _ and fractions using parentheses.",
+              "omissions": []
+            }
+          ],
+          "lean": [
+            "NearCubicGates.Published.Shoup.IrreducibleChoice",
+            "NearCubicGates.Published.Shoup.coeffWord"
+          ],
+          "note": "The coefficient-field specialization is ZMod 2. Values at degree 0 are unconstrained by the positive-degree source contract. The output ordering is a formal representation convention."
+        }
+      ]
+    },
+    {
+      "id": "stv",
+      "page": "SourceMapping/8-amplification.md",
+      "title": "Sudan–Trevisan–Vadhan: polynomial reconstruction",
+      "premises": [
+        "NearCubicGates.Published.STV.Theorem29"
+      ],
+      "notes": [
+        "All source quotations on this page are transcribed from the scanned ECCC TR98-074 revision 2 PDF, SHA256 87ccd011e2e0d55929decddd29caaf4b4c89659dee9c93760a8e29d950d59865.",
+        "Printed page 17 is physical PDF page 18; printed page 13 is physical PDF page 14. The extra physical page is the unnumbered first page. Physical PDF page 17 contains printed page 16, not Theorem 29.",
+        "The statement specializes the source field F to polynomial-basis binary fields F₂[X]/(q). The concrete bit tapes, finite transition tables, fieldElt, and query layout are explicit Lean representation conventions; the source paragraphs below do not prescribe those codecs.",
+        "The source reconstructs an implicit representation and defines computation pointwise with success probability at least 3/4. The retained premise asks only for the existence of a successful output list, with description, coin, and runtime bounds, rather than adding a deterministic list-construction hypothesis.",
+        "The d=0 extension and parameter specializations remain in the existing explanatory prose; they are not inserted into a source quotation."
+      ],
+      "rows": [
+        {
+          "id": "stv-theorem29",
+          "label": "Theorem 29",
+          "quotes": [
+            {
+              "id": "stv-theorem29-source",
+              "source": "stv01-eccc-rev2",
+              "pdf_sha256": "87ccd011e2e0d55929decddd29caaf4b4c89659dee9c93760a8e29d950d59865",
+              "pdf_page": 18,
+              "printed_page": "17",
+              "locator": "Theorem 29, §4.3",
+              "revision": "ECCC TR98-074 revision 2, May 18, 2000",
+              "text": "There exists a constant \\(c\\) such that the reconstruction problem above can be solved in time \\(\\operatorname{poly}(m,d,\\log|F|,1/\\varepsilon)\\), provided \\(\\varepsilon>c\\sqrt{d/|F|}\\). Furthermore, the reconstruction algorithm produces a list of at most \\(l=O(1/\\varepsilon)\\) oracle machines, each with running time at most \\(\\operatorname{poly}(m,d,\\log|F|,1/\\varepsilon)\\).",
+              "sha256": "ad1dd5b8be40525f4502b86f6e7608dc567a9498f08390e6fb49623243895fc3",
+              "transcribed": true,
+              "transcription_note": "Transcribed from the scanned page of ECCC TR98-074 revision 2. Mathematical typesetting is represented in TeX; line wrapping and line-break hyphenation are joined. The source words and punctuation are retained. Physical PDF page numbers include the unnumbered first page.",
+              "omissions": []
+            }
+          ],
+          "lean": [
+            "NearCubicGates.Published.STV.Theorem29"
+          ],
+          "note": "The reconstruction problem referred to by this statement is quoted next. The Lean premise exposes the absolute constants and specializes the field representation."
+        },
+        {
+          "id": "stv-reconstruction-problem",
+          "label": "The reconstruction problem",
+          "quotes": [
+            {
+              "id": "stv-reconstruction-problem-source",
+              "source": "stv01-eccc-rev2",
+              "pdf_sha256": "87ccd011e2e0d55929decddd29caaf4b4c89659dee9c93760a8e29d950d59865",
+              "pdf_page": 18,
+              "printed_page": "17",
+              "locator": "§4.3, problem immediately preceding Theorem 29",
+              "revision": "ECCC TR98-074 revision 2, May 18, 2000",
+              "text": "Recall that we wish to solve the following problem:\nGiven: An oracle \\(f:F^m\\to F\\) and parameters \\(d\\in\\mathbb{N}\\) and \\(\\varepsilon\\in\\mathbb{R}\\).\nGoal: Reconstruct (an implicit representation for) every polynomial of total degree at most \\(d\\) that has \\(\\varepsilon\\)-agreement with the function \\(f\\). Specifically, construct randomized oracle machines \\(M_1,\\ldots,M_l\\) such that for every polynomial \\(p:F^m\\to F\\) of degree \\(d\\) that has (relative) agreement \\(\\varepsilon\\) with \\(f\\), there exists \\(j\\in[l]\\) such that \\(M_j^f\\) computes \\(p\\).",
+              "sha256": "2b77b2df624f4a78dfab9343bbb35345662fd21730f330e33cc54c5fb2321ff0",
+              "transcribed": true,
+              "transcription_note": "Transcribed from the scanned page of ECCC TR98-074 revision 2. Mathematical typesetting is represented in TeX; line wrapping and line-break hyphenation are joined. The source words and punctuation are retained. Physical PDF page numbers include the unnumbered first page.",
+              "omissions": []
+            }
+          ],
+          "lean": [
+            "NearCubicGates.Published.STV.Theorem29",
+            "NearCubicGates.Published.STV.Agrees",
+            "NearCubicGates.Published.STV.evalAt",
+            "NearCubicGates.Published.STV.fieldElt"
+          ],
+          "note": "The source uses total degree and one common output list for every agreeing polynomial. The polynomial-basis quotient and its bit-word representation are the declared specialization."
+        },
+        {
+          "id": "stv-runtime-scope",
+          "label": "Which running times are bounded",
+          "quotes": [
+            {
+              "id": "stv-runtime-scope-source",
+              "source": "stv01-eccc-rev2",
+              "pdf_sha256": "87ccd011e2e0d55929decddd29caaf4b4c89659dee9c93760a8e29d950d59865",
+              "pdf_page": 18,
+              "printed_page": "17",
+              "locator": "§4.3, paragraph immediately preceding Theorem 29",
+              "revision": "ECCC TR98-074 revision 2, May 18, 2000",
+              "text": "We will be interested in the running time of the “reconstruction procedure”, i.e., the time taken to generate the machines \\(M_1,\\ldots,M_l\\), as well as the running times of the machines \\(M_1,\\ldots,M_l\\).",
+              "sha256": "35da1cfdc22570c6e75df262d6d45f470dff72e2ccf03f68b8e2b6f4848fc777",
+              "transcribed": true,
+              "transcription_note": "Transcribed from the scanned page of ECCC TR98-074 revision 2. Mathematical typesetting is represented in TeX; line wrapping and line-break hyphenation are joined. The source words and punctuation are retained. Physical PDF page numbers include the unnumbered first page.",
+              "omissions": []
+            }
+          ],
+          "lean": [
+            "NearCubicGates.Published.STV.Theorem29",
+            "NearCubicGates.Published.STV.OracleMachine.HaltsWithin"
+          ],
+          "note": "The source bounds both the reconstruction procedure and the machines it outputs. The retained list-existence premise states the resulting finite-description, coin, and runtime bounds explicitly."
+        },
+        {
+          "id": "stv-computes-definition20",
+          "label": "Definition 20: computation and agreement",
+          "quotes": [
+            {
+              "id": "stv-definition20-source",
+              "source": "stv01-eccc-rev2",
+              "pdf_sha256": "87ccd011e2e0d55929decddd29caaf4b4c89659dee9c93760a8e29d950d59865",
+              "pdf_page": 14,
+              "printed_page": "13",
+              "locator": "Definition 20, §4.1",
+              "revision": "ECCC TR98-074 revision 2, May 18, 2000",
+              "text": "A randomized procedure \\(A\\) is said to compute a function \\(f:X\\to Y\\) at a point \\(x\\in X\\) if \\(\\Pr[A(x)=f(x)]\\ge3/4\\), where the probability is taken over the internal coin tosses of \\(A\\). We say that \\(A\\) has agreement \\(\\alpha\\in[0,1]\\) with \\(f\\) if \\(A\\) computes \\(f\\) on an \\(\\alpha\\) fraction of the inputs in \\(X\\). We say that \\(A\\) computes \\(f\\) if it has agreement \\(1\\) with \\(f\\). A randomized procedure \\(A\\) is said to solve a search problem \\(S\\), if on input \\(x\\), \\(\\Pr[A(x)\\in S(x)]\\ge3/4\\).",
+              "sha256": "7da9a66ef549ab38e43ca712e494e3ccd8ab3e21667d492d5814f83a24e3ac86",
+              "transcribed": true,
+              "transcription_note": "Transcribed from the scanned page of ECCC TR98-074 revision 2. Mathematical typesetting is represented in TeX; line wrapping and line-break hyphenation are joined. The source words and punctuation are retained. Physical PDF page numbers include the unnumbered first page.",
+              "omissions": []
+            }
+          ],
+          "lean": [
+            "NearCubicGates.Published.STV.OracleMachine.Computes",
+            "NearCubicGates.Published.STV.OracleMachine.OutputsValue"
+          ],
+          "note": "Computes is pointwise success probability at least 3/4, not correctness on only three quarters of the inputs. The final sentence gives the source meaning of solving the randomized reconstruction search problem."
+        },
+        {
+          "id": "stv-oracle-machines",
+          "label": "Implicit words and oracle-machine notation",
+          "quotes": [
+            {
+              "id": "stv-oracle-notation-source",
+              "source": "stv01-eccc-rev2",
+              "pdf_sha256": "87ccd011e2e0d55929decddd29caaf4b4c89659dee9c93760a8e29d950d59865",
+              "pdf_page": 14,
+              "printed_page": "13",
+              "locator": "§4.1, second computational-requirements bullet, sentences beginning “Thus”",
+              "revision": "ECCC TR98-074 revision 2, May 18, 2000",
+              "text": "Thus we will assume we have oracle access to the received word \\(r\\) (the input). We will also output the codewords implicitly, by programs that compute the function represented by the codeword. These programs will be allowed to make oracle calls to the received word \\(r\\). Thus both our decoding algorithm and their output programs are best thought of as oracle-machines. We will use the notation \\(M^{\\mathcal{O}}(x)\\) to denote the computation of an oracle-machine \\(M\\) on input \\(x\\) with access to an oracle \\(\\mathcal{O}\\). When asking for efficient list-decoding, we will expect that the decoding algorithm, as well as its output programs are all efficient.",
+              "sha256": "045e826bf4bd9a48c188a00ba5351260faead6cf7abce7b2b5be9c9b4aae89b9",
+              "transcribed": true,
+              "transcription_note": "Transcribed from the scanned page of ECCC TR98-074 revision 2. Mathematical typesetting is represented in TeX; line wrapping and line-break hyphenation are joined. The source words and punctuation are retained. Physical PDF page numbers include the unnumbered first page.",
+              "omissions": []
+            },
+            {
+              "id": "stv-randomized-programs-source",
+              "source": "stv01-eccc-rev2",
+              "pdf_sha256": "87ccd011e2e0d55929decddd29caaf4b4c89659dee9c93760a8e29d950d59865",
+              "pdf_page": 14,
+              "printed_page": "13",
+              "locator": "§4.1, third computational-requirements bullet",
+              "revision": "ECCC TR98-074 revision 2, May 18, 2000",
+              "text": "Finally, we will allow our decoding algorithms, as well as their output programs, to be randomized. Below we define what it means for randomized algorithms to approximately compute functions, and to solve search problems.",
+              "sha256": "9ba72ec512c80b8dec1c926569bd0cf8b4669978aa0af117aaf3551e6a2bc0aa",
+              "transcribed": true,
+              "transcription_note": "Transcribed from the scanned page of ECCC TR98-074 revision 2. Mathematical typesetting is represented in TeX; line wrapping and line-break hyphenation are joined. The source words and punctuation are retained. Physical PDF page numbers include the unnumbered first page.",
+              "omissions": []
+            }
+          ],
+          "lean": [
+            "NearCubicGates.Published.STV.OracleMachine",
+            "NearCubicGates.Published.STV.OracleMachine.oracleStep",
+            "NearCubicGates.Published.STV.OracleMachine.oracleRun",
+            "NearCubicGates.Published.STV.fieldOracle",
+            "NearCubicGates.Published.STV.queryPoint",
+            "NearCubicGates.Published.STV.pointWord"
+          ],
+          "note": "The source defines the oracle computation interface. The five distinguished tapes and their bit layout are the concrete machine-model conventions used to transcribe it."
+        },
+        {
+          "id": "stv-relative-distance",
+          "label": "Relative Hamming distance",
+          "quotes": [
+            {
+              "id": "stv-relative-distance-source",
+              "source": "stv01-eccc-rev2",
+              "pdf_sha256": "87ccd011e2e0d55929decddd29caaf4b4c89659dee9c93760a8e29d950d59865",
+              "pdf_page": 14,
+              "printed_page": "13",
+              "locator": "§4.1, opening paragraph of printed page 13",
+              "revision": "ECCC TR98-074 revision 2, May 18, 2000",
+              "text": "For codes to be of use to us, we will need that the codewords are sufficiently “far” from each other. So we define the Hamming distance between two vectors \\(x,y\\in[q]^n\\) to be the number of coordinates i such that \\(x(i)\\ne y(i)\\). (Notice we are already using the functional notation!) The relative Hamming distance, denoted \\(\\Delta(x,y)\\), is \\(\\Pr_{i\\in[n]}[x(i)\\ne y(i)]\\).",
+              "sha256": "7f635c51113aa8cbf62b55a2745ece9d58c444468318733f6c0d0c15dfd5314e",
+              "transcribed": true,
+              "transcription_note": "Transcribed from the scanned page of ECCC TR98-074 revision 2. Mathematical typesetting is represented in TeX; line wrapping and line-break hyphenation are joined. The source words and punctuation are retained. Physical PDF page numbers include the unnumbered first page.",
+              "omissions": []
+            }
+          ],
+          "lean": [
+            "NearCubicGates.Published.STV.Agrees"
+          ],
+          "note": "Agrees uses the fraction of points at which the two function values coincide. Its inequality is the usual agreement-at-least-ε convention; the surrounding source problem and its uses concern agreeing polynomials, not a specified tape encoding."
+        }
+      ]
+    },
+    {
+      "id": "cw-proximity",
+      "page": "SourceMapping/9-three-query-pcpp.md",
+      "title": "CW19 Lemma 22 at soundness 1/2",
+      "premises": [
+        "NearCubicGates.Published.CW19Proximity.Lemma22Half"
+      ],
+      "notes": [
+        "The retained premise field is NearCubicGates.Close.PublishedInputs.cw19Proximity_lemma22Half. The Lean column is generated verbatim from Statement.lean.",
+        "The source quantifies over real constants δ and s; the retained statement specializes soundness to 1/2 and uses each fixed rational η ∈ (0,1). Appendix A explicitly uses the s=1/2 instance.",
+        "CW19 Definition 20 does not itself state a verifier running time. The polynomial-time verifier convention is Definition 2.1 of its cited reference [11], BGHSV06; the pinned full version is January 2006 and is not the SIAM typeset PDF.",
+        "The flat node-list circuit encoding, finite proof extension by false, separate input/proof address tags, request tuple encodings, framed input tape, ordinary bit-multitape model and polynomial budget conventions are formal representation choices. The source quotations do not purport to specify these bytes.",
+        "All mathematical notation in manually transcribed quotes was checked against rendered primary PDF pages. Source wording is retained, including the printed phrase “making V(C) always accepts” in Lemma 22. Decorative heading/bullet glyphs and physical line wraps are not copied."
+      ],
+      "rows": [
+        {
+          "id": "cw-proximity-theorem-row",
+          "label": "Published premise: Lemma 22",
+          "quotes": [
+            {
+              "id": "cw19-lemma22-verbatim",
+              "source": "cw19-dagstuhl",
+              "pdf_sha256": "c3c6ea6f80dbdf92a1887272fc2d618a4f63bd887d1cc1186dcf299a3aa99533",
+              "pdf_page": 15,
+              "printed_page": "19:15",
+              "locator": "Lemma 22 (Theorem 3.3 in [11])",
+              "revision": "CCC 2019, LIPIcs 137, article 19, published Dagstuhl version",
+              "text": "For any constants \\(0 < \\delta, s < 1\\), there is a PCP of proximity system for Circuit-Eval with proximity \\(\\delta\\), soundness \\(s\\), number of random bits \\(r = O(\\log n)\\) and query complexity \\(q = O(1)\\). Moreover, given the pair \\((C,w) \\in \\text{Circuit-Eval}\\), a proof \\(\\pi\\) making \\(V(C)\\) always accepts can be constructed in \\(\\operatorname{poly}(|C| + |w|)\\) time.",
+              "sha256": "974425b6f9351b96fa153ec382d94cc94215d3f7cdb3323eeaf88f23ce190939",
+              "transcribed": true,
+              "transcription_note": "Verbatim wording, with mathematical notation transcribed into LaTeX after checking the rendered PDF; physical line wrapping normalized. The source PDF has a text layer and is not a scan. The statement body is quoted; its heading is identified by the locator.",
+              "omissions": []
+            }
+          ],
+          "lean": [
+            "NearCubicGates.Published.CW19Proximity.Lemma22Half"
+          ],
+          "note": "The retained premise field is printed beside its exact statement. The source lemma has arbitrary constant soundness; the right side retains its 1/2 instance."
+        },
+        {
+          "id": "cw-proximity-circuit-row",
+          "label": "The pair language Circuit-Eval",
+          "quotes": [
+            {
+              "id": "cw19-circuit-eval-verbatim",
+              "source": "cw19-dagstuhl",
+              "pdf_sha256": "c3c6ea6f80dbdf92a1887272fc2d618a4f63bd887d1cc1186dcf299a3aa99533",
+              "pdf_page": 13,
+              "printed_page": "19:13",
+              "locator": "Section 2, Preliminaries, first sentence",
+              "revision": "CCC 2019, LIPIcs 137, article 19, published Dagstuhl version",
+              "text": "The Circuit Evaluation Problem (Circuit-Eval) is the language of pairs \\(\\{(C,w)\\}\\) such that when \\(C\\) is a general fan-in-2 circuit and \\(w\\) is a Boolean input, \\((C,w) \\in \\text{Circuit-Eval}\\) if and only if \\(C(w) = 1\\).",
+              "sha256": "2ab191b82cbce43a53cece84f91e2f75ea4392b0daaba56e0383a0a164a669ef",
+              "transcribed": true,
+              "transcription_note": "Verbatim wording, with mathematical notation transcribed into LaTeX after checking the rendered PDF; physical line wrapping normalized. The source PDF has a text layer and is not a scan. The statement body is quoted; its heading is identified by the locator.",
+              "omissions": []
+            }
+          ],
+          "lean": [
+            "NearCubicWires.BooleanNode",
+            "NearCubicWires.BooleanNode.WellFormedAt",
+            "NearCubicWires.BooleanNode.eval",
+            "NearCubicWires.BooleanCircuit",
+            "NearCubicWires.BooleanCircuit.values",
+            "NearCubicWires.BooleanCircuit.eval",
+            "NearCubicWires.BooleanCircuit.size",
+            "NearCubicGates.Published.CW19Proximity.SourceCircuit",
+            "NearCubicGates.Published.CW19Proximity.sourceNodeWord",
+            "NearCubicGates.Published.CW19Proximity.sourceCircuitWord"
+          ],
+          "note": "The source fixes general fan-in-two circuits. The right side chooses an explicit finite topological DAG and an ordinary binary source encoding; those representation details are conventions, not extra quoted words."
+        },
+        {
+          "id": "cw-proximity-definition20-row",
+          "label": "Definition of PCP of proximity",
+          "quotes": [
+            {
+              "id": "cw19-definition20-verbatim",
+              "source": "cw19-dagstuhl",
+              "pdf_sha256": "c3c6ea6f80dbdf92a1887272fc2d618a4f63bd887d1cc1186dcf299a3aa99533",
+              "pdf_page": 15,
+              "printed_page": "19:15",
+              "locator": "Definition 20 (Probabilistic Checkable Proofs of Proximity (PCP of proximity, or PCPP))",
+              "revision": "CCC 2019, LIPIcs 137, article 19, published Dagstuhl version",
+              "text": "For \\(s,\\delta : \\mathbb{N} \\to [0,1]\\) and \\(r,q : \\mathbb{N} \\to \\mathbb{N}\\), a verifier \\(V\\) is a PCP of proximity system for a pair language \\(L\\) with proximity parameter \\(\\delta\\), soundness parameter \\(s\\), number of random bits \\(r\\) and query complexity \\(q\\) if the following holds for all \\(x,y\\):\n\nIf \\((x,y) \\in L\\), there is a proof \\(\\pi\\) such that \\(V(x)\\) accepts oracle \\(y \\circ \\pi\\) with probability 1.\n\nIf \\(y\\) is \\(\\delta(|x|)\\)-far from \\(L(x) := \\{z : (x,z) \\in L\\}\\), then for all proofs \\(\\pi\\), \\(V(x)\\) accepts oracle \\(y \\circ \\pi\\) with probability at most \\(s(|x|)\\).\n\n\\(V(x)\\) tosses \\(r(|x|)\\) random coins, and makes at most \\(q(|x|)\\) non-adaptive queries.",
+              "sha256": "8c9e96d2479e875007cff49c0f88847953322adaba36bfc73bfecf034124bfba",
+              "transcribed": true,
+              "transcription_note": "Verbatim wording, with mathematical notation transcribed into LaTeX after checking the rendered PDF; physical line wrapping normalized. The source PDF has a text layer and is not a scan. The statement body is quoted; its heading is identified by the locator.",
+              "omissions": []
+            }
+          ],
+          "lean": [
+            "NearCubicGates.Published.CW19Proximity.QueryAddress",
+            "NearCubicGates.Published.CW19Proximity.oracleValue",
+            "NearCubicGates.Published.CW19Proximity.NonadaptiveVerifier.fraction",
+            "NearCubicGates.Published.CW19Proximity.finiteProofOracle"
+          ],
+          "note": "The source uses the concatenated oracle y ∘ π. The direct-sum addresses and false extension outside a finite proof are explicit representation conventions."
+        },
+        {
+          "id": "cw-proximity-distance-row",
+          "label": "Strict source distance boundary",
+          "quotes": [
+            {
+              "id": "cw19-strict-far-verbatim",
+              "source": "cw19-dagstuhl",
+              "pdf_sha256": "c3c6ea6f80dbdf92a1887272fc2d618a4f63bd887d1cc1186dcf299a3aa99533",
+              "pdf_page": 11,
+              "printed_page": "19:11",
+              "locator": "Introduction, Error Correcting Codes and Probabilistic Checkable Proofs of Proximity, clarification sentence",
+              "revision": "CCC 2019, LIPIcs 137, article 19, published Dagstuhl version",
+              "text": "To clarify the second point, we are saying that if \\(x\\) has hamming distance more than \\(\\delta n\\) from all \\(y\\) that satisfy \\(E\\), then \\(V(E)\\) has decent probability of rejection on any proof \\(\\pi\\).",
+              "sha256": "134847da2adacd753eefe65f1f24fda82e106f58fa15cc24c1658cceb54f9d27",
+              "transcribed": true,
+              "transcription_note": "Verbatim wording, with mathematical notation transcribed into LaTeX after checking the rendered PDF; physical line wrapping normalized. The source PDF has a text layer and is not a scan. The statement body is quoted; its heading is identified by the locator.",
+              "omissions": []
+            },
+            {
+              "id": "bghsv06-relative-distance-verbatim",
+              "source": "bghsv06-full",
+              "pdf_sha256": "ff46a605d18cd6b3443239574edd8d2e9073cd8b49a32d41c989f72ac44f6ee1",
+              "pdf_page": 11,
+              "printed_page": "10",
+              "locator": "Section 2, Notation, relative distance paragraph (first three sentences)",
+              "revision": "January 2006 author full version; not the SIAM typeset version",
+              "text": "We will extensively refer to the relative distance between strings/sequences over some alphabet \\(\\Sigma\\): For \\(u,v \\in \\Sigma^\\ell\\), we denote by \\(\\Delta(u,v)\\) the fraction of locations on which \\(u\\) and \\(v\\) differ (i.e., \\(\\Delta(u,v) \\triangleq |\\{i : u_i \\ne v_i\\}|/\\ell\\), where \\(u = u_1 \\cdots u_\\ell \\in \\Sigma^\\ell\\) and \\(v = v_1 \\cdots v_\\ell \\in \\Sigma^\\ell\\)). We say that \\(u\\) is \\(\\delta\\)-close to \\(v\\) (resp., \\(\\delta\\)-far from \\(v\\)) if \\(\\Delta(u,v) \\le \\delta\\) (resp., \\(\\Delta(u,v) > \\delta\\)). The relative distance of a string to a set of strings is defined in the natural manner; that is, \\(\\Delta(u,S) \\triangleq \\min_{v \\in S}\\{\\Delta(u,v)\\}\\).",
+              "sha256": "6d869a379a17b33f113375e376f861dad18c796375ff5f175ff61a6d9f5f0c0a",
+              "transcribed": true,
+              "transcription_note": "Verbatim wording, with mathematical notation transcribed into LaTeX after checking the rendered PDF; physical line wrapping normalized. The source PDF has a text layer and is not a scan. The statement body is quoted; its heading is identified by the locator.",
+              "omissions": [
+                "The rest of the paragraph, starting with the sentence about absolute Hamming distance and ending with repetition notation, is not included. The displayed quotation is one contiguous excerpt."
+              ]
+            }
+          ],
+          "lean": [
+            "NearCubicGates.PublishedSources.PCPP.relativeHamming",
+            "NearCubicGates.Published.CW19Proximity.StrictlyFar"
+          ],
+          "note": "CW19 explicitly says more than δn. The adjacent BGHSV06 definition makes the normalized strict inequality and distance-to-set notation explicit. The target closed boundary is established later by an adapter."
+        },
+        {
+          "id": "cw-proximity-nonadaptive-row",
+          "label": "Nonadaptive query addresses and decision predicate",
+          "quotes": [
+            {
+              "id": "cw19-appendixA-nonadaptive-verbatim",
+              "source": "cw19-dagstuhl",
+              "pdf_sha256": "c3c6ea6f80dbdf92a1887272fc2d618a4f63bd887d1cc1186dcf299a3aa99533",
+              "pdf_page": 38,
+              "printed_page": "19:38",
+              "locator": "Appendix A, proof of Lemma 24, first two paragraphs",
+              "revision": "CCC 2019, LIPIcs 137, article 19, published Dagstuhl version",
+              "text": "By Lemma 22, there is a PCP of proximity system \\(V\\) for Circuit-Eval with proximity \\(\\delta\\), soundness \\(s = 1/2\\), number of random bits \\(r = O(\\log n)\\) and query complexity \\(q = O_\\delta(1)\\).\n\nLet the circuit be \\(C\\). Suppose we are given random bits \\(R \\in \\{0,1\\}^r\\), so that \\(V(C)\\) queries positions \\(k_1 = k_1(C,R), k_2 = k_2(C,R), \\ldots, k_q = k_q(C,R)\\) of the oracle \\(z = w \\circ \\pi\\), computes a predicate \\(P = P(C,R)\\) on these bits, and outputs \\(P(z_{k_1},z_{k_2},\\ldots,z_{k_q})\\).",
+              "sha256": "4d38a5358e192defa521e2f60c3ce4687171ad781bb2ecc9d17be3d316777c75",
+              "transcribed": true,
+              "transcription_note": "Verbatim wording, with mathematical notation transcribed into LaTeX after checking the rendered PDF; physical line wrapping normalized. The source PDF has a text layer and is not a scan. The statement body is quoted; its heading is identified by the locator.",
+              "omissions": []
+            }
+          ],
+          "lean": [
+            "NearCubicGates.Published.CW19Proximity.NonadaptiveVerifier",
+            "NearCubicGates.Published.CW19Proximity.NonadaptiveVerifier.accepts"
+          ],
+          "note": "This is the source verifier V before the derived three-query conversion. Query positions and decision depend on C and R, not on oracle answers. The source paragraph is in the proof of Lemma 24 but describes the Lemma 22 verifier."
+        },
+        {
+          "id": "cw-proximity-polynomial-verifier-row",
+          "label": "The cited polynomial-time verifier convention",
+          "quotes": [
+            {
+              "id": "bghsv06-definition21-verbatim",
+              "source": "bghsv06-full",
+              "pdf_sha256": "ff46a605d18cd6b3443239574edd8d2e9073cd8b49a32d41c989f72ac44f6ee1",
+              "pdf_page": 11,
+              "printed_page": "10",
+              "locator": "Definition 2.1 (PCP verifiers), both bullets",
+              "revision": "January 2006 author full version; not the SIAM typeset version",
+              "text": "A verifier is a probabilistic polynomial-time algorithm \\(V\\) that, on an input \\(x\\) of length \\(n\\), tosses \\(r = r(n)\\) random coins \\(R\\) and generates a sequence of \\(q = q(n)\\) queries \\(I = (i_1,\\ldots,i_q)\\) and a circuit \\(D : \\{0,1\\}^q \\to \\{0,1\\}\\) of size at most \\(d(n)\\).\n\nWe think of \\(V\\) as representing a probabilistic oracle machine that queries its oracle \\(\\pi\\) for the positions in \\(I\\), receives the \\(q\\) answer bits \\(\\pi|_I \\triangleq (\\pi_{i_1},\\ldots,\\pi_{i_q})\\), and accepts iff \\(D(\\pi|_I) = 1\\).\n\nWe write \\((I,D) \\overset{R}{\\leftarrow} V(x)\\) to denote the queries and circuit generated by \\(V\\) on input \\(x\\) and random coin tosses, and \\((I,D) = V(x;R)\\) if we wish to specify the coin tosses \\(R\\).",
+              "sha256": "22c09c2fd5c085d17353676e0dd0b5b2f64eeb52733eecbc55cceb58896aa2e7",
+              "transcribed": true,
+              "transcription_note": "Verbatim wording, with mathematical notation transcribed into LaTeX after checking the rendered PDF; physical line wrapping normalized. The source PDF has a text layer and is not a scan. The statement body is quoted; its heading is identified by the locator.",
+              "omissions": []
+            }
+          ],
+          "lean": [
+            "NearCubicGates.Published.CW19Proximity.SourcePolyTime",
+            "NearCubicGates.Published.CW19Proximity.queryAddressWord",
+            "NearCubicGates.Published.CW19Proximity.CoinRequest",
+            "NearCubicGates.Published.CW19Proximity.coinRequestWord",
+            "NearCubicGates.Published.CW19Proximity.QueryRequest",
+            "NearCubicGates.Published.CW19Proximity.queryRequestWord",
+            "NearCubicGates.Published.CW19Proximity.DecisionRequest",
+            "NearCubicGates.Published.CW19Proximity.decisionRequestWord"
+          ],
+          "note": "CW19 reference [11] is identified on printed page 19:35, PDF page 35. BGHSV06 Definition 2.1 is printed page 10, PDF page 11. The concrete request/output encodings on the right are conventions implementing this verifier notion."
+        },
+        {
+          "id": "cw-proximity-honest-row",
+          "label": "Uniform construction on accepted inputs",
+          "quotes": [
+            {
+              "id": "cw19-honest-proof-verbatim",
+              "source": "cw19-dagstuhl",
+              "pdf_sha256": "c3c6ea6f80dbdf92a1887272fc2d618a4f63bd887d1cc1186dcf299a3aa99533",
+              "pdf_page": 15,
+              "printed_page": "19:15",
+              "locator": "Lemma 22, moreover sentence",
+              "revision": "CCC 2019, LIPIcs 137, article 19, published Dagstuhl version",
+              "text": "Moreover, given the pair \\((C,w) \\in \\text{Circuit-Eval}\\), a proof \\(\\pi\\) making \\(V(C)\\) always accepts can be constructed in \\(\\operatorname{poly}(|C| + |w|)\\) time.",
+              "sha256": "16be39a845e790405c820d468e6aafdc6dd7afbc1b28ff755c8fd9645018c7db",
+              "transcribed": true,
+              "transcription_note": "Verbatim wording, with mathematical notation transcribed into LaTeX after checking the rendered PDF; physical line wrapping normalized. The source PDF has a text layer and is not a scan. The statement body is quoted; its heading is identified by the locator.",
+              "omissions": []
+            },
+            {
+              "id": "cw19-remark23-verbatim",
+              "source": "cw19-dagstuhl",
+              "pdf_sha256": "c3c6ea6f80dbdf92a1887272fc2d618a4f63bd887d1cc1186dcf299a3aa99533",
+              "pdf_page": 15,
+              "printed_page": "19:15",
+              "locator": "Remark 23",
+              "revision": "CCC 2019, LIPIcs 137, article 19, published Dagstuhl version",
+              "text": "The moreover part is not explicitly stated in [11], but it is evident from the constructions.",
+              "sha256": "ddbb5dc2c0bbda34f65f834459ef77de417e0baa2848d027e6adfeee42221ef7",
+              "transcribed": false,
+              "transcription_note": "Verbatim text-layer wording; physical line wrapping normalized.",
+              "omissions": []
+            }
+          ],
+          "lean": [
+            "NearCubicGates.Published.CW19Proximity.AcceptedSourceInput",
+            "NearCubicGates.Published.CW19Proximity.acceptedSourceWord"
+          ],
+          "note": "The accepted source input is a promise. The quotation does not require the honest-proof algorithm to decide circuit acceptance. Remark 23 is retained so the relationship to the cited older construction remains explicit."
+        }
+      ]
+    },
+    {
+      "id": "cw-code",
+      "page": "SourceMapping/9-three-query-pcpp.md",
+      "title": "CW19 Lemma 26: the source linear code",
+      "premises": [
+        "NearCubicGates.Published.CW19Code.Lemma26"
+      ],
+      "notes": [
+        "The retained premise field is NearCubicGates.Close.PublishedInputs.cw19Code_lemma26. The Lean column is generated verbatim from Statement.lean.",
+        "CW19 Lemma 26 is the retained source statement. Lemma 27 supplies a derived modification and is not an additional retained premise. The Section 4 quotation only records the paper's explicit binary encoder/decoder and constant-rate notation; it refers to Lemma 27, and is not the statement of Lemma 26.",
+        "CW19 does not expand a separate formal definition of linearity, code family, encoder input format or decoder input format. The right side uses Boolean vectors, zero/XOR linearity, an onset for constant rate, one ordinary machine per algorithm, and an explicit unary-length decoder request. These are representation/convention notes, not verbatim source definitions.",
+        "The source decoder is used only under its near-codeword promise. The formal closed source radius may be chosen smaller; total decoding and three-block sparse-support construction are later proved adapters and are not imported here."
+      ],
+      "rows": [
+        {
+          "id": "cw-code-theorem-row",
+          "label": "Published premise: Lemma 26",
+          "quotes": [
+            {
+              "id": "cw19-lemma26-verbatim",
+              "source": "cw19-dagstuhl",
+              "pdf_sha256": "c3c6ea6f80dbdf92a1887272fc2d618a4f63bd887d1cc1186dcf299a3aa99533",
+              "pdf_page": 16,
+              "printed_page": "19:16",
+              "locator": "Section 2.4, Lemma 26 ([43])",
+              "revision": "CCC 2019, LIPIcs 137, article 19, published Dagstuhl version",
+              "text": "There is a constant \\(\\delta > 0\\) such that there is a constant-rate linear error correcting code ECC with minimum relative distance \\(\\delta\\), an efficient encoder Enc and an efficient decoder Dec recovering error up to \\(c_1 \\cdot \\delta\\), where \\(c_1\\) is a universal constant.",
+              "sha256": "a766bbd79578cf22b5c680b31f5e386f685657460022336f4b3cb798fba7b03a",
+              "transcribed": true,
+              "transcription_note": "Verbatim wording, with mathematical notation transcribed into LaTeX after checking the rendered PDF; physical line wrapping normalized. The source PDF has a text layer and is not a scan. The statement body is quoted; its heading is identified by the locator.",
+              "omissions": []
+            }
+          ],
+          "lean": [
+            "NearCubicGates.Published.CW19Code.Lemma26"
+          ],
+          "note": "The exact source statement does not contain the three-block modification or the n/2 support bound of Lemma 27."
+        },
+        {
+          "id": "cw-code-family-row",
+          "label": "Binary family and rate notation used in the paper",
+          "quotes": [
+            {
+              "id": "cw19-code-notation-verbatim",
+              "source": "cw19-dagstuhl",
+              "pdf_sha256": "c3c6ea6f80dbdf92a1887272fc2d618a4f63bd887d1cc1186dcf299a3aa99533",
+              "pdf_page": 20,
+              "printed_page": "19:20",
+              "locator": "Section 4, proof of Theorem 5, paragraph beginning Let δ₁",
+              "revision": "CCC 2019, LIPIcs 137, article 19, published Dagstuhl version",
+              "text": "Let \\(\\delta_1 > 0\\) be the constant of Lemma 27. We fix a constant-rate linear error correcting code with minimum relative distance \\(\\delta_1\\), as guaranteed by Lemma 27. Let \\(\\operatorname{Enc} : \\{0,1\\}^n \\to \\{0,1\\}^{cn}\\) and \\(\\operatorname{Dec} : \\{0,1\\}^{cn} \\to \\{0,1\\}^n\\) be the corresponding encoder and decoder, where \\(c \\ge 1\\) is a constant corresponding to the rate of the code. Let \\(\\delta_{\\mathrm{Dec}} = c_1 \\cdot \\delta_1\\), which is error rate that Dec can recover.",
+              "sha256": "92ff0805a293f042778bed92ccb387ad0e691c792edfe09d950ceecec249522c",
+              "transcribed": true,
+              "transcription_note": "Verbatim wording, with mathematical notation transcribed into LaTeX after checking the rendered PDF; physical line wrapping normalized. The source PDF has a text layer and is not a scan. The statement body is quoted; its heading is identified by the locator.",
+              "omissions": []
+            }
+          ],
+          "lean": [
+            "NearCubicGates.Published.CW19Code.BinaryFamily",
+            "NearCubicGates.Published.CW19Code.IsLinear"
+          ],
+          "note": "This source usage paragraph explicitly invokes Lemma 27. It is included for the binary Enc/Dec domains and constant-rate notation only. Zero/XOR identities and the variable-length family type are formal conventions for the word linear; they are not separately printed by CW19."
+        },
+        {
+          "id": "cw-code-distance-row",
+          "label": "Minimum relative distance",
+          "quotes": [
+            {
+              "id": "cw19-minimum-distance-phrase-verbatim",
+              "source": "cw19-dagstuhl",
+              "pdf_sha256": "c3c6ea6f80dbdf92a1887272fc2d618a4f63bd887d1cc1186dcf299a3aa99533",
+              "pdf_page": 16,
+              "printed_page": "19:16",
+              "locator": "Lemma 26, contiguous phrase",
+              "revision": "CCC 2019, LIPIcs 137, article 19, published Dagstuhl version",
+              "text": "a constant-rate linear error correcting code ECC with minimum relative distance \\(\\delta\\)",
+              "sha256": "8e45b8a929182c0d9d2287a05d11dd8a6deaad74c01cf10065f5fc17f58ee806",
+              "transcribed": true,
+              "transcription_note": "Verbatim wording, with mathematical notation transcribed into LaTeX after checking the rendered PDF; physical line wrapping normalized. The source PDF has a text layer and is not a scan. The statement body is quoted; its heading is identified by the locator.",
+              "omissions": [
+                "Contiguous phrase from the middle of Lemma 26; the complete statement is quoted in the first row of this table."
+              ]
+            },
+            {
+              "id": "bghsv06-code-relative-distance-verbatim",
+              "source": "bghsv06-full",
+              "pdf_sha256": "ff46a605d18cd6b3443239574edd8d2e9073cd8b49a32d41c989f72ac44f6ee1",
+              "pdf_page": 11,
+              "printed_page": "10",
+              "locator": "Section 2, Notation, definition of relative distance",
+              "revision": "January 2006 author full version; not the SIAM typeset version",
+              "text": "For \\(u,v \\in \\Sigma^\\ell\\), we denote by \\(\\Delta(u,v)\\) the fraction of locations on which \\(u\\) and \\(v\\) differ (i.e., \\(\\Delta(u,v) \\triangleq |\\{i : u_i \\ne v_i\\}|/\\ell\\), where \\(u = u_1 \\cdots u_\\ell \\in \\Sigma^\\ell\\) and \\(v = v_1 \\cdots v_\\ell \\in \\Sigma^\\ell\\)).",
+              "sha256": "521fbd0555cf686092ac5ef1a22f223c2b1f248c94bdfab85fed9d77c6dc1df7",
+              "transcribed": true,
+              "transcription_note": "Verbatim wording, with mathematical notation transcribed into LaTeX after checking the rendered PDF; physical line wrapping normalized. The source PDF has a text layer and is not a scan. The statement body is quoted; its heading is identified by the locator.",
+              "omissions": [
+                "The paragraph prefix before For and later sentences about closeness, sets, absolute distance and repetition are not included. The quotation is one contiguous excerpt."
+              ]
+            }
+          ],
+          "lean": [
+            "NearCubicGates.Published.CW19Code.MinimumDistance"
+          ],
+          "note": "The source phrase is in the first-row statement. Relative Hamming distance is a fraction of unequal coordinates; the normalized distance definition is the same common notation used by the paper's PCPP reference BGHSV06. The actual relativeHamming declaration is printed with the proximity definition row above."
+        },
+        {
+          "id": "cw-code-algorithms-row",
+          "label": "Efficient encoder and promised decoder",
+          "quotes": [
+            {
+              "id": "cw19-efficient-encoder-decoder-phrase-verbatim",
+              "source": "cw19-dagstuhl",
+              "pdf_sha256": "c3c6ea6f80dbdf92a1887272fc2d618a4f63bd887d1cc1186dcf299a3aa99533",
+              "pdf_page": 16,
+              "printed_page": "19:16",
+              "locator": "Lemma 26, final contiguous phrase",
+              "revision": "CCC 2019, LIPIcs 137, article 19, published Dagstuhl version",
+              "text": "an efficient encoder Enc and an efficient decoder Dec recovering error up to \\(c_1 \\cdot \\delta\\), where \\(c_1\\) is a universal constant.",
+              "sha256": "475f697ab9e3d89aac107426b87d000a13929b80915475b14a5e65a1759b2ff2",
+              "transcribed": true,
+              "transcription_note": "Verbatim wording, with mathematical notation transcribed into LaTeX after checking the rendered PDF; physical line wrapping normalized. The source PDF has a text layer and is not a scan. The statement body is quoted; its heading is identified by the locator.",
+              "omissions": [
+                "Contiguous final phrase from Lemma 26; the beginning is quoted in the first row of this table."
+              ]
+            }
+          ],
+          "lean": [
+            "NearCubicGates.Published.CW19Code.EfficientEncoder",
+            "NearCubicGates.Published.CW19Code.PromisedDecoder",
+            "NearCubicGates.Published.CW19Code.decoderInput"
+          ],
+          "note": "The exact tape programs, polynomial witnesses, unary message-length separator, fresh output tape and closed promised radius are the explicit formal conventions and specialization stated in the existing prose. The source does not specify these encodings or behavior outside the decoding promise."
+        }
+      ]
+    }
+  ]
+}
